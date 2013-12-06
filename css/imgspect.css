@@ -1,0 +1,42 @@
+.imgspect .viewport {
+	position: relative;
+	width: 640px;
+	height: 480px;
+	overflow: hidden;
+	background-color: #fff;
+	float: left;
+}
+
+.imgspect .navigate {
+	display: block;
+	float: left;
+}
+
+.imgspect .viewport img,
+.imgspect .viewport .canvas {
+	position: absolute;
+	display: block;
+	vertical-align: baseline;
+	max-width: none;
+	max-height: none;
+}
+
+.imgspect .drag {
+	position: absolute;
+	z-index: 100;
+	outline: 1px solid #444;
+	border: 1px solid #BBB;
+}
+
+.imgspect .zoom {
+	font-size: 30px;
+	display: block;
+	float: left;
+	margin-right: 10px;
+}
+
+.imgspect .highlight {
+	position: absolute;
+	background-color: #FFFF00;
+	opacity: .2;
+}
