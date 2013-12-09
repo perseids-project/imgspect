@@ -46,6 +46,7 @@
 		//  Separate the image source and clipping coordinates
 		//------------------------------------------------------------
 		self.href = $( self.elem ).attr( 'href' );
+		
 		var arr = self.href.split('?');
 		self.src = arr[0];
 		self.area = self.getToJson( arr[1] );
@@ -65,6 +66,7 @@
 		$( 'img', self.album ).each( function() {
 			if ( $( this ).attr( 'src' ) == self.src ) {
 				self.buildDom();
+				return;
 			};
 		});
 		
@@ -74,11 +76,15 @@
 		self.imgLoad();
 	}
 	
+	
+	/**
+	 * Retrieve an image from the page's imgbit album
+	 */	
 	imgbit.prototype.imgFromAlbum = function() {
 		var self = this;
 		$( 'img', self.album ).each( function() {
 			if ( $( this ).attr( 'src' ) == self.src ) {
-				return $( this ).clone().appendTo( $( '.view', self.elem ) ).addClass('star');
+				$( this ).clone().appendTo( $( '.view', self.elem ) ).addClass('star');
 			};
 		});
 	}
@@ -115,6 +121,10 @@
 		$( document.body ).append( '<div id="imgbit_album">' );
 		self.album = $( '#imgbit_album' );
 		self.album.hide();
+		
+		$( document.body ).append( '<ul id="imgbit_index">' );
+		self.index = $( '#imgbit_index' );
+		self.index.hide();
 	}
 	
 	/**
@@ -124,10 +134,23 @@
 		var self = this;
 		
 		//------------------------------------------------------------
-		//  Wrap the text in a popup
+		//  Change anchor tag to div
 		//------------------------------------------------------------
-		$( self.elem ).wrapInner( '<div class="text">' );
-		$( self.elem ).prepend( '<div class="view">' );
+		$( self.elem ).after( '<div class="imgbit">' );
+		self.elem = $( self.elem ).next();
+		var a = $( self.elem ).prev();
+		var html = a.html();
+		a.remove();
+		
+		//------------------------------------------------------------
+		//  Create the viewport
+		//------------------------------------------------------------
+		$( self.elem ).append( '<div class="view">' );
+		
+		//------------------------------------------------------------
+		//  Store the a tag text
+		//------------------------------------------------------------
+		$( self.elem ).append( '<div class="text">'+ html +'</div>' );
 		
 		//------------------------------------------------------------
 		//  Clone the image
@@ -137,14 +160,35 @@
 		//------------------------------------------------------------
 		//  Crop the view to the area dimensions
 		//------------------------------------------------------------
+		self.viewCrop();
+		
+		//------------------------------------------------------------
+		//  Move the image into place and scale it
+		//------------------------------------------------------------
+		self.imgMove();
+		
+		//------------------------------------------------------------
+		//  Add a link to the source image
+		//------------------------------------------------------------
+		$( self.elem ).append( '<a href="'+ self.src +'">+</a>' );
+	}
+	
+	/**
+	 * Crop the view window
+	 */
+	imgbit.prototype.viewCrop = function() {
+		var self = this;
 		$( '.view', self.elem ).css({
 			width: ( self.area.x2 - self.area.x1 ) * self.area.z,
 			height: ( self.area.y2 - self.area.y1 ) * self.area.z
 		});
-		
-		//------------------------------------------------------------
-		//  Move the image
-		//------------------------------------------------------------
+	}
+	
+	/**
+	 * Move the image into place
+	 */
+	imgbit.prototype.imgMove = function() {
+		var self = this;
 		$( 'img.star', self.elem ).css({
 			width: $( 'img.star', self.elem ).width() * self.area.z,
 			height: $( 'img.star', self.elem ).height() * self.area.z,
