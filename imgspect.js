@@ -6,12 +6,11 @@
 	/**
 	 * Holds default options, adds user defined options, and initializes the plugin
 	 *
-	 * @param { obj } _elem The image DOM element you want to inspect
+	 * @param { obj } _elem The img element you want to inspect
 	 *
-	 * @param { obj } _options Key value pairs that hold 
-	 *		imgspect's configuration
+	 * @param { obj } _options Configuration options
 	 *
-	 * @param { string } _id The id of the DOM element 
+	 * @param { string } _id The id of the img element 
 	 */
 	function imgspect( _elem, _options, _id ) {
 		var self = this;
@@ -25,8 +24,7 @@
 	 *
 	 * @param { obj } _elem The image DOM element you want to inspect
 	 *
-	 * @param { obj } _options Key value pairs that hold 
-	 *		imgspect's configuration
+	 * @param { obj } _options Configuration options
 	 */
 	imgspect.prototype.init = function( _elem, _options ) {
 		var self = this;
@@ -73,27 +71,27 @@
 		self.elem = $( self.elem ).parent();
 		
 		//------------------------------------------------------------
-		//  Create the navigation window
+		//  Create the navigation window aka the 'nav'
 		//------------------------------------------------------------
 		$( 'img', self.elem ).wrap( '<div class="nav">' );
 		
 		//------------------------------------------------------------
-		//  Create the navigation "dragger"
+		//  Create the navigation dragger aka the 'drag'
 		//------------------------------------------------------------
 		$( '.nav', self.elem ).prepend( '<div class="drag">' );
 		
 		//------------------------------------------------------------
-		//  Create the viewport
+		//  Create the viewport aka the 'view
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div class="view">' );
 		
 		//------------------------------------------------------------
-		//  Create the drawing space
+		//  Create the drawing area aka the 'drawable image'
 		//------------------------------------------------------------
 		$( '.view', self.elem ).append( '<div class="draw">' );
 		
 		//------------------------------------------------------------
-		//  Set image as drawing space background
+		//  Set image as drawing area background
 		//------------------------------------------------------------
 		var src = $( '.nav img', self.elem ).attr('src');
 		$( '.draw', self.elem ).css({ 
@@ -106,7 +104,7 @@
 		$( self.elem ).append( '<div style="clear:both">' );
 		
 		//------------------------------------------------------------
-		//  Create the toolbars
+		//  Create the tool buttons
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div class="tools">' );
 		$( '.tools', self.elem ).append( '<a href="#" class="zoom in">+</a>' );
@@ -188,6 +186,10 @@
 			var y2 = y1 + self.c_lite.height() / self.zoom_n;
 			self.lites.push({ x1:x1, y1:y1, x2:x2, y2:y2 });
 			
+			//------------------------------------------------------------
+			//  Draw the lite on the nav image.
+			//  ( Make this optional with a config option? )
+			//------------------------------------------------------------
 			self.liteDrawNav();
 			
 			//------------------------------------------------------------
@@ -213,12 +215,13 @@
 	imgspect.prototype.liteDrawNav = function() {
 		var self = this;
 		var lite = self.liteDom();
-		$( '.nav', self.elem ).append( lite );
-		
+		var nav = $( '.nav', self.elem );
+		nav.append( lite );
+		var np = nav.position();
 		var lp = self.lites[ self.lites.length - 1 ];
 		lite.css({
-			'left': lp.x1,
-			'top': lp.y1,
+			'left': lp.x1 + np.left,
+			'top': lp.y1 + np.top,
 			'width': lp.x2 - lp.x1,
 			'height': lp.y2 - lp.y1
 		});
@@ -286,7 +289,7 @@
 	/**
 	 * Scale drawable image
 	 *
-	 * @param { string } Either 'IN' or 'OUT'
+	 * @param { string } _dir Either 'IN' or 'OUT'
 	 */
 	imgspect.prototype.zoom = function( _dir ) {
 		var self = this;
@@ -325,8 +328,8 @@
 	/**
 	 * Moves the drawable image when the nav drag is moved
 	 *
-	 * @param { object } nav window position
-	 * @param { object } drag position
+	 * @param { object } _nav_pos nav window position
+	 * @param { object } _drag_pos drag position
 	 */
 	imgspect.prototype.dragHandler = function( _nav_pos, _drag_pos ) {
 		var self = this;
@@ -363,8 +366,8 @@
 	/**
 	 * Move the drawable image
 	 *
-	 * @param { float } new left css parameter
-	 * @param { float } new top css parameter
+	 * @param { float } _left new left css parameter
+	 * @param { float } _top new top css parameter
 	 */
 	imgspect.prototype.drawMove = function( _left, _top ) {
 		var self = this;
@@ -387,6 +390,8 @@
 	
 	/**
 	 * Retrieve the mouse position in relation to the view
+	 *
+	 * @param { Event } _e the mouse event object
 	 */
 	imgspect.prototype.viewMousePos = function( _e ) {
 		var vp = $( '.view', this.elem ).position();		

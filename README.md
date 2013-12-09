@@ -1,10 +1,17 @@
-## This plug-in has just been started.  It half works.  Come back in a few days.
 # imgspect
 **imgspect** is a plugin that will let you explore any image displayable by a browser by zooming and panning, but the most useful feature is the ability to highlight areas of interest and write little notes associated with the highlighted areas.
 
-## How to use it.
-Here's all you need to know to get started.
+Also included is **imgbit**.
 
+**imgbit** is a plugin that will display only a small area of a larger image.
+
+## Used best for...
+Why use **imgbit** instead of Photoshop or some other image editor for image cropping?
+
+	Make your case, Adam.
+
+## How to use...
+### imgspect
 	<html>
 		<head>
 			<!-- Load the imgspect stylesheet -->
@@ -28,6 +35,8 @@ Here's all you need to know to get started.
 		</script>
 	</html>
 
+### imgbit
+	coming soon...
 
 # Work Log... Brainstorming
 2013-12-09
