@@ -1,0 +1,12 @@
+.imgbit .view {
+	position: relative;
+	overflow: hidden;
+}
+
+.imgbit img.star {
+	position: absolute;
+	display: block;
+	vertical-align: baseline;
+	max-width: none;
+	max-height: none;
+}

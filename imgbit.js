@@ -49,8 +49,56 @@
 		var arr = self.href.split('?');
 		self.src = arr[0];
 		self.area = self.getToJson( arr[1] );
+		self.area.z = ( self.area.z == undefined ) ? 1 : self.area.z;
+		
+		//------------------------------------------------------------
+		//  Check to see if img is in album
+		//------------------------------------------------------------
+		self.imgCheck();
 	}
 	
+	/**
+	 * Check to see if an image is stored in the page's imgbit album
+	 */
+	imgbit.prototype.imgCheck = function() {
+		var self = this;
+		$( 'img', self.album ).each( function() {
+			if ( $( this ).attr( 'src' ) == self.src ) {
+				self.buildDom();
+			};
+		});
+		
+		//------------------------------------------------------------
+		//  If the image isn't in the album download it.
+		//------------------------------------------------------------
+		self.imgLoad();
+	}
+	
+	imgbit.prototype.imgFromAlbum = function() {
+		var self = this;
+		$( 'img', self.album ).each( function() {
+			if ( $( this ).attr( 'src' ) == self.src ) {
+				return $( this ).clone().appendTo( $( '.view', self.elem ) ).addClass('star');
+			};
+		});
+	}
+	
+	/**
+	 * Load an image and store it in the page's imgbit album
+	 */	
+	imgbit.prototype.imgLoad = function() {
+		var self = this;
+		var img = new Image();
+		img.onload = function() {
+			self.album.append( this );
+			self.buildDom();
+		}
+		img.src = self.src;
+	}
+	
+	/**
+	 * Check to see if a page's imgbit album has been created
+	 */	
 	imgbit.prototype.albumCheck = function() {
 		var self = this;
 		self.album = $( '#imgbit_album' );
@@ -64,8 +112,9 @@
 	 */	
 	imgbit.prototype.albumBuild = function() {
 		var self = this;
-		$( document ).append( '<div id="imgbit_album">' );
+		$( document.body ).append( '<div id="imgbit_album">' );
 		self.album = $( '#imgbit_album' );
+		self.album.hide();
 	}
 	
 	/**
@@ -73,8 +122,40 @@
 	 */
 	imgbit.prototype.buildDom = function() {
 		var self = this;
+		
+		//------------------------------------------------------------
+		//  Wrap the text in a popup
+		//------------------------------------------------------------
+		$( self.elem ).wrapInner( '<div class="text">' );
+		$( self.elem ).prepend( '<div class="view">' );
+		
+		//------------------------------------------------------------
+		//  Clone the image
+		//------------------------------------------------------------
+		self.imgFromAlbum();
+		
+		//------------------------------------------------------------
+		//  Crop the view to the area dimensions
+		//------------------------------------------------------------
+		$( '.view', self.elem ).css({
+			width: ( self.area.x2 - self.area.x1 ) * self.area.z,
+			height: ( self.area.y2 - self.area.y1 ) * self.area.z
+		});
+		
+		//------------------------------------------------------------
+		//  Move the image
+		//------------------------------------------------------------
+		$( 'img.star', self.elem ).css({
+			width: $( 'img.star', self.elem ).width() * self.area.z,
+			height: $( 'img.star', self.elem ).height() * self.area.z,
+			left: self.area.x1*-1*self.area.z,
+			top: self.area.y1*-1*self.area.z
+		});
 	}
 	
+	/**
+	 * Turn GET parameter string into a JSON object
+	 */
 	imgbit.prototype.getToJson = function( _get ) {
         if ( _get == "" ) return {};
         var json = {};
