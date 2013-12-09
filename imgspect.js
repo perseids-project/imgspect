@@ -34,7 +34,9 @@
 		//------------------------------------------------------------
 		// 	User options 
 		//------------------------------------------------------------
-		self.options = $.extend({}, _options);
+		self.options = $.extend({
+			'zoom_unit': .1
+		}, _options);
 		
 		//------------------------------------------------------------
 		//  Plugin properties
@@ -59,7 +61,7 @@
 	}
 	
 	/**
-	 * Create the imgspect environment.
+	 * Build the imgspect DOM elements
 	 */
 	imgspect.prototype.buildDom = function() {
 		var self = this;
@@ -116,6 +118,9 @@
 		$( self.elem ).append( '<div style="clear:both">' );
 	}
 	
+	/**
+	 * Resize imgspect
+	 */
 	imgspect.prototype.resize = function() {
 		var self = this;
 		
@@ -127,6 +132,9 @@
 		self.liteResize();
 	}
 	
+	/**
+	 * Start imgspect
+	 */
 	imgspect.prototype.start = function() {
 		var self = this;
 		
@@ -138,10 +146,9 @@
 		self.dragStart();
 	}
 	
-	imgspect.prototype.liteMove = function() {
-		
-	}
-	
+	/**
+	 * Start the lite mouse event listeners
+	 */
 	imgspect.prototype.liteStart = function() {
 		var self = this;
 		
@@ -149,7 +156,7 @@
 			self.c_lite = $( document.createElement('div') ).addClass( 'lite' );
 			$( '.draw', self.elem ).append( self.c_lite );
 			var dp = $( '.draw', self.elem ).position();
-			var mp = self.mousePos( _e );
+			var mp = self.viewMousePos( _e );
 			self.c_lite.css({
 				left: mp.x - dp.left,
 				top: mp.y - dp.top,
@@ -160,7 +167,7 @@
 		$( '.view', self.elem ).mousemove( function( _e ) {
 			if ( self.c_lite != null ) {
 				var lp = self.c_lite.position();
-				var mp = self.mousePos( _e );
+				var mp = self.viewMousePos( _e );
 				var dp = $( '.draw', self.elem ).position();
 				self.c_lite.css({
 					width: mp.x - lp.left - dp.left,
@@ -182,15 +189,27 @@
 			self.lites.push({ x1:x1, y1:y1, x2:x2, y2:y2 });
 			
 			self.liteDrawNav();
+			
+			//------------------------------------------------------------
+			//  Reset current lite
+			//------------------------------------------------------------
 			self.c_lite = null;
 			_e.preventDefault();
 		});
 	}
 	
+	/**
+	 * Build the DOM element for a lite
+	 *
+	 * @return { jQuery } A jQuery DOM element handle
+	 */
 	imgspect.prototype.liteDom = function() {
 		return $( document.createElement('div') ).addClass( 'lite' );
 	}
 	
+	/**
+	 * Build the imgspect DOM elements
+	 */
 	imgspect.prototype.liteDrawNav = function() {
 		var self = this;
 		var lite = self.liteDom();
@@ -205,6 +224,9 @@
 		});
 	}
 	
+	/**
+	 * Resize the lites
+	 */
 	imgspect.prototype.liteResize = function() {
 		var self = this;
 		
@@ -229,13 +251,9 @@
 		}
 	}
 	
-	imgspect.prototype.mousePos = function( _e ) {
-		var vp = $( '.view', this.elem ).position();		
-		var x = _e.clientX - vp.left;
-		var y = _e.clientY - vp.top;
-		return { 'x':x, 'y':y }
-	}
-	
+	/**
+	 * Start the zoom event listeners
+	 */
 	imgspect.prototype.zoomStart = function() {
 		var self = this;
 		$( '.zoom', self.elem ).click( function( _e ) {
@@ -249,24 +267,35 @@
 		});
 	}
 	
+	/**
+	 * Make drawable image larger
+	 */
 	imgspect.prototype.zoomIn = function() {
 		var self = this;
 		self.zoom('IN');
 	}
 
+	/**
+	 * Make drawable image smaller
+	 */
 	imgspect.prototype.zoomOut = function() {
 		var self = this;
 		self.zoom('OUT');
 	}
 	
+	/**
+	 * Scale drawable image
+	 *
+	 * @param { string } Either 'IN' or 'OUT'
+	 */
 	imgspect.prototype.zoom = function( _dir ) {
 		var self = this;
 		switch( _dir.toUpperCase() ) {
 			case 'IN':
-				self.zoom_n += .1;
+				self.zoom_n += self.options['zoom_unit'];
 				break;
 			case 'OUT':
-				self.zoom_n = ( self.zoom_n <= 1 ) ? 1 : self.zoom_n-.1;
+				self.zoom_n = ( self.zoom_n <= 1 ) ? 1 : self.zoom_n-self.options['zoom_unit'];
 				break;
 		}
 		
@@ -276,6 +305,9 @@
 		self.resize();
 	}
 	
+	/**
+	 * Start drag listener
+	 */
 	imgspect.prototype.dragStart = function() {
 		var self = this;
 		
@@ -290,6 +322,12 @@
 		});
 	}
 	
+	/**
+	 * Moves the drawable image when the nav drag is moved
+	 *
+	 * @param { object } nav window position
+	 * @param { object } drag position
+	 */
 	imgspect.prototype.dragHandler = function( _nav_pos, _drag_pos ) {
 		var self = this;
 		var x = _drag_pos.left - _nav_pos.left;
@@ -301,6 +339,9 @@
 		self.drawMove( left, top );
 	}
 	
+	/**
+	 * Resize drag window
+	 */
 	imgspect.prototype.dragResize = function() {
 		var self = this;
 		var view = $( '.view', self.elem );
@@ -319,6 +360,12 @@
 		});
 	}
 	
+	/**
+	 * Move the drawable image
+	 *
+	 * @param { float } new left css parameter
+	 * @param { float } new top css parameter
+	 */
 	imgspect.prototype.drawMove = function( _left, _top ) {
 		var self = this;
 		$( '.draw', this.elem ).css({
@@ -327,6 +374,9 @@
 		});
 	}
 	
+	/**
+	 * Resize drawable window when zoomed
+	 */
 	imgspect.prototype.drawResize = function() {
 		var self = this;
 		$( '.draw', self.elem ).css({
@@ -335,9 +385,19 @@
 		});
 	}
 	
-	//----------------
-	//	Extend JQuery 
-	//----------------
+	/**
+	 * Retrieve the mouse position in relation to the view
+	 */
+	imgspect.prototype.viewMousePos = function( _e ) {
+		var vp = $( '.view', this.elem ).position();		
+		var x = _e.clientX - vp.left;
+		var y = _e.clientY - vp.top;
+		return { 'x':x, 'y':y }
+	}
+	
+	/**
+	 * "Register" this plugin with jQuery
+	 */
 	jQuery(document).ready( function($) {
 		jQuery.fn.imgspect = function( options ) {
 			var id = jQuery(this).selector;
