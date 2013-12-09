@@ -27,3 +27,13 @@ Here's all you need to know to get started.
 			});
 		</script>
 	</html>
+
+
+# Work Log... Brainstorming
+2013-12-09
+
+So right now my interface does not move highlighted areas in the viewport.
+I was thinking that I should create a clear canvas to overlay over the image and just draw to that canvas.  
+Problems arise though... It would make click handling a bit trickier.
+Having the highlighted areas in the DOM seems more scalalbe.
+I'm conflicted.

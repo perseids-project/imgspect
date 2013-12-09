@@ -39,25 +39,22 @@
 		//------------------------------------------------------------
 		//  Plugin properties
 		//------------------------------------------------------------
-		self.highlights = [];
-		self.zoomLev = 1;
+		self.lites = [];
+		self.zoom_n = 1;
 		self.pan = { x:0, y:0 };
-		self.curHiDom = null;
+		self.c_lite = null;
 		
 		//------------------------------------------------------------
 		//  Original height and width
 		//------------------------------------------------------------
-		self.origW = $( self.elem ).width();
-		self.origH = $( self.elem ).height();
+		self.orig_w = $( self.elem ).width();
+		self.orig_h = $( self.elem ).height();
 		
 		//------------------------------------------------------------
-		//	Start this party
+		//	Build the application and get ready for interactivity
 		//------------------------------------------------------------
 		self.buildDom();
-		
-		//------------------------------------------------------------
-		//  Start interaction
-		//------------------------------------------------------------
+		self.resize();
 		self.start();
 	}
 	
@@ -74,29 +71,40 @@
 		self.elem = $( self.elem ).parent();
 		
 		//------------------------------------------------------------
-		//  Build the viewport.
+		//  Create the navigation window
 		//------------------------------------------------------------
-		$( 'img', self.elem ).wrap( '<div class="viewport">' );
+		$( 'img', self.elem ).wrap( '<div class="nav">' );
 		
 		//------------------------------------------------------------
-		//  Clone the viewport and rename it to create the
-		//  navigation boundary box.
+		//  Create the navigation "dragger"
 		//------------------------------------------------------------
-		$( self.elem ).append( $( '.viewport', self.elem ).clone() );
-		$( '.viewport:eq(0)', self.elem ).removeClass( 'viewport' ).addClass( 'navigate' );
+		$( '.nav', self.elem ).prepend( '<div class="drag">' );
 		
 		//------------------------------------------------------------
-		//  Create the navigation dragger
+		//  Create the viewport
 		//------------------------------------------------------------
-		$( '.navigate', self.elem ).prepend( '<div class="drag">' );
+		$( self.elem ).append( '<div class="view">' );
 		
 		//------------------------------------------------------------
-		//  Clear element so no unexpected wrapping occurs
+		//  Create the drawing space
+		//------------------------------------------------------------
+		$( '.view', self.elem ).append( '<div class="draw">' );
+		
+		//------------------------------------------------------------
+		//  Set image as drawing space background
+		//------------------------------------------------------------
+		var src = $( '.nav img', self.elem ).attr('src');
+		$( '.draw', self.elem ).css({ 
+			'background-image': "url('"+src+"')",
+		});
+		
+		//------------------------------------------------------------
+		//  Clear elements so no unexpected wrapping occurs
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div style="clear:both">' );
 		
 		//------------------------------------------------------------
-		//  Create the toolbrs
+		//  Create the toolbars
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div class="tools">' );
 		$( '.tools', self.elem ).append( '<a href="#" class="zoom in">+</a>' );
@@ -108,37 +116,128 @@
 		$( self.elem ).append( '<div style="clear:both">' );
 	}
 	
-	/**
-	 * Start imgspect interactivity.
-	 */
+	imgspect.prototype.resize = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
+		//  Resize the drawing area
+		//------------------------------------------------------------
+		self.drawResize()
+		self.dragResize();
+		self.liteResize();
+	}
+	
 	imgspect.prototype.start = function() {
 		var self = this;
 		
 		//------------------------------------------------------------
-		//  Build the navigation dragger
+		//  Start event listeners
 		//------------------------------------------------------------
-		$( '.drag', self.elem ).draggable({
-			containment: 'parent',
-			scroll: false,
-			drag: function() {
-				var pPos = $( '.navigate', this.elem ).position();
-				var tPos = $( '.drag', this.elem ).position();
-				self.drag( pPos, tPos );
+		self.zoomStart();
+		self.liteStart();
+		self.dragStart();
+	}
+	
+	imgspect.prototype.liteMove = function() {
+		
+	}
+	
+	imgspect.prototype.liteStart = function() {
+		var self = this;
+		
+		$( '.view', self.elem ).mousedown( function( _e ) {
+			self.c_lite = $( document.createElement('div') ).addClass( 'lite' );
+			$( '.draw', self.elem ).append( self.c_lite );
+			var dp = $( '.draw', self.elem ).position();
+			var mp = self.mousePos( _e );
+			self.c_lite.css({
+				left: mp.x - dp.left,
+				top: mp.y - dp.top,
+			});
+			_e.preventDefault();
+		});
+		
+		$( '.view', self.elem ).mousemove( function( _e ) {
+			if ( self.c_lite != null ) {
+				var lp = self.c_lite.position();
+				var mp = self.mousePos( _e );
+				var dp = $( '.draw', self.elem ).position();
+				self.c_lite.css({
+					width: mp.x - lp.left - dp.left,
+					height: mp.y - lp.top - dp.top
+				});
 			}
+			
 		});
 		
-		//------------------------------------------------------------
-		//  Set the navigation dragger dimensions
-		//------------------------------------------------------------
-		var img = $( '.navigate img', self.elem );
-		$( '.drag', self.elem ).css({
-			width: img.width(),
-			height: img.height(),
+		$( '.view', self.elem ).mouseup( function( _e ) {
+			//------------------------------------------------------------
+			//  Store lite position in relation to original
+			//------------------------------------------------------------
+			var cp = self.c_lite.position();
+			var x1 = cp.left / self.zoom_n;
+			var y1 = cp.top / self.zoom_n;
+			var x2 = x1 + self.c_lite.width() / self.zoom_n;
+			var y2 = y1 + self.c_lite.height() / self.zoom_n;
+			self.lites.push({ x1:x1, y1:y1, x2:x2, y2:y2 });
+			
+			self.liteDrawNav();
+			self.c_lite = null;
+			_e.preventDefault();
 		});
+	}
+	
+	imgspect.prototype.liteDom = function() {
+		return $( document.createElement('div') ).addClass( 'lite' );
+	}
+	
+	imgspect.prototype.liteDrawNav = function() {
+		var self = this;
+		var lite = self.liteDom();
+		$( '.nav', self.elem ).append( lite );
+		
+		var lp = self.lites[ self.lites.length - 1 ];
+		lite.css({
+			'left': lp.x1,
+			'top': lp.y1,
+			'width': lp.x2 - lp.x1,
+			'height': lp.y2 - lp.y1
+		});
+	}
+	
+	imgspect.prototype.liteResize = function() {
+		var self = this;
 		
 		//------------------------------------------------------------
-		//  Zooming
+		//  Clear the existing lites
 		//------------------------------------------------------------
+		$( '.draw .lite', self.elem ).remove();
+		
+		//------------------------------------------------------------
+		//  Redraw at different dimensions
+		//------------------------------------------------------------
+		var dp = $( '.draw', self.elem ).position();
+		for ( var i in self.lites ) {
+			var lite = self.liteDom();
+			$( '.draw' ).append( lite );
+			lite.css({
+				'left': self.lites[i].x1 * self.zoom_n,
+				'top': self.lites[i].y1 * self.zoom_n,
+				'width': ( self.lites[i].x2 - self.lites[i].x1 ) * self.zoom_n,
+				'height': ( self.lites[i].y2 - self.lites[i].y1 ) * self.zoom_n
+			});
+		}
+	}
+	
+	imgspect.prototype.mousePos = function( _e ) {
+		var vp = $( '.view', this.elem ).position();		
+		var x = _e.clientX - vp.left;
+		var y = _e.clientY - vp.top;
+		return { 'x':x, 'y':y }
+	}
+	
+	imgspect.prototype.zoomStart = function() {
+		var self = this;
 		$( '.zoom', self.elem ).click( function( _e ) {
 			if ( $(this).hasClass('in') ) {
 				self.zoomIn();
@@ -148,165 +247,94 @@
 			}
 			_e.preventDefault();
 		});
-		
-		//------------------------------------------------------------
-		//  Add Highlights Mouse Event Listener
-		//------------------------------------------------------------
-		$( '.viewport', self.elem ).mousedown( function( _e ) {
-			self.curHiDom = $( document.createElement('div') ).addClass( 'highlight' );
-			$( '.viewport', self.elem ).append( self.curHiDom );
-			var c = self.coords( _e );
-			self.curHiDom.css({
-				left: c.x,
-				top: c.y
-			});
-			_e.preventDefault();
-		});
-		$( '.viewport', self.elem ).mousemove( function( _e ) {
-			if ( self.curHiDom != null ) {
-				var c = self.coords( _e );
-				var width = c.x - parseInt( self.curHiDom.css('left').replace('px') );
-				var height = c.y - parseInt( self.curHiDom.css('top').replace('px') );
-				self.curHiDom.css({
-					'width': width,
-					'height': height
-				});
-			}
-			_e.preventDefault();
-		});
-		$( '.viewport', self.elem ).mouseup( function( _e ) {
-			//------------------------------------------------------------
-			//  Mark the temporary highlight for removal
-			//------------------------------------------------------------
-			self.curHiDom.addClass( 'remove' );
-			
-			//------------------------------------------------------------
-			//  Store coordinates in relation to original image
-			//------------------------------------------------------------
-			var cp = self.curHiDom.position();
-			var vi = $( '.viewport img', self.elem ).position();
-			var x1 = ( cp.left - vi.left ) / self.zoomLev;
-			var y1 = ( cp.top - vi.top ) / self.zoomLev;
-			var x2 = x1 + self.curHiDom.width() / self.zoomLev;
-			var y2 = y1 + self.curHiDom.height() / self.zoomLev;
-			
-			self.highlights.push({ x1:x1, y1:y1, x2:x2, y2:y2 });
-			self.drawHiLiteNav();
-			
-			//------------------------------------------------------------
-			//  Reset the temp highlight
-			//------------------------------------------------------------
-			self.curHiDom = null;
-			_e.preventDefault();
-		});
-	}
-	
-	imgspect.prototype.drawHiLiteNav = function() {
-		var self = this;
-		var hilite = $( document.createElement('div') ).addClass( 'highlight' );
-		$( '.navigate', self.elem ).append( hilite );
-		
-		var hl = self.highlights[ self.highlights.length - 1 ];
-		console.log( hl );
-		
-		hilite.css({
-			'left': hl.x1,
-			'top': hl.y1,
-			'width': hl.x2 - hl.x1,
-			'height': hl.y2 - hl.y1
-		});
-	}
-	
-	/**
-	 * Drag event handler.
-	 */
-	imgspect.prototype.drag = function( _pPos, _tPos ) {
-		var x = _tPos.left - _pPos.left;
-		var y = _tPos.top - _pPos.top;
-		
-		var left = x*-1*this.zoomLev;
-		var top = y*-1*this.zoomLev;
-				
-		$( '.viewport img', this.elem ).css({
-			left: left,
-			top: top
-		});
-	}
-	
-	/**
-	 * Drag event handler.
-	 */	
-	imgspect.prototype.coords = function( _e ) {
-		var vp = $( '.viewport', this.elem ).position();		
-		var x = _e.clientX - vp.left;
-		var y = _e.clientY - vp.top;
-		return { 'x':x, 'y':y }
-	}
-	
-	/**
-	 * Zoom handler.
-	 */	
-	imgspect.prototype.zoom = function( _dir ) {
-		var self = this;
-		switch ( _dir.toUpperCase() ) {
-			case 'IN':
-				self.zoomLev += .1;
-				break;
-			case 'OUT':
-				self.zoomLev = ( self.zoomLev <= 1 ) ? 1 : self.zoomLev-.1;
-				break;
-		}
-		
-		//------------------------------------------------------------
-		//  Resize the viewport img
-		//------------------------------------------------------------
-		var vImg = $( '.viewport img', self.elem );
-		vImg.css({
-			width: self.origW * self.zoomLev,
-			height: self.origH * self.zoomLev
-		});
-		
-		
-		//------------------------------------------------------------
-		//  TODO Reposition the highlights
-		//------------------------------------------------------------
-		
-		//------------------------------------------------------------
-		//  Resize the navigation dragger
-		//------------------------------------------------------------
-		//------------------------------------------------------------
-		//  Get the ratio of the zoomed image to the viewport
-		//------------------------------------------------------------
-		var wRatio = $( '.viewport', self.elem ).width() / vImg.width();
-		wRatio = ( wRatio > 1 ) ? 1 : wRatio;
-		
-		var hRatio = $( '.viewport', self.elem ).height() / vImg.height();
-		hRatio = ( hRatio > 1 ) ? 1 : hRatio;
-		
-		var navWidth = $( '.navigate img', self.elem ).width();
-		var navHeight = $( '.navigate img', self.elem ).height();
-		$( '.drag', self.elem ).css({
-			width: navWidth*wRatio,
-			height: navHeight*hRatio
-		});
-		
-		
 	}
 	
 	imgspect.prototype.zoomIn = function() {
 		var self = this;
 		self.zoom('IN');
 	}
-	
+
 	imgspect.prototype.zoomOut = function() {
 		var self = this;
 		self.zoom('OUT');
 	}
 	
-	imgspect.prototype.addHighlight = function() {
+	imgspect.prototype.zoom = function( _dir ) {
 		var self = this;
+		switch( _dir.toUpperCase() ) {
+			case 'IN':
+				self.zoom_n += .1;
+				break;
+			case 'OUT':
+				self.zoom_n = ( self.zoom_n <= 1 ) ? 1 : self.zoom_n-.1;
+				break;
+		}
+		
+		//------------------------------------------------------------
+		//  Resize draw window & nav drag
+		//------------------------------------------------------------
+		self.resize();
 	}
-
+	
+	imgspect.prototype.dragStart = function() {
+		var self = this;
+		
+		$( '.drag', self.elem ).draggable({
+			containment: 'parent',
+			scroll: false,
+			drag: function() {
+				var nav_pos = $( '.nav', this.elem ).position();
+				var drag_pos = $( '.drag', this.elem ).position();
+				self.dragHandler( nav_pos, drag_pos );
+			}
+		});
+	}
+	
+	imgspect.prototype.dragHandler = function( _nav_pos, _drag_pos ) {
+		var self = this;
+		var x = _drag_pos.left - _nav_pos.left;
+		var y = _drag_pos.top - _nav_pos.top;
+		
+		var left = x*-1*this.zoom_n;
+		var top = y*-1*this.zoom_n;
+		
+		self.drawMove( left, top );
+	}
+	
+	imgspect.prototype.dragResize = function() {
+		var self = this;
+		var view = $( '.view', self.elem );
+		var draw = $( '.draw', self.elem );
+		
+		var w_ratio = view.width() / draw.width();
+		w_ratio = ( w_ratio > 1 ) ? 1 : w_ratio;
+		
+		var h_ratio = view.height() / draw.height();
+		h_ratio = ( h_ratio > 1 ) ? 1 : h_ratio;
+		
+		var img = $( '.nav img', self.elem );
+		$( '.drag', self.elem ).css({
+			width: img.width() * w_ratio,
+			height: img.height() * h_ratio
+		});
+	}
+	
+	imgspect.prototype.drawMove = function( _left, _top ) {
+		var self = this;
+		$( '.draw', this.elem ).css({
+			left: _left,
+			top: _top
+		});
+	}
+	
+	imgspect.prototype.drawResize = function() {
+		var self = this;
+		$( '.draw', self.elem ).css({
+			width: self.orig_w * self.zoom_n,
+			height: self.orig_h * self.zoom_n
+		});
+	}
+	
 	//----------------
 	//	Extend JQuery 
 	//----------------

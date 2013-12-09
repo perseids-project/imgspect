@@ -1,4 +1,4 @@
-.imgspect .viewport {
+.imgspect .view {
 	position: relative;
 	width: 640px;
 	height: 480px;
@@ -7,18 +7,19 @@
 	float: left;
 }
 
-.imgspect .navigate {
+.imgspect .nav {
 	display: block;
 	float: left;
 }
 
-.imgspect .viewport img,
-.imgspect .viewport .canvas {
+.imgspect .draw {
+	float: left;
 	position: absolute;
 	display: block;
 	vertical-align: baseline;
 	max-width: none;
 	max-height: none;
+	background-size: cover;
 }
 
 .imgspect .drag {
@@ -35,7 +36,7 @@
 	margin-right: 10px;
 }
 
-.imgspect .highlight {
+.imgspect .lite {
 	position: absolute;
 	background-color: #FFFF00;
 	opacity: .2;
