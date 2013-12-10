@@ -1,3 +1,7 @@
+.imbspect {
+	width: auto;
+}
+
 .imgspect .view {
 	position: relative;
 	width: 640px;
@@ -19,6 +23,7 @@
 	vertical-align: baseline;
 	max-width: none;
 	max-height: none;
+	margin-right: 10px;
 	background-size: cover;
 }
 
@@ -33,11 +38,31 @@
 	font-size: 30px;
 	display: block;
 	float: left;
-	margin-right: 10px;
+	margin-right: 5px;
 }
 
 .imgspect .lite {
 	position: absolute;
 	background-color: #FFFF00;
 	opacity: .2;
+}
+
+.imgspect.basic {
+	background-color: #f2f2f2;
+	padding: 5px;
+	margin: 5px;
+	font-family: 'Lucida Console', 'Monaco', sans-serif;
+}
+
+.imgspect.basic .zoom {
+	background-color: #DDD;
+	color: #FF8888;
+	margin-top: 5px;
+	text-decoration: none;
+	padding: 2px 6px;
+	font-size: 24px;
+}
+
+.imgspect.basic .zoom:hover {
+	color: #FF4444;
 }

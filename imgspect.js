@@ -33,8 +33,16 @@
 		// 	User options 
 		//------------------------------------------------------------
 		self.options = $.extend({
-			'zoom_unit': .1
+			zoom_unit: .1,
+			style: 'basic'
 		}, _options);
+		
+		//------------------------------------------------------------
+		//  Events
+		//------------------------------------------------------------
+		self.events = {
+			change: 'IMGSPECT-CHANGE'
+		}
 		
 		//------------------------------------------------------------
 		//  Plugin properties
@@ -71,6 +79,13 @@
 		self.elem = $( self.elem ).parent();
 		
 		//------------------------------------------------------------
+		//  Add the style class if it is not null
+		//------------------------------------------------------------
+		if ( self.options['style'] != null ) {
+			$( self.elem ).addClass( self.options['style'] );
+		}
+		
+		//------------------------------------------------------------
 		//  Create the navigation window aka the 'nav'
 		//------------------------------------------------------------
 		$( 'img', self.elem ).wrap( '<div class="nav">' );
@@ -83,12 +98,12 @@
 		//------------------------------------------------------------
 		//  Create the viewport aka the 'view
 		//------------------------------------------------------------
-		$( self.elem ).append( '<div class="view">' );
+		$( self.elem ).prepend( '<div class="view">' );
 		
 		//------------------------------------------------------------
 		//  Create the drawing area aka the 'drawable image'
 		//------------------------------------------------------------
-		$( '.view', self.elem ).append( '<div class="draw">' );
+		$( '.view', self.elem ).prepend( '<div class="draw">' );
 		
 		//------------------------------------------------------------
 		//  Set image as drawing area background
