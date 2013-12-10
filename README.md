@@ -39,10 +39,26 @@ Why use **imgbit** instead of Photoshop or some other image editor for image cro
 	coming soon...
 
 # Work Log... Brainstorming
-2013-12-09
+## 2013-12-09
 
 So right now my interface does not move highlighted areas in the viewport.
 I was thinking that I should create a clear canvas to overlay over the image and just draw to that canvas.  
 Problems arise though... It would make click handling a bit trickier.
 Having the highlighted areas in the DOM seems more scalalbe.
 I'm conflicted.
+
+## 2013-12-10
+### imgspect
+I have a working solution for my problem yesterday.
+Highlighted areas are still drawn in the DOM.
+But they're all children of one container div.
+This div is moved when the areas need to be translated.
+Scaling requires that the highlighted areas be redrawn, because I couldn't reliably make the highlited areas percentages of the parent container.
+So I'm redrawing them.
+It shouldn't be too costly.
+Zoom/scaling events aren't as granular as translations.
+
+### imgbit
+I thought I'd be clever and make an album area in the DOM so I wouldn't have to redownload images if several imgbit instances were created for a page, but really what browser doesn't do this already.  
+I'm going to scrap it.
+That should simplify things.

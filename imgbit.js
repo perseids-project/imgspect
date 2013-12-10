@@ -35,12 +35,9 @@
 		//------------------------------------------------------------
 		// 	User options 
 		//------------------------------------------------------------
-		self.options = $.extend({}, _options);
-		
-		//------------------------------------------------------------
-		//  Check for the imgbit album
-		//------------------------------------------------------------
-		self.albumCheck();
+		self.options = $.extend({
+			style: 'basic'
+		}, _options);
 		
 		//------------------------------------------------------------
 		//  Separate the image source and clipping coordinates
@@ -55,76 +52,7 @@
 		//------------------------------------------------------------
 		//  Check to see if img is in album
 		//------------------------------------------------------------
-		self.imgCheck();
-	}
-	
-	/**
-	 * Check to see if an image is stored in the page's imgbit album
-	 */
-	imgbit.prototype.imgCheck = function() {
-		var self = this;
-		$( 'img', self.album ).each( function() {
-			if ( $( this ).attr( 'src' ) == self.src ) {
-				self.buildDom();
-				return;
-			};
-		});
-		
-		//------------------------------------------------------------
-		//  If the image isn't in the album download it.
-		//------------------------------------------------------------
-		self.imgLoad();
-	}
-	
-	
-	/**
-	 * Retrieve an image from the page's imgbit album
-	 */	
-	imgbit.prototype.imgFromAlbum = function() {
-		var self = this;
-		$( 'img', self.album ).each( function() {
-			if ( $( this ).attr( 'src' ) == self.src ) {
-				$( this ).clone().appendTo( $( '.view', self.elem ) ).addClass('star');
-			};
-		});
-	}
-	
-	/**
-	 * Load an image and store it in the page's imgbit album
-	 */	
-	imgbit.prototype.imgLoad = function() {
-		var self = this;
-		var img = new Image();
-		img.onload = function() {
-			self.album.append( this );
-			self.buildDom();
-		}
-		img.src = self.src;
-	}
-	
-	/**
-	 * Check to see if a page's imgbit album has been created
-	 */	
-	imgbit.prototype.albumCheck = function() {
-		var self = this;
-		self.album = $( '#imgbit_album' );
-		if ( self.album.length == 0 ) {
-			self.albumBuild();
-		}
-	}
-
-	/**
-	 * Build the imgbit album
-	 */	
-	imgbit.prototype.albumBuild = function() {
-		var self = this;
-		$( document.body ).append( '<div id="imgbit_album">' );
-		self.album = $( '#imgbit_album' );
-		self.album.hide();
-		
-		$( document.body ).append( '<ul id="imgbit_index">' );
-		self.index = $( '#imgbit_index' );
-		self.index.hide();
+		self.buildDom();
 	}
 	
 	/**
@@ -143,6 +71,13 @@
 		a.remove();
 		
 		//------------------------------------------------------------
+		//  Add the style class if it is not null
+		//------------------------------------------------------------
+		if ( self.options['style'] != null ) {
+			$( self.elem ).addClass( self.options['style'] );
+		}
+		
+		//------------------------------------------------------------
 		//  Create the viewport
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div class="view">' );
@@ -155,22 +90,43 @@
 		//------------------------------------------------------------
 		//  Clone the image
 		//------------------------------------------------------------
-		self.imgFromAlbum();
+		var img = new Image();
+		img.onload = function() {
+			$( this ).addClass('star');
+			
+			//------------------------------------------------------------
+			//  Add the image to the view
+			//------------------------------------------------------------
+			$( '.view', self.elem ).append( this )
+			
+			//------------------------------------------------------------
+			//  Crop the view to the area dimensions
+			//------------------------------------------------------------
+			self.viewCrop();
 		
-		//------------------------------------------------------------
-		//  Crop the view to the area dimensions
-		//------------------------------------------------------------
-		self.viewCrop();
+			//------------------------------------------------------------
+			//  Move the image into place and scale it
+			//------------------------------------------------------------
+			self.imgMove();
 		
-		//------------------------------------------------------------
-		//  Move the image into place and scale it
-		//------------------------------------------------------------
-		self.imgMove();
+			//------------------------------------------------------------
+			//  Add a clear
+			//------------------------------------------------------------
+			$( self.elem ).prepend( '<div style="clear:both"></div>' );
 		
-		//------------------------------------------------------------
-		//  Add a link to the source image
-		//------------------------------------------------------------
-		$( self.elem ).append( '<a href="'+ self.src +'">+</a>' );
+			//------------------------------------------------------------
+			//  Add a link to the source image
+			//------------------------------------------------------------
+			$( self.elem ).prepend( '<a class="source" href="'+ self.src +'">source</a>' );
+						
+			//------------------------------------------------------------
+			//  Scale imgbit container to size of image
+			//------------------------------------------------------------
+			$( self.elem ).css({
+				width: $( '.view', self.elem ).width()
+			});
+		}
+		img.src = self.src;
 	}
 	
 	/**

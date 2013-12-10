@@ -1,3 +1,6 @@
+.imgbit {
+	display: inline-block;
+}
 .imgbit .view {
 	position: relative;
 	overflow: hidden;
@@ -9,4 +12,29 @@
 	vertical-align: baseline;
 	max-width: none;
 	max-height: none;
+}
+
+.imgbit.basic {
+	background-color: #f2f2f2;
+	padding: 5px;
+	margin: 5px;
+	font-family: 'Lucida Console', 'Monaco', sans-serif;
+}
+
+.imgbit.basic .source {
+	float: right;
+	background-color: #DDD;
+	color: #FF8888;
+	margin-bottom: 2px;
+	text-decoration: none;
+	padding: 2px 6px;
+	font-size: 9px;
+}
+
+.imgbit.basic .source:hover {
+	color: #FF4444;
+}
+
+.imgbit.basic .text {
+	padding: 5px;
 }
