@@ -3,13 +3,62 @@
 	<link rel="stylesheet" href="../../../css/imgbit.css">
 </head>
 <body>
-	<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400">Butterfly Body</a>
-	<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&z=2">Butterfly Body Z</a>
+	<h1>Include the necessary files</h1>
+	<pre>
+&lt;script src=&quot;//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;imgbit.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;css/imgbit.css&quot;&gt;
+	</pre>
+	
+	<h1>Activate the imgbit plug-in</h1>
+	<pre>
+&lt;script type=&quot;text/javascript&quot;&gt;
+	$(document).ready( function(){
+		$( &#x27;.imgbit&#x27; ).imgbit();
+	});
+&lt;/script&gt;
+	</pre>
+
+	<hr/>
+	
+	<h1>imgbit &lt;a&gt; tags</h1>
+	<h2>Most basic use</h2>
+	<div>
+		<p>To use just add <strong>class="imgbit"</strong> to an <strong>&lt;a&gt;</strong> tag.  In the href attribute after the image url add the clipping coordinates using html GET parameters <strong>?x1=0&y1=0&x2=100&y2=100</strong>.</p>  
+		<p>Any text inside the anchor tag will become the image caption.</p>
+		<pre>
+&lt;a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400"&gt;Butterfly Body&lt;/a&gt;
+		</pre>
+		<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400">Butterfly Body</a>
+	</div>
+	
+	<hr/>
+	
+	<h2>Explicit Scale</h2>
+	<div>
+		<p>If you want to change the scale of an image you can add a zoom parameter. <strong>&z=2</strong> added to the first example <strong>will scale the image to 200%</strong> its original size.</p>
+		<pre>
+&lt;a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&z=2"&gt;Butterfly Body Z&lt;/a&gt;
+		</pre>
+		<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&z=2">Butterfly Body Z</a>
+	</div>
+	
+	<hr/>
+	
+	<h2>Explicit Width</h2>
+	<div>
+		<p>If you want an image to be scaled to a specific width you can add a width parameter. <strong>&w=200 will scale the image to 200px</strong></p>
+		<pre>
+&lt;a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200"&gt;Butterfly Body W&lt;/a&gt;
+		</pre>
+		<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200">Butterfly Body Z</a>
+	</div>
+	
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="../../../imgbit.js"></script>
 <script type="text/javascript">
-	$(window).load( function(){
+	$(document).ready( function(){
 		$( '.imgbit' ).imgbit();
 	});
 </script>

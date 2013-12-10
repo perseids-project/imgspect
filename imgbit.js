@@ -47,6 +47,9 @@
 		var arr = self.href.split('?');
 		self.src = arr[0];
 		self.area = self.getToJson( arr[1] );
+		if ( self.area.w != undefined ) {
+			self.area.z = ( self.area.x2 - self.area.x1 ) / self.area.w;
+		}
 		self.area.z = ( self.area.z == undefined ) ? 1 : self.area.z;
 		
 		//------------------------------------------------------------
