@@ -38,7 +38,7 @@ Why use **imgbit** instead of Photoshop or some other image editor for image cro
 ### imgbit
 	coming soon...
 
-# Work Log... Brainstorming
+# Work Log and Brainstorming
 ## 2013-12-09
 
 So right now my interface does not move highlighted areas in the viewport.
@@ -62,3 +62,17 @@ Zoom/scaling events aren't as granular as translations.
 I thought I'd be clever and make an album area in the DOM so I wouldn't have to redownload images if several imgbit instances were created for a page, but really what browser doesn't do this already.  
 I'm going to scrap it.
 That should simplify things.
+
+## 2013-12-11
+### imgspect
+So I made it so hi-res images can be navigated.
+I feel good about that.
+
+I would like to make the nav and draw areas resizable by the user.  
+Maybe just a draggable button in the lower right corner of the draw area.
+The nav will resize just to fit the width of the browser?
+I think that could work pretty well.
+
+Also the ability to change the hilite color and opacity would be useful.
+Multiple hilite colors?
+I dunno...

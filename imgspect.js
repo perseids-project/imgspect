@@ -119,11 +119,6 @@
 		});
 		
 		//------------------------------------------------------------
-		//  Clear elements so no unexpected wrapping occurs
-		//------------------------------------------------------------
-		$( self.elem ).append( '<div style="clear:both">' );
-		
-		//------------------------------------------------------------
 		//  Create the tool buttons
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div class="tools">' );
@@ -146,9 +141,21 @@
 		//  Resize the drawing area
 		//------------------------------------------------------------
 		self.navResize();
+		self.viewResize();
 		self.drawResize();
 		self.dragResize();
 		self.liteResize();
+	}
+	
+	/**
+	 *  Resize the view element to fit the empty space
+	 */
+	imgspect.prototype.viewResize = function() {
+		var self = this;
+		var app_width = $( self.elem ).width();
+		$( '.view', self.elem ).css({
+			width: app_width
+		});
 	}
 	
 	/**
@@ -175,6 +182,19 @@
 		self.zoomStart();
 		self.liteStart();
 		self.dragStart();
+		self.sizeStart();
+	}
+	
+	/**
+	 * Start window resize event listener
+	 */
+	imgspect.prototype.sizeStart = function() {
+		var self = this;
+		var timer;
+		$(window).resize( function(){
+			timer && clearTimeout(timer);
+			timer = setTimeout( function(){ self.resize(); }, 100 );
+		});
 	}
 	
 	/**

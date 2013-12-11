@@ -3,18 +3,17 @@
 }
 
 .imgspect .view {
-	width: 640px;
 	height: 480px;
 	position: relative;
 	overflow: hidden;
 	background-color: #fff;
-	float: left;
 }
 
 .imgspect .nav {
+	float: left;
+	margin: 5px 5px 0 0;
 	width: 640px;
 	display: block;
-	float: left;
 }
 
 .imgspect .draw {
@@ -45,7 +44,7 @@
 .imgspect .lite {
 	position: absolute;
 	background-color: #FFFF00;
-	opacity: .2;
+	opacity: .6;
 }
 
 .imgspect.basic {
