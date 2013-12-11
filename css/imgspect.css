@@ -34,7 +34,7 @@
 	border: 1px solid #BBB;
 }
 
-.imgspect .zoom {
+.imgspect .tool {
 	font-size: 30px;
 	display: block;
 	float: left;
@@ -54,7 +54,7 @@
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 }
 
-.imgspect.basic .zoom {
+.imgspect.basic .tool {
 	background-color: #DDD;
 	color: #FF8888;
 	margin-top: 5px;
@@ -63,6 +63,6 @@
 	font-size: 40px;
 }
 
-.imgspect.basic .zoom:hover {
+.imgspect.basic .tool:hover {
 	color: #FF4444;
 }

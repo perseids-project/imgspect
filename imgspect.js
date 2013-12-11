@@ -122,8 +122,9 @@
 		//  Create the tool buttons
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div class="tools">' );
-		$( '.tools', self.elem ).append( '<a href="#" class="zoom in">+</a>' );
-		$( '.tools', self.elem ).append( '<a href="#" class="zoom out">-</a>' );
+		$( '.tools', self.elem ).append( '<a href="#" class="tool zoom in">+</a>' );
+		$( '.tools', self.elem ).append( '<a href="#" class="tool zoom out">-</a>' );
+		$( '.tools', self.elem ).append( '<a href="#" class="tool undo">&larr;</a>' );
 		
 		//------------------------------------------------------------
 		//  Clear element so no unexpected wrapping occurs
@@ -157,9 +158,21 @@
 		//  Start event listeners
 		//------------------------------------------------------------
 		self.zoomStart();
+		self.undoStart();
 		self.liteStart();
 		self.dragStart();
 		self.sizeStart();
+	}
+	
+	/**
+	 * Listen for undo button click
+	 */
+	imgspect.prototype.undoStart = function() {
+		var self = this;
+		$( '.undo', self.elem ).click( function( _e ) {
+			self.lites.pop();
+			self.liteRedraw();
+		});
 	}
 	
 	/**
@@ -276,6 +289,13 @@
 	 * Resize the lites
 	 */
 	imgspect.prototype.liteResize = function() {
+		this.liteRedraw();
+	}
+	
+	/**
+	 * Redraw the lites
+	 */
+	imgspect.prototype.liteRedraw = function() {
 		var self = this;
 		
 		//------------------------------------------------------------
