@@ -148,29 +148,6 @@
 	}
 	
 	/**
-	 *  Resize the view element to fit the empty space
-	 */
-	imgspect.prototype.viewResize = function() {
-		var self = this;
-		var app_width = $( self.elem ).width();
-		$( '.view', self.elem ).css({
-			width: app_width
-		});
-	}
-	
-	/**
-	 *  Resize the nav img and set the nav_scaling factor
-	 */
-	imgspect.prototype.navResize = function() {
-		var self = this;
-		var width = $( '.nav', self.elem ).width();
-		self.nav_scale = self.orig_w / width;
-		$( '.nav img', self.elem ).css({
-			width: width
-		});
-	}
-	
-	/**
 	 * Start imgspect
 	 */
 	imgspect.prototype.start = function() {
@@ -237,7 +214,7 @@
 			var y1 = cp.top / self.zoom_n;
 			var x2 = x1 + self.c_lite.width() / self.zoom_n;
 			var y2 = y1 + self.c_lite.height() / self.zoom_n;
-			self.lites.push({ x1:x1, y1:y1, x2:x2, y2:y2 });
+			self.lites.push({ x1:parseInt(x1), y1:parseInt(y1), x2:parseInt(x2), y2:parseInt(y2) });
 			
 			//------------------------------------------------------------
 			//  Draw the lite on the nav image.
@@ -249,6 +226,12 @@
 			//  Reset current lite
 			//------------------------------------------------------------
 			self.c_lite = null;
+			
+			//------------------------------------------------------------
+			//  Let the world know the app state has changed
+			//------------------------------------------------------------
+			$( self.elem ).trigger( self.events['change'] );
+			
 			_e.preventDefault();
 		});
 	}
@@ -271,13 +254,22 @@
 		var nav = $( '.nav', self.elem );
 		nav.append( lite );
 		var np = nav.position();
-		var lp = self.lites[ self.lites.length - 1 ];
+		var lp = self.liteLast();
 		lite.css({
 			'left': lp.x1 / self.nav_scale + np.left,
 			'top': lp.y1 / self.nav_scale + np.top,
 			'width': lp.x2 / self.nav_scale - lp.x1 / self.nav_scale,
 			'height': lp.y2 / self.nav_scale - lp.y1 / self.nav_scale
 		});
+	}
+	
+	/**
+	 * Returns the last lite
+	 *
+	 * @ return { lite } A lite object
+	 */
+	imgspect.prototype.liteLast = function() {
+		return this.lites[ this.lites.length - 1 ];
 	}
 	
 	/**
@@ -448,6 +440,30 @@
 		var drag_pos = $( '.drag', self.elem ).position();
 		self.dragHandler( nav_pos, drag_pos );
 		
+	}
+	
+	
+	/**
+	 *  Resize the nav img and set the nav_scaling factor
+	 */
+	imgspect.prototype.navResize = function() {
+		var self = this;
+		var width = $( '.nav', self.elem ).width();
+		self.nav_scale = self.orig_w / width;
+		$( '.nav img', self.elem ).css({
+			width: width
+		});
+	}
+	
+	/**
+	 *  Resize the view element to fit the empty space
+	 */
+	imgspect.prototype.viewResize = function() {
+		var self = this;
+		var app_width = $( self.elem ).width();
+		$( '.view', self.elem ).css({
+			width: app_width
+		});
 	}
 	
 	/**

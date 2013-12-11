@@ -3,14 +3,24 @@
 	<link rel="stylesheet" href="../../../css/imgbit.css">
 </head>
 <body>
-	<h1>Include the necessary files</h1>
+	<h1>Do you only want a part of this image?</h1>
+	
+	<img src="../../img/morpho.jpg" />
+	
+	<p>If so read on...</p>
+	
+	<hr />
+	
+	<h1>How to use imgbit</h1>
+	
+	<h2>Include the necessary files</h2>
 	<pre>
 &lt;script src=&quot;//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;imgbit.js&quot;&gt;&lt;/script&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;css/imgbit.css&quot;&gt;
 	</pre>
 	
-	<h1>Activate the imgbit plug-in</h1>
+	<h2>Activate the imgbit plug-in</h2>
 	<pre>
 &lt;script type=&quot;text/javascript&quot;&gt;
 	$(document).ready( function(){
@@ -21,7 +31,7 @@
 
 	<hr/>
 	
-	<h1>imgbit &lt;a&gt; tags</h1>
+	<h2>imgbit &lt;a&gt; tags</h2>
 	<h2>Most basic use</h2>
 	<div>
 		<p>To use just add <strong>class="imgbit"</strong> to an <strong>&lt;a&gt;</strong> tag.  In the href attribute after the image url add the clipping coordinates using html GET parameters <strong>?x1=0&y1=0&x2=100&y2=100</strong>.</p>  
@@ -56,7 +66,7 @@
 	
 	<hr/>
 	
-	<h2>Minimal Option</h2>
+	<h2>'min' Option</h2>
 	<div>
 		<p>If you want just the clipped image, no caption, no source button, add <strong>min</strong> to the <strong>&lt;a&gt;'s class attribute</strong></p>
 		<pre>

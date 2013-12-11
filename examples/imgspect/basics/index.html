@@ -1,6 +1,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="../../../css/imgspect.css">
+	<link rel="stylesheet" href="../../../css/imgbit.css">
 </head>
 <body>
 	<img id="bosch" src="../../img/the-garden-of-earthly-delights.jpg" />
@@ -8,9 +9,21 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 <script src="../../../imgspect.js"></script>
+<script src="../../../imgbit.js"></script>
 <script type="text/javascript">
 	$(window).load( function(){
-		$( '#bosch' ).imgspect();
+		var spect = $( '#bosch' ).imgspect().data( '#bosch' );
+		$( '.imgspect' ).on( 'IMGSPECT-CHANGE', function() {
+			var lite = spect.liteLast();
+			$( document.body ).append( '<a class="imgbit min" href="../../img/the-garden-of-earthly-delights.jpg\
+				?x1='+lite.x1+'\
+				&y1='+lite.y1+'\
+				&x2='+lite.x2+'\
+				&y2='+lite.y2+'\
+				"></a>'
+			);
+			$( 'a.imgbit' ).imgbit();
+		});
 	});
 </script>
 </html>
