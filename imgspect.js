@@ -59,6 +59,11 @@
 		self.orig_h = $( self.elem ).height();
 		
 		//------------------------------------------------------------
+		//  Nav scaling factor
+		//------------------------------------------------------------
+		self.nav_scale = 1;
+		
+		//------------------------------------------------------------
 		//	Build the application and get ready for interactivity
 		//------------------------------------------------------------
 		self.buildDom();
@@ -140,9 +145,22 @@
 		//------------------------------------------------------------
 		//  Resize the drawing area
 		//------------------------------------------------------------
-		self.drawResize()
+		self.navResize();
+		self.drawResize();
 		self.dragResize();
 		self.liteResize();
+	}
+	
+	/**
+	 *  Resize the nav img and set the nav_scaling factor
+	 */
+	imgspect.prototype.navResize = function() {
+		var self = this;
+		var width = $( '.nav', self.elem ).width();
+		self.nav_scale = self.orig_w / width;
+		$( '.nav img', self.elem ).css({
+			width: width
+		});
 	}
 	
 	/**
@@ -235,10 +253,10 @@
 		var np = nav.position();
 		var lp = self.lites[ self.lites.length - 1 ];
 		lite.css({
-			'left': lp.x1 + np.left,
-			'top': lp.y1 + np.top,
-			'width': lp.x2 - lp.x1,
-			'height': lp.y2 - lp.y1
+			'left': lp.x1 / self.nav_scale + np.left,
+			'top': lp.y1 / self.nav_scale + np.top,
+			'width': lp.x2 / self.nav_scale - lp.x1 / self.nav_scale,
+			'height': lp.y2 / self.nav_scale - lp.y1 / self.nav_scale
 		});
 	}
 	
@@ -350,9 +368,8 @@
 		var self = this;
 		var x = _drag_pos.left - _nav_pos.left;
 		var y = _drag_pos.top - _nav_pos.top;
-		
-		var left = x*-1*this.zoom_n;
-		var top = y*-1*this.zoom_n;
+		var left = x * -1 * this.zoom_n * self.nav_scale;
+		var top = y * -1 * this.zoom_n * self.nav_scale;
 		
 		self.drawMove( left, top );
 	}
@@ -385,7 +402,6 @@
 	 * @param { float } _top new top css parameter
 	 */
 	imgspect.prototype.drawMove = function( _left, _top ) {
-		var self = this;
 		$( '.draw', this.elem ).css({
 			left: _left,
 			top: _top

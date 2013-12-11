@@ -3,15 +3,16 @@
 }
 
 .imgspect .view {
-	position: relative;
 	width: 640px;
 	height: 480px;
+	position: relative;
 	overflow: hidden;
 	background-color: #fff;
 	float: left;
 }
 
 .imgspect .nav {
+	width: 640px;
 	display: block;
 	float: left;
 }
