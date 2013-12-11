@@ -472,9 +472,9 @@
 	 * @param { Event } _e the mouse event object
 	 */
 	imgspect.prototype.viewMousePos = function( _e ) {
-		var vp = $( '.view', this.elem ).position();		
+		var vp = $( '.view', this.elem ).position();
 		var x = _e.clientX - vp.left;
-		var y = _e.clientY - vp.top;
+		var y = _e.clientY - vp.top + $(window).scrollTop();
 		return { 'x':x, 'y':y }
 	}
 	
