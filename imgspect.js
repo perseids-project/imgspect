@@ -370,7 +370,6 @@
 		var y = _drag_pos.top - _nav_pos.top;
 		var left = x * -1 * this.zoom_n * self.nav_scale;
 		var top = y * -1 * this.zoom_n * self.nav_scale;
-		
 		self.drawMove( left, top );
 	}
 	
@@ -417,6 +416,18 @@
 			width: self.orig_w * self.zoom_n,
 			height: self.orig_h * self.zoom_n
 		});
+		
+		//------------------------------------------------------------
+		//  Call the dragHandler method to move.
+		//  You have to pass the nav and drag position before calling.
+		//
+		//  Sorry it's clunky but the jQuery position() method 
+		//  call is costly.
+		//------------------------------------------------------------
+		var nav_pos = $( '.nav', self.elem ).position();
+		var drag_pos = $( '.drag', self.elem ).position();
+		self.dragHandler( nav_pos, drag_pos );
+		
 	}
 	
 	/**
