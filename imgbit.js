@@ -36,7 +36,7 @@
 		// 	User options 
 		//------------------------------------------------------------
 		self.options = $.extend({
-			style: 'basic'
+			style: 'full'
 		}, _options);
 		
 		//------------------------------------------------------------
@@ -51,6 +51,13 @@
 			self.area.z = ( self.area.x2 - self.area.x1 ) / self.area.w;
 		}
 		self.area.z = ( self.area.z == undefined ) ? 1 : self.area.z;
+		
+		//------------------------------------------------------------
+		//  Check to see if min class has been passed
+		//------------------------------------------------------------
+		if ( $( self.elem ).hasClass('min') ) {
+			self.options['style'] = null;
+		}
 		
 		//------------------------------------------------------------
 		//  Check to see if img is in album
@@ -88,7 +95,9 @@
 		//------------------------------------------------------------
 		//  Store the a tag text
 		//------------------------------------------------------------
-		$( self.elem ).append( '<div class="text">'+ html +'</div>' );
+		if ( self.options['style'] != null ) {
+			$( self.elem ).append( '<div class="text">'+ html +'</div>' );
+		}
 		
 		//------------------------------------------------------------
 		//  Clone the image
@@ -120,7 +129,9 @@
 			//------------------------------------------------------------
 			//  Add a link to the source image
 			//------------------------------------------------------------
-			$( self.elem ).prepend( '<a class="source" href="'+ self.src +'">source</a>' );
+			if ( self.options['style'] != null ) {
+				$( self.elem ).prepend( '<a class="source" href="'+ self.src +'">source</a>' );
+			}
 						
 			//------------------------------------------------------------
 			//  Scale imgbit container to size of image

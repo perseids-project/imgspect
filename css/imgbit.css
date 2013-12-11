@@ -14,14 +14,14 @@
 	max-height: none;
 }
 
-.imgbit.basic {
+.imgbit.full {
 	background-color: #f2f2f2;
 	padding: 5px;
 	margin: 5px;
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 }
 
-.imgbit.basic .source {
+.imgbit.full .source {
 	float: right;
 	background-color: #DDD;
 	color: #FF8888;
@@ -31,10 +31,10 @@
 	font-size: 9px;
 }
 
-.imgbit.basic .source:hover {
+.imgbit.full .source:hover {
 	color: #FF4444;
 }
 
-.imgbit.basic .text {
+.imgbit.full .text {
 	padding: 5px;
 }
