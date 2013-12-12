@@ -76,3 +76,12 @@ I think that could work pretty well.
 Also the ability to change the hilite color and opacity would be useful.
 Multiple hilite colors?
 I dunno...
+
+## 2013-12-12
+### imgspect
+Some thoughts
+* maybe it would be nice to position the imgbit snippets overlayed on top of the base image, with the ability to toggle its visibility?
+* love the undo feature - needs to apply to the 'nav' image and the imgbit snippets too
+* can we enable the zoom on the imgbit snippets too?
+* how are you planning on handling the urn? Maybe if a data-urn attribute is specified on the img src tag it could trigger CITE URN specific functionality? (Namely, the creation of a new URN with the coordinates of the ROI when the drag event ends). 
+* was thinking it would be really nice if we could enable something like the following: user types facs="" in the editing area, and clicks in the middle of the "" - this triggers the start of an event pointing at those coordinates on the page - then the user selects a roi on the image - the newly created URN is displayed and when they click on it it gets copied to the coordinates of the original click.  What do you think? I would want the behavior that triggers the start of the whole event to be a plugin class that could be applied to any element.
