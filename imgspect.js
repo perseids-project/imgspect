@@ -560,9 +560,7 @@
 		var nav_pos = $( '.nav', self.elem ).position();
 		var drag_pos = $( '.drag', self.elem ).position();
 		self.dragHandler( nav_pos, drag_pos );
-		
 	}
-	
 	
 	/**
 	 *  Resize the nav img and set the nav_scaling factor

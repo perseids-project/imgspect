@@ -47,9 +47,23 @@
 		var arr = self.href.split('?');
 		self.src = arr[0];
 		self.area = self.getToJson( arr[1] );
+		
+		console.log( self.area );
+		
+		//------------------------------------------------------------
+		//  Explicit width?
+		//------------------------------------------------------------
 		if ( self.area.w != undefined ) {
-			self.area.z = ( self.area.x2 - self.area.x1 ) / self.area.w;
+			self.area.z = self.area.w / ( self.area.x2 - self.area.x1 );
 		}
+		
+		//------------------------------------------------------------
+		//  Explicit height?
+		//------------------------------------------------------------
+		if ( self.area.h != undefined ) {
+			self.area.z = self.area.h / ( self.area.y2 - self.area.y1 );
+		}
+		
 		self.area.z = ( self.area.z == undefined ) ? 1 : self.area.z;
 		
 		//------------------------------------------------------------
