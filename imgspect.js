@@ -242,7 +242,7 @@
 				zoom: self.zoom_n,
 				color: self.options['lite_color'],
 				opacity: self.options['lite_opacity'],
-				id: self.lites.length+1
+				id: self.lites.length
 			});
 			
 			console.log( self.lites );
@@ -310,6 +310,38 @@
 	 */
 	imgspect.prototype.liteResize = function() {
 		this.liteRedraw();
+	}
+	
+	/**
+	 * Move the dragger so the selected lite is displayed
+	 * in the center of draw area
+	 *
+	 * @ param { int } _id The lite id
+	 */
+	imgspect.prototype.liteShow = function( _id ) {
+		var self = this;
+		var lite = self.lites[ _id ];
+		
+		//------------------------------------------------------------
+		//  Start by finding the center of the lite
+		//------------------------------------------------------------
+		var x = lite.x1 + ( lite.x2 - lite.x1 )/2;
+		var y = lite.y1 + ( lite.y2 - lite.y1 )/2;
+		
+		//------------------------------------------------------------
+		//  Then subtract half the view area
+		//------------------------------------------------------------
+		x = x - $( '.view', self.elem ).width()/2;
+		y = y - $( '.view', self.elem ).height()/2;
+		
+		//------------------------------------------------------------
+		//  But you also have to make sure you aren't moving beyond
+		//  the edges of the image... Maybe not...
+		//  I'm not convinced this is best.  If people complain
+		//  here's where you can constrain the coordinates.
+		//------------------------------------------------------------
+
+		self.goTo( x, y );
 	}
 	
 	/**
@@ -435,13 +467,14 @@
 	}
 	
 	/**
-	 * Moves the dragger to the passed coordinates
+	 * Positions view origin to the passed coordinates.
+	 * AKA it GOES to the coordinates.
 	 *
 	 * @param { float } _x x coordinate
 	 * @param { float } _y y coordinate
 	 * @param { float } _sec number of seconds the dragger movement takes
 	 */
-	imgspect.prototype.dragMove = function( _x, _y, _sec ) {
+	imgspect.prototype.goTo = function( _x, _y, _sec ) {
 		var self = this;
 		
 		//------------------------------------------------------------
@@ -456,8 +489,8 @@
 		//------------------------------------------------------------
 		var nav_pos = $( '.nav', this.elem ).position();
 		$( '.drag', self.elem ).animate({
-			left: _y / self.nav_scale + nav_pos.left,
-			top: _x / self.nav_scale + nav_pos.top
+			left: _x / self.nav_scale + nav_pos.left,
+			top: _y / self.nav_scale + nav_pos.top
 		},
 		{
 			duration: _sec * 1000, // to milliseconds
