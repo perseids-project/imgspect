@@ -48,8 +48,6 @@
 		self.src = arr[0];
 		self.area = self.getToJson( arr[1] );
 		
-		console.log( self.area );
-		
 		//------------------------------------------------------------
 		//  Explicit width?
 		//------------------------------------------------------------
@@ -86,10 +84,24 @@
 		var self = this;
 		
 		//------------------------------------------------------------
+		//  Store the id
+		//------------------------------------------------------------
+		var id = $( self.elem ).attr('id');
+		
+		//------------------------------------------------------------
 		//  Change anchor tag to div
 		//------------------------------------------------------------
 		$( self.elem ).after( '<div class="imgbit">' );
 		self.elem = $( self.elem ).next();
+		
+		//------------------------------------------------------------
+		//  Add the id
+		//------------------------------------------------------------
+		$( self.elem ).attr( 'id', id );
+		
+		//------------------------------------------------------------
+		//  Remove the original anchor tag.
+		//------------------------------------------------------------
 		var a = $( self.elem ).prev();
 		var html = a.html();
 		a.remove();
@@ -193,7 +205,7 @@
 			if ( param.length != 2 ) {
 				continue;
 			}
-            json[ param[0] ] = decodeURIComponent( param[1].replace( /\+/g, " " ) );
+            json[ param[0] ] = decodeURIComponent( param[1].replace( /\+/g, "" ) );
         }
         return json;
     }

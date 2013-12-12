@@ -30,13 +30,24 @@
 		var self = this;
 		
 		//------------------------------------------------------------
+		//  Lite colors
+		//------------------------------------------------------------
+		self.colors = {
+			'CYAN': '#00FFFF',
+			'MAGENTA': '#FF00FF',
+			'YELLOW': '#FFFF00',
+			'BLACK': '#000000'
+		}
+		
+		//------------------------------------------------------------
 		// 	User options 
 		//------------------------------------------------------------
 		self.options = $.extend({
 			zoom_unit: .1,
 			style: 'basic',
-			lite_color: '#FFFF00',
-			lite_opacity: .6
+			lite_color: self.colors['YELLOW'],
+			lite_opacity: .4,
+			secs: .5 // default number of seconds it takes for goTo() animations
 		}, _options);
 		
 		//------------------------------------------------------------
@@ -173,9 +184,25 @@
 	imgspect.prototype.undoStart = function() {
 		var self = this;
 		$( '.undo', self.elem ).click( function( _e ) {
-			self.lites.pop();
+			//------------------------------------------------------------
+			//  Remove the last lite
+			//------------------------------------------------------------
+			var lite = self.lites.pop();
+			
+			//------------------------------------------------------------
+			//  Redraw the lites
+			//------------------------------------------------------------
 			self.liteRedraw();
+			
+			//------------------------------------------------------------
+			//  Remove the lite preview from the nav
+			//------------------------------------------------------------
 			$( '.nav .lite:last', self.elem ).remove();
+			
+			//------------------------------------------------------------
+			//  Let the world know what's happened here.
+			//------------------------------------------------------------
+			$( self.elem ).trigger( self.events['undo'], { id: lite.id } );
 			_e.preventDefault();
 		});
 	}
@@ -206,8 +233,8 @@
 			self.c_lite.css({
 				left: mp.x - dp.left,
 				top: mp.y - dp.top,
-				'background-color': self.options['background-color'],
-				opacity: self.options['opacity']
+				'background-color': self.options['lite_color'],
+				opacity: self.options['lite_opacity']
 			});
 			_e.preventDefault();
 		});
@@ -244,8 +271,6 @@
 				opacity: self.options['lite_opacity'],
 				id: self.lites.length
 			});
-			
-			console.log( self.lites );
 			
 			//------------------------------------------------------------
 			//  Draw the lite on the nav image.
@@ -302,7 +327,7 @@
 	 * @ return { lite } A lite object
 	 */
 	imgspect.prototype.liteLast = function() {
-		return this.lites[ this.lites.length - 1 ];
+		return this.lites[ this.lites.length-1 ];
 	}
 	
 	/**
@@ -368,6 +393,8 @@
 				top: self.lites[i].y1 * self.zoom_n,
 				width: ( self.lites[i].x2 - self.lites[i].x1 ) * self.zoom_n,
 				height: ( self.lites[i].y2 - self.lites[i].y1 ) * self.zoom_n,
+				'background-color': self.lites[i].color,
+				opacity: self.lites[i].opacity
 			});
 		}
 	}
@@ -483,7 +510,7 @@
 		//------------------------------------------------------------
 		_x = ( _x == undefined ) ? 0 : _x;
 		_y = ( _y == undefined ) ? 0 : _y;
-		_sec = ( _sec == undefined ) ? .5 : _sec;
+		_sec = ( _sec == undefined ) ? self.options['secs'] : _sec;
 		
 		//------------------------------------------------------------
 		//  Start the drag animation
@@ -595,6 +622,26 @@
 		var x = _e.clientX - vp.left;
 		var y = _e.clientY - vp.top + $(window).scrollTop();
 		return { 'x':x, 'y':y }
+	}
+	
+	/**
+	 * Change the color of future lites
+	 *
+	 * @param { string } _color CMYK name as defined in self.colors
+	 *						    OR a hex color value
+	 */
+	imgspect.prototype.liteColor = function( _color ) {
+		var self = this;
+		_color = _color.toUpperCase();
+		if ( _color in self.colors ) {
+			self.options['lite_color'] = self.colors[ _color ];
+		}
+		else {
+			//------------------------------------------------------------
+			//  TODO: Comeback and check to make sure _color is a hex
+			//------------------------------------------------------------
+			self.options['lite_color'] = _color;
+		}
 	}
 	
 	/**

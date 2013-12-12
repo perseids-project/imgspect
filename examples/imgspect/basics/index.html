@@ -13,17 +13,48 @@
 <script type="text/javascript">
 	var spect = null;
 	$(window).load( function(){
+		/**
+		 * Start imgspect and grab a handler
+		 */
 		spect = $( '#bosch' ).imgspect().data( '#bosch' );
+		
+		/**
+		 * Undo listener
+		 */
+		$( '.imgspect' ).on( 'IMGSPECT-UNDO', function( _e, _obj ) {
+			$( '#imgbit-'+_obj.id+'.imgbit' ).remove();
+		});
+		
+		/**
+		 * Change listener
+		 */
 		$( '.imgspect' ).on( 'IMGSPECT-CHANGE', function() {
 			var lite = spect.liteLast();
-			$( document.body ).append( '<a class="imgbit min" href="../../img/the-garden-of-earthly-delights.jpg\
+			var id = 'imgbit-'+lite.id;
+			var elem = '<a id="'+id+'" class="imgbit min" href="../../img/the-garden-of-earthly-delights.jpg\
 				?x1='+lite.x1+'\
 				&y1='+lite.y1+'\
 				&x2='+lite.x2+'\
 				&y2='+lite.y2+'\
-				"></a>'
-			);
-			$( 'a.imgbit' ).imgbit();
+				&h=200\
+				"></a>';
+			$( document.body ).append( elem );
+			
+			//------------------------------------------------------------
+			//  Activate imgbit
+			//------------------------------------------------------------
+			$( '#'+id+'.imgbit' ).imgbit();
+			
+			//------------------------------------------------------------
+			//  Clicking an imgbit will take you to its position in
+			//  the original image.
+			//------------------------------------------------------------
+			$( '#'+id+'.imgbit' ).click( function( _e ) {
+				var id = $(this).attr('id');
+				i = parseInt( id.replace('imgbit-', '' ) );
+				spect.liteShow( i );
+				_e.preventDefault();
+			});
 		});
 	});
 </script>

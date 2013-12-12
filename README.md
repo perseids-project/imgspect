@@ -90,7 +90,6 @@ Feedback:
 		* can we enable the zoom on the imgbit snippets too?
 		
 		* how are you planning on handling the urn? Maybe if a data-urn attribute is specified on the 
-		
 		img src tag it could trigger CITE URN specific functionality? 
 		(Namely, the creation of a new URN with the coordinates of the ROI when the drag event ends).
 		
