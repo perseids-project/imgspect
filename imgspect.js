@@ -329,10 +329,11 @@
 		var y = lite.y1 + ( lite.y2 - lite.y1 )/2;
 		
 		//------------------------------------------------------------
-		//  Then subtract half the view area
+		//  Then subtract half the view area taking zoom level
+		//  into consideration to center the lite
 		//------------------------------------------------------------
-		x = x - $( '.view', self.elem ).width()/2;
-		y = y - $( '.view', self.elem ).height()/2;
+		x = x - ( $( '.view', self.elem ).width()/2 )/self.zoom_n;
+		y = y - ( $( '.view', self.elem ).height()/2 )/self.zoom_n;
 		
 		//------------------------------------------------------------
 		//  But you also have to make sure you aren't moving beyond
@@ -461,13 +462,13 @@
 		var self = this;
 		var x = _drag_pos.left - _nav_pos.left;
 		var y = _drag_pos.top - _nav_pos.top;
-		var left = x * -1 * this.zoom_n * self.nav_scale;
-		var top = y * -1 * this.zoom_n * self.nav_scale;
+		var left = x * -1 * self.zoom_n * self.nav_scale;
+		var top = y * -1 * self.zoom_n * self.nav_scale;
 		self.drawMove( left, top );
 	}
 	
 	/**
-	 * Positions view origin to the passed coordinates.
+	 * Positions the view origin to the passed coordinates.
 	 * AKA it GOES to the coordinates.
 	 *
 	 * @param { float } _x x coordinate
