@@ -34,14 +34,17 @@
 		//------------------------------------------------------------
 		self.options = $.extend({
 			zoom_unit: .1,
-			style: 'basic'
+			style: 'basic',
+			lite_color: '#FFFF00',
+			lite_opacity: .6
 		}, _options);
 		
 		//------------------------------------------------------------
 		//  Events
 		//------------------------------------------------------------
 		self.events = {
-			change: 'IMGSPECT-CHANGE'
+			change: 'IMGSPECT-CHANGE',
+			undo: 'IMGSPECT-UNDO'
 		}
 		
 		//------------------------------------------------------------
@@ -172,6 +175,8 @@
 		$( '.undo', self.elem ).click( function( _e ) {
 			self.lites.pop();
 			self.liteRedraw();
+			$( '.nav .lite:last', self.elem ).remove();
+			_e.preventDefault();
 		});
 	}
 	
@@ -201,6 +206,8 @@
 			self.c_lite.css({
 				left: mp.x - dp.left,
 				top: mp.y - dp.top,
+				'background-color': self.options['background-color'],
+				opacity: self.options['opacity']
 			});
 			_e.preventDefault();
 		});
@@ -227,7 +234,18 @@
 			var y1 = cp.top / self.zoom_n;
 			var x2 = x1 + self.c_lite.width() / self.zoom_n;
 			var y2 = y1 + self.c_lite.height() / self.zoom_n;
-			self.lites.push({ x1:parseInt(x1), y1:parseInt(y1), x2:parseInt(x2), y2:parseInt(y2) });
+			self.lites.push({ 
+				x1: parseInt(x1),
+				y1: parseInt(y1),
+				x2: parseInt(x2),
+				y2: parseInt(y2),
+				zoom: self.zoom_n,
+				color: self.options['lite_color'],
+				opacity: self.options['lite_opacity'],
+				id: self.lites.length+1
+			});
+			
+			console.log( self.lites );
 			
 			//------------------------------------------------------------
 			//  Draw the lite on the nav image.
@@ -269,10 +287,12 @@
 		var np = nav.position();
 		var lp = self.liteLast();
 		lite.css({
-			'left': lp.x1 / self.nav_scale + np.left,
-			'top': lp.y1 / self.nav_scale + np.top,
-			'width': lp.x2 / self.nav_scale - lp.x1 / self.nav_scale,
-			'height': lp.y2 / self.nav_scale - lp.y1 / self.nav_scale
+			left: lp.x1 / self.nav_scale + np.left,
+			top: lp.y1 / self.nav_scale + np.top,
+			width: lp.x2 / self.nav_scale - lp.x1 / self.nav_scale,
+			height: lp.y2 / self.nav_scale - lp.y1 / self.nav_scale,
+			'background-color': lp.color,
+			opacity: lp.opacity
 		});
 	}
 	
@@ -311,10 +331,10 @@
 			var lite = self.liteDom();
 			$( '.draw' ).append( lite );
 			lite.css({
-				'left': self.lites[i].x1 * self.zoom_n,
-				'top': self.lites[i].y1 * self.zoom_n,
-				'width': ( self.lites[i].x2 - self.lites[i].x1 ) * self.zoom_n,
-				'height': ( self.lites[i].y2 - self.lites[i].y1 ) * self.zoom_n
+				left: self.lites[i].x1 * self.zoom_n,
+				top: self.lites[i].y1 * self.zoom_n,
+				width: ( self.lites[i].x2 - self.lites[i].x1 ) * self.zoom_n,
+				height: ( self.lites[i].y2 - self.lites[i].y1 ) * self.zoom_n,
 			});
 		}
 	}
@@ -388,6 +408,15 @@
 				self.dragHandler( nav_pos, drag_pos );
 			}
 		});
+		
+		//------------------------------------------------------------
+		//  Set the dragger to the nav's origin
+		//------------------------------------------------------------
+		var nav_pos = $( '.nav', this.elem ).position();
+		$( '.drag', self.elem ).css({
+			left: nav_pos.left,
+			top: nav_pos.top
+		});
 	}
 	
 	/**
@@ -403,6 +432,44 @@
 		var left = x * -1 * this.zoom_n * self.nav_scale;
 		var top = y * -1 * this.zoom_n * self.nav_scale;
 		self.drawMove( left, top );
+	}
+	
+	/**
+	 * Moves the dragger to the passed coordinates
+	 *
+	 * @param { float } _x x coordinate
+	 * @param { float } _y y coordinate
+	 * @param { float } _sec number of seconds the dragger movement takes
+	 */
+	imgspect.prototype.dragMove = function( _x, _y, _sec ) {
+		var self = this;
+		
+		//------------------------------------------------------------
+		//  Set defaults
+		//------------------------------------------------------------
+		_x = ( _x == undefined ) ? 0 : _x;
+		_y = ( _y == undefined ) ? 0 : _y;
+		_sec = ( _sec == undefined ) ? .5 : _sec;
+		
+		//------------------------------------------------------------
+		//  Start the drag animation
+		//------------------------------------------------------------
+		var nav_pos = $( '.nav', this.elem ).position();
+		$( '.drag', self.elem ).animate({
+			left: _y / self.nav_scale + nav_pos.left,
+			top: _x / self.nav_scale + nav_pos.top
+		},
+		{
+			duration: _sec * 1000, // to milliseconds
+			
+			//------------------------------------------------------------
+			//  Reuse the drag handler function...
+			//------------------------------------------------------------
+			step: function() {
+				var drag_pos = $( '.drag', this.elem ).position();
+				self.dragHandler( nav_pos, drag_pos );
+			}
+		});
 	}
 	
 	/**

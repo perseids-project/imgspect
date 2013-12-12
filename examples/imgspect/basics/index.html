@@ -11,8 +11,9 @@
 <script src="../../../imgspect.js"></script>
 <script src="../../../imgbit.js"></script>
 <script type="text/javascript">
+	var spect = null;
 	$(window).load( function(){
-		var spect = $( '#bosch' ).imgspect().data( '#bosch' );
+		spect = $( '#bosch' ).imgspect().data( '#bosch' );
 		$( '.imgspect' ).on( 'IMGSPECT-CHANGE', function() {
 			var lite = spect.liteLast();
 			$( document.body ).append( '<a class="imgbit min" href="../../img/the-garden-of-earthly-delights.jpg\
