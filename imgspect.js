@@ -7,9 +7,7 @@
 	 * Holds default options, adds user defined options, and initializes the plugin
 	 *
 	 * @param { obj } _elem The img element you want to inspect
-	 *
 	 * @param { obj } _options Configuration options
-	 *
 	 * @param { string } _id The id of the img element 
 	 */
 	function imgspect( _elem, _options, _id ) {
@@ -23,7 +21,6 @@
 	 * Holds default options, adds user defined options, and initializes the plugin
 	 *
 	 * @param { obj } _elem The image DOM element you want to inspect
-	 *
 	 * @param { obj } _options Configuration options
 	 */
 	imgspect.prototype.init = function( _elem, _options ) {
@@ -33,10 +30,9 @@
 		//  Lite colors
 		//------------------------------------------------------------
 		self.colors = {
-			'CYAN': '#00FFFF',
-			'MAGENTA': '#FF00FF',
 			'YELLOW': '#FFFF00',
-			'BLACK': '#000000'
+			'MAGENTA': '#FF00FF',
+			'CYAN': '#00FFFF'
 		}
 		
 		//------------------------------------------------------------
@@ -131,6 +127,23 @@
 		$( '.draw', self.elem ).css({ 
 			'background-image': "url('"+src+"')",
 		});
+
+		//------------------------------------------------------------
+		//  Create the tool buttons
+		//------------------------------------------------------------
+		self.buildTools();
+		
+		//------------------------------------------------------------
+		//  Clear element so no unexpected wrapping occurs
+		//------------------------------------------------------------
+		$( self.elem ).append( '<div style="clear:both">' );
+	}
+	
+	/**
+	 * Add the DOM elements that make up the tools
+	 */
+	imgspect.prototype.buildTools = function() {
+		var self = this;
 		
 		//------------------------------------------------------------
 		//  Create the tool buttons
@@ -141,9 +154,17 @@
 		$( '.tools', self.elem ).append( '<a href="#" class="tool undo">&larr;</a>' );
 		
 		//------------------------------------------------------------
-		//  Clear element so no unexpected wrapping occurs
+		//  Build the color
 		//------------------------------------------------------------
-		$( self.elem ).append( '<div style="clear:both">' );
+		$( '.tools', self.elem ).append( '<div class="colors">' );
+		for ( var i in self.colors ) {
+			var name = i.toLowerCase();
+			$( '.colors', self.elem ).append( '<a href="#" class="tool color '+ name + '">&nbsp;<a>' );
+			$( '.color.'+name, self.elem ).css({
+				'background-color': self.colors[i]
+			});
+		}
+		
 	}
 	
 	/**
@@ -176,6 +197,30 @@
 		self.liteStart();
 		self.dragStart();
 		self.sizeStart();
+		self.colorStart();
+	}
+	
+	/**
+	 * Start the color
+	 */
+	imgspect.prototype.colorStart = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
+		//  Select the first color
+		//------------------------------------------------------------
+		var first = $( '.color:first', self.elem );
+		first.addClass( 'selected' );
+		
+		//------------------------------------------------------------
+		//  Select the clicked color
+		//------------------------------------------------------------
+		$( '.color', self.elem ).click( function( _e ) {
+			$( '.color', self.elem ).removeClass( 'selected' );
+			$( this ).addClass( 'selected' );
+			self.liteColor( $( this ).css('background-color') );
+			_e.preventDefault();
+		});
 	}
 	
 	/**

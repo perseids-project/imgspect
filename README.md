@@ -104,4 +104,64 @@ I improved the undo features.
 Lites now have ids which will make zeroing in on them easy / possible.
 I might breakout lites into their own class if they get any more complex.
 Added the goTo and showLite methods which will make it possible to find the context of an imgbit.
-I need to a proof of concept on that in the basics example.  I'll do that now.
+I need to a proof of concept on that in the basics example.  I'll do that now...
+
+So I added the ability to find a lite in context.
+In the example you can click an imgbit below the main app area and your draw area will find the corresponding lite.
+The animation effect is eye-candy but it's useful to for getting a sense of where lites are positioned relative to one another.
+JQuery's animate function can be a resource hawg.
+Maybe they've improved it, or maybe my development laptop is too new and too fast.
+I'll have to test it on a clunker.
+
+Undo feature works now.  I'm going to move some of the code hacked together on the basics example page into the plugin itself once I wrap my head around a few things.
+
+So let me think through some of the feedback.
+
+	* maybe it would be nice to position the imgbit snippets overlayed on top of the base image, 
+	with the ability to toggle its visibility?
+
+So if I'm imagining this right the snippets would basically be floating over the view area, and you can show or hide them, instead of the grid of imgbits being appended to the bottom.  I can see that being visually confusing unless I add a semi transparent black background behind the imgbits and over the whole view area.  Right now appending the imgbits at the bottom is not ideal because depending on the height of your display they could be hidden.  I'll have to give this some thought.  If done well this could be attractive / easy to use.
+
+	* love the undo feature - needs to apply to the 'nav' image and the imgbit snippets too
+
+It should be fixed now...
+
+	* can we enable the zoom on the imgbit snippets too?
+
+There is something like a zoom.  You can set explicit scale, width, or height now.  But an interactive scale after the imgbit is created could be neat.  If the dimensions change it could really mess up page layouts though, and if the image gets clipped like in imgspect's view area I would need to come up with a UI to pan.  The nav dragger system in imgspect wouldn't really work. That could get tricky because the imgbit areas potentially can be really small.  The dimension changing approach could work if the max size could be set and could be accounted for in the layout.
+
+	* how are you planning on handling the urn? Maybe if a data-urn attribute is specified on the 
+	img src tag it could trigger CITE URN specific functionality? 
+	(Namely, the creation of a new URN with the coordinates of the ROI when the drag event ends).
+
+Change events are being triggered, so I could build a little module that could listen in and build the URNs of all the ROIS separate from the main imgspect app.  
+
+When starting the app CITE URNs could be translated to the GET params system I'm using now.  It's javascript so all the data ends up in JSON.  GET params > JSON or CITE URN > GET params > JSON it shouldn't be hard to translate.
+
+	* was thinking it would be really nice if we could enable something like the following: 
+	user types facs="" in the editing area, and clicks in the middle of the "" - this triggers 
+	the start of an event pointing at those coordinates on the page - then the user selects a 
+	roi on the image - the newly created URN is displayed and when they click on it it gets copied 
+	to the coordinates of the original click.  What do you think? I would want the behavior that 
+	triggers the start of the whole event to be a plugin class that could be applied to any element.
+
+I was thinking that the transcription could be done through the UI.
+Each imgbit gets a text input box below it and people can do the transcription right there.
+Then I could have another little widget that transforms the imgbit 
+and transcription into an XML tag and displays the xml in a small textarea.
+Then the user has to copy and paste the tags into the main epidoc text area and save.
+
+### imgbit
+
+Explicit heights can now be set.  This will make certain kinds of layouts possible, plus why not, right?  Low hanging fruit.
+
+## 2013-12-13
+
+You can now select from three colors.
+Not a trivial feature.
+You never know what colors contrast best with the image you're working on.
+I like semi transparent areas of color over just borders of color.
+I think they're a lot simpler to use visually.
+Plus they can be used for categorization and sorting later on if we want to add that feature.
+
+Now I need to figure out how to layout the imgbit grid.  Below the main app area with explicit heights ain't cuttin' it for me.
