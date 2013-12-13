@@ -3,10 +3,39 @@
 	<link rel="stylesheet" href="../../../third_party/menumucil/css/menumucil.css">
 	<link rel="stylesheet" href="../../../css/imgspect.css">
 	<link rel="stylesheet" href="../../../css/imgbit.css">
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+		#app {
+			background-color: #222;
+		}
+		#menumucil {
+			width: 100%;
+		}
+		#menumucil .inner {
+			background-color: rgba( 0, 0, 0, 0.8 );
+			padding: 10px;
+		}
+		#menumucil .inner .imgbit {
+			margin: 10px;
+		}
+		#menumucil .clicker {
+			display: block;
+			width: 100%;
+			text-align: center;
+			text-decoration: none;
+			background-color: rgba( 25, 25, 25, 0.9 );
+			color: #666;
+			padding: 5px 0;
+		}
+	</style>
 </head>
 <body>
-	<div id="menumucil"><div id="imgbits"></div></div>
-	<img id="bosch" src="../../img/the-garden-of-earthly-delights.jpg" />
+	<div id="app">
+		<div id="menumucil"><div id="imgbits"></div></div>
+		<img id="bosch" src="../../img/the-garden-of-earthly-delights.jpg" />
+	</div>
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
