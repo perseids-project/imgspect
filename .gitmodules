@@ -1,0 +1,3 @@
+[submodule "third_party/menumucil"]
+	path = third_party/menumucil
+	url = https://github.com/caesarfeta/menumucil

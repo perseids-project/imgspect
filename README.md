@@ -1,39 +1,22 @@
 # imgspect
-**imgspect** is a plugin that will let you explore any image displayable by a browser by zooming and panning, but the most useful feature is the ability to highlight areas of interest and write little notes associated with the highlighted areas.
+**imgspect** is a jQuery plugin for exploring images.  You can zoom, pan, and hi-lite areas of interest.  Use it in conjunction with imgbit for cropping and scaling images without Photoshop.
 
-Also included is **imgbit**.
+**imgbit** is the plugin that will display areas you hi-lite with imgspect.
 
-**imgbit** is a plugin that will display only a small area of a larger image.
+## Requirements
+* jQuery ( http://jquery.com )
+* jQuery UI Draggable ( http://jqueryui.com/draggable )
+* menumucil ( https://github.com/caesarfeta/menumucil )
 
-## Used best for...
-Why use **imgbit** instead of Photoshop or some other image editor for image cropping?
+## Install
+	cd [javascript directory]
+	git clone https://github.com/caesarfeta/menumucil.git menumucil
+	cd menumucil
+	git submodule update --init
 
-	Make your case, Adam.
-
-## How to use...
+## Use
 ### imgspect
-	<html>
-		<head>
-			<!-- Load the imgspect stylesheet -->
-			<link rel="stylesheet" href="imgspect/css/imgspect.css">
-		</head>
-		<body>
-			<img id="butterfly" src="/img/morpho_butterfly.jpg" />
-		</body>
-		
-		<!-- Required third-party libraries -->
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-		
-		<!-- Load the imgspect javascript -->
-		<script src="imgspect/imgspect.js"></script>
-		
-		<script type="text/javascript">
-			$(window).load( function(){
-				$( '#butterfly' ).imgspect();
-			});
-		</script>
-	</html>
+	coming soon...
 
 ### imgbit
 	coming soon...
@@ -157,11 +140,17 @@ Explicit heights can now be set.  This will make certain kinds of layouts possib
 
 ## 2013-12-13
 
-You can now select from three colors.
+11:00 - You can now select from three colors.
 Not a trivial feature.
 You never know what colors contrast best with the image you're working on.
 I like semi transparent areas of color over just borders of color.
 I think they're a lot simpler to use visually.
 Plus they can be used for categorization and sorting later on if we want to add that feature.
 
-Now I need to figure out how to layout the imgbit grid.  Below the main app area with explicit heights ain't cuttin' it for me.
+Now I need to figure out how to layout the imgbit grid.
+Below the main app area with explicit heights ain't cuttin' it for me.
+
+3:32 - So I found my old menumucil project.  
+I created a github repo for it.
+imgspect will pull it in as a submodule now.
+It will create a imgbit grid drop-down over the main app area.

@@ -1,18 +1,27 @@
 <html>
 <head>
+	<link rel="stylesheet" href="../../../third_party/menumucil/css/menumucil.css">
 	<link rel="stylesheet" href="../../../css/imgspect.css">
 	<link rel="stylesheet" href="../../../css/imgbit.css">
 </head>
 <body>
+	<div id="menumucil"><div id="imgbits"></div></div>
 	<img id="bosch" src="../../img/the-garden-of-earthly-delights.jpg" />
 </body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="../../../third_party/menumucil/menumucil.js"></script>
 <script src="../../../imgspect.js"></script>
 <script src="../../../imgbit.js"></script>
 <script type="text/javascript">
 	var spect = null;
 	$(window).load( function(){
+		
+		/**
+		 * Start menumucil and grab a handler
+		 */
+		menumucil = $( '#menumucil' ).menumucil({ cover: true }).data( '#menumucil' );
+		
 		/**
 		 * Start imgspect and grab a handler
 		 */
@@ -38,7 +47,7 @@
 				&y2='+lite.y2+'\
 				&h=200\
 				"></a>';
-			$( document.body ).append( elem );
+			$( '#imgbits' ).append( elem );
 			
 			//------------------------------------------------------------
 			//  Activate imgbit
