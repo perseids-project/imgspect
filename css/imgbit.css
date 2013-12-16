@@ -47,6 +47,8 @@
 }
 
 .imgbit.edit .caption {
+	overflow: hidden;
+	display: block;
 	word-wrap: break-word;
 	margin: 0;
 	border: none;
@@ -54,6 +56,7 @@
 	background-color: #f9f9c9;
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	padding: 5px;
+	padding-top: 6px;
 	resize: none;
 	font-size: 15px;
 }

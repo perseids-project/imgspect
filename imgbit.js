@@ -10,9 +10,7 @@
 	 * Holds default options, adds user defined options, and initializes the plugin
 	 *
 	 * @param { obj } _elem The <a> tag holding your urn and display text.
-	 *
 	 * @param { obj } _options Configuration options
-	 *
 	 * @param { string } _id The id of the anchor element 
 	 */
 	function imgbit( _elem, _options, _id ) {
@@ -26,7 +24,6 @@
 	 * Holds default options, adds user defined options, and initializes the plugin
 	 *
 	 * @param { obj } _elem The <a> tag holding your urn and display text.
-	 *
 	 * @param { obj } _options Configuration options
 	 */
 	imgbit.prototype.init = function( _elem, _options ) {
@@ -170,18 +167,47 @@
 			}
 			
 			//------------------------------------------------------------
-			//  If the edit tag is set create the edit dom elements
-			//------------------------------------------------------------
-			self.editStart();
-			
-			//------------------------------------------------------------
 			//  Scale imgbit container to size of image
 			//------------------------------------------------------------
 			$( self.elem ).css({
 				width: $( '.view', self.elem ).width()
 			});
+			
+			//------------------------------------------------------------
+			//  If the edit tag is set create the edit dom elements
+			//------------------------------------------------------------
+			self.editStart();
 		}
 		img.src = self.src;
+	}
+	
+	/**
+	 * Resize caption textarea to match static caption
+	 */
+	imgbit.prototype.captionResize = function() {
+		var self = this;
+		var text = $( '.text', self.elem );
+		
+		//------------------------------------------------------------
+		//  jQuery's height() method returns incorrect values if
+		//  the targeted element is hidden.  So we have to do a
+		//  a little show and hide voodoo to get an accurate height
+		//  value.  Hopefully it won't cause any strobing.
+		//------------------------------------------------------------
+		var hide = false;
+		if ( text.is(':visible') == false ) {
+			hide = true;
+		}
+		text.show();
+		var textHeight = text.height();
+		if ( hide == true ) {
+			text.hide();
+		}
+		var fontSize = parseInt( text.css( 'font-size' ).replace( 'px', '' ) );
+		console.log( textHeight );
+		console.log( fontSize );
+		var height = ( textHeight > fontSize ) ? textHeight : fontSize;
+		$( '.caption', self.elem ).height( height )
 	}
 	
 	/**
@@ -201,9 +227,12 @@
 			var caption = $( '.caption', self.elem );
 			
 			//------------------------------------------------------------
-			//  Set the width of the caption to the size of the image
+			//  Set the width of the caption textarea to the size of the 
+			//  image and the height of the static caption.
 			//------------------------------------------------------------
-			caption.css({ width: $( '.view', self.elem).width() });
+			caption.css({ 
+				width: $( '.view', self.elem).width()
+			});
 			
 			//------------------------------------------------------------
 			//  Build a switcher
@@ -231,11 +260,16 @@
 			});
 			
 			//------------------------------------------------------------
+			//  Resize the caption as neeeded
+			//------------------------------------------------------------
+			self.captionResize();
+			
+			//------------------------------------------------------------
 			//  Keep editable and static caption synched
 			//------------------------------------------------------------
 			caption.bind( 'input propertychange', function() {
 				text.text( caption.val() );
-				
+				self.captionResize();
 				//------------------------------------------------------------
 				//  Let the application know you've changed
 				//------------------------------------------------------------
