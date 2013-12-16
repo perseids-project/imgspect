@@ -204,8 +204,6 @@
 			text.hide();
 		}
 		var fontSize = parseInt( text.css( 'font-size' ).replace( 'px', '' ) );
-		console.log( textHeight );
-		console.log( fontSize );
 		var height = ( textHeight > fontSize ) ? textHeight : fontSize;
 		$( '.caption', self.elem ).height( height )
 	}
@@ -220,61 +218,87 @@
 		if ( self.options['style'] == 'edit' ) {
 			
 			//------------------------------------------------------------
-			//  Build a caption
+			//  Build the edit DOM elements.
 			//------------------------------------------------------------
-			var text = $( '.text', self.elem );
-			text.after( '<textarea class="caption">'+text.text()+'</textarea>' );
-			var caption = $( '.caption', self.elem );
+			self.editBuild();
 			
 			//------------------------------------------------------------
-			//  Set the width of the caption textarea to the size of the 
-			//  image and the height of the static caption.
-			//------------------------------------------------------------
-			caption.css({ 
-				width: $( '.view', self.elem).width()
-			});
-			
-			//------------------------------------------------------------
-			//  Build a switcher
-			//------------------------------------------------------------
-			caption.after( '<a href="#" class="switcher">edit</a>' );
-			$( '.caption', self.elem ).hide();
-			
-			//------------------------------------------------------------
-			//  Switch between editable and static captions
-			//------------------------------------------------------------
-			var switcher = $( '.switcher', self.elem );
-			switcher.click( function( _e ) {
-				if ( caption.is(":visible") ) {
-					caption.hide();
-					text.show();
-					switcher.text( 'edit' );
-				}
-				else {
-					caption.show();
-					text.hide();
-					switcher.text( 'save' );
-					caption.cursorToEnd();
-				}
-				_e.preventDefault();
-			});
-			
-			//------------------------------------------------------------
-			//  Resize the caption as neeeded
+			//  Resize the caption as neeeded.
 			//------------------------------------------------------------
 			self.captionResize();
 			
 			//------------------------------------------------------------
-			//  Keep editable and static caption synched
+			//  Listen for return key.  
+			//  That's the same as clicking 'save'.
 			//------------------------------------------------------------
-			caption.bind( 'input propertychange', function() {
-				text.text( caption.val() );
+			$( '.caption', self.elem ).keypress( function( _e ) {
+				if ( _e.which == 13) {
+					self.editSwitch();
+				};
+			});
+			
+			//------------------------------------------------------------
+			//  Keep editable and static caption synched.
+			//------------------------------------------------------------
+			$( '.caption', self.elem ).bind( 'input propertychange', function() {
+				$( '.text', self.elem ).text( $( '.caption', self.elem ).val() );
 				self.captionResize();
 				//------------------------------------------------------------
-				//  Let the application know you've changed
+				//  Let the application know you've changed.
 				//------------------------------------------------------------
 				$( self.elem ).trigger( self.events['change'] );
 			});
+		}
+	}
+	
+	/**
+	 * Build the edit DOM elements
+	 */
+	imgbit.prototype.editBuild = function() {
+		var self = this;
+		//------------------------------------------------------------
+		//  Build a caption
+		//------------------------------------------------------------
+		$( '.text', self.elem ).after( '<textarea class="caption">'+$( '.text', self.elem ).text()+'</textarea>' );
+		
+		//------------------------------------------------------------
+		//  Set the width of the caption textarea to the size of the 
+		//  image and the height of the static caption.
+		//------------------------------------------------------------
+		 $( '.caption', self.elem ).css({ 
+			width: $( '.view', self.elem).width()
+		});
+		
+		//------------------------------------------------------------
+		//  Build a switcher
+		//------------------------------------------------------------
+		$( '.caption', self.elem ).after( '<a href="#" class="switcher">edit</a>' );
+		$( '.caption', self.elem ).hide();
+		
+		//------------------------------------------------------------
+		//  Switch between editable and static captions
+		//------------------------------------------------------------
+		$( '.switcher', self.elem ).click( function( _e ) {
+			self.editSwitch();
+			_e.preventDefault();
+		});
+	}
+	
+	/**
+	 * Switch between static caption and textarea caption
+	 */
+	imgbit.prototype.editSwitch = function() {
+		var self = this;
+		if ( $( '.caption', self.elem ).is(":visible") ) {
+			$( '.caption', self.elem ).hide();
+			$( '.text', self.elem ).show();
+			$( '.switcher', self.elem ).text( 'edit' );
+		}
+		else {
+			$( '.caption', self.elem ).show();
+			$( '.text', self.elem ).hide();
+			$( '.switcher', self.elem ).text( 'save' );
+			$( '.caption', self.elem ).cursorToEnd();
 		}
 	}
 	
