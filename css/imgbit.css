@@ -42,13 +42,16 @@
 
 .imgbit.full .text,
 .imgbit.edit .text {
+	word-wrap: break-word;
 	padding: 5px;
 }
 
 .imgbit.edit .caption {
+	word-wrap: break-word;
 	margin: 0;
+	border: none;
 	outline: none;
-	background-color: #f2f2f2;
+	background-color: #f9f9c9;
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	padding: 5px;
 	resize: none;
