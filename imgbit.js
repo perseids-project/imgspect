@@ -40,6 +40,13 @@
 		}, _options);
 		
 		//------------------------------------------------------------
+		//  Events
+		//------------------------------------------------------------
+		self.options = {
+			change: 'IMGBIT-CHANGE'
+		}
+		
+		//------------------------------------------------------------
 		//  Separate the image source and clipping coordinates
 		//------------------------------------------------------------
 		self.href = $( self.elem ).attr( 'href' );
@@ -65,10 +72,13 @@
 		self.area.z = ( self.area.z == undefined ) ? 1 : self.area.z;
 		
 		//------------------------------------------------------------
-		//  Check to see if min class has been passed
+		//  Check to see if special style classes have been passed
 		//------------------------------------------------------------
 		if ( $( self.elem ).hasClass('min') ) {
 			self.options['style'] = null;
+		}
+		if ( $( self.elem ).hasClass('edit') ) {
+			self.options['style'] = 'edit';
 		}
 		
 		//------------------------------------------------------------
@@ -126,7 +136,7 @@
 		}
 		
 		//------------------------------------------------------------
-		//  Clone the image
+		//  Load the image
 		//------------------------------------------------------------
 		var img = new Image();
 		img.onload = function() {
@@ -155,10 +165,15 @@
 			//------------------------------------------------------------
 			//  Add a link to the source image
 			//------------------------------------------------------------
-			if ( self.options['style'] != null ) {
+			if ( self.options['style'] != null && self.options['style'] != 'edit' ) {
 				$( self.elem ).prepend( '<a class="source" href="'+ self.src +'">source</a>' );
 			}
-						
+			
+			//------------------------------------------------------------
+			//  If the edit tag is set create the edit dom elements
+			//------------------------------------------------------------
+			self.editStart();
+			
 			//------------------------------------------------------------
 			//  Scale imgbit container to size of image
 			//------------------------------------------------------------
@@ -167,6 +182,66 @@
 			});
 		}
 		img.src = self.src;
+	}
+	
+	/**
+	 * Build DOM elements needed for edit style
+	 *
+	 * @param { imgbit } _self There are weird scopr
+	 */
+	imgbit.prototype.editStart = function() {
+		var self = this;
+		if ( self.options['style'] == 'edit' ) {
+			
+			//------------------------------------------------------------
+			//  Build a caption
+			//------------------------------------------------------------
+			var text = $( '.text', self.elem );
+			text.after( '<textarea class="caption">'+text.text()+'</textarea>' );
+			var caption = $( '.caption', self.elem );
+			
+			//------------------------------------------------------------
+			//  Set the width of the caption to the size of the image
+			//------------------------------------------------------------
+			caption.css({ width: $( '.view', self.elem).width() });
+			
+			//------------------------------------------------------------
+			//  Build a switcher
+			//------------------------------------------------------------
+			caption.after( '<a href="#" class="switcher">edit</a>' );
+			$( '.caption', self.elem ).hide();
+			
+			//------------------------------------------------------------
+			//  Switch between editable and static captions
+			//------------------------------------------------------------
+			var switcher = $( '.switcher', self.elem );
+			switcher.click( function( _e ) {
+				if ( caption.is(":visible") ) {
+					caption.hide();
+					text.show();
+					switcher.text( 'edit' );
+				}
+				else {
+					caption.show();
+					text.hide();
+					switcher.text( 'save' );
+					caption.cursorToEnd();
+				}
+				_e.preventDefault();
+			});
+			
+			//------------------------------------------------------------
+			//  Keep editable and static caption synched
+			//------------------------------------------------------------
+			caption.bind( 'input propertychange', function() {
+				text.text( caption.val() );
+				
+				//------------------------------------------------------------
+				//  Let the application know you've changed
+				//------------------------------------------------------------
+				$( self.elem ).trigger( self.events['change'] );
+			});
+		}
 	}
 	
 	/**
@@ -222,3 +297,37 @@
 		};
 	})
 })(jQuery);
+
+/*
+ *  Extend jQuery
+ */
+jQuery.fn.cursorToEnd = function() {
+	return this.each( function() {
+		$(this).focus();
+		
+		//------------------------------------------------------------
+		//   If this function exists...
+		//------------------------------------------------------------
+		if ( this.setSelectionRange ) {
+			//------------------------------------------------------------
+			// ... then use it (Doesn't work in IE)
+			// Double the length because Opera is inconsistent 
+			// about whether a carriage return is one character or two.
+			//------------------------------------------------------------
+			var len = $(this).val().length * 2;
+			this.setSelectionRange(len, len);
+		} 
+		else {
+			//------------------------------------------------------------
+			// ... otherwise replace the contents with itself
+			// (Doesn't work in Google Chrome)
+			//------------------------------------------------------------
+			$(this).val($(this).val());
+		}
+		//------------------------------------------------------------
+		// Scroll to the bottom, in case we're in a tall textarea
+		// (Necessary for Firefox and Google Chrome)
+		//------------------------------------------------------------
+		this.scrollTop = 999999;
+	});
+};

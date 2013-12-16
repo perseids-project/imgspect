@@ -14,14 +14,16 @@
 	max-height: none;
 }
 
-.imgbit.full {
+.imgbit.full,
+.imgbit.edit {
 	background-color: #f2f2f2;
 	padding: 5px;
 	margin: 5px;
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 }
 
-.imgbit.full .source {
+.imgbit.full .source,
+.imgbit.edit .switcher {
 	float: right;
 	background-color: #DDD;
 	color: #FF8888;
@@ -30,11 +32,25 @@
 	padding: 2px 6px;
 	font-size: 9px;
 }
+.imgbit.edit .switcher {
+	margin-top: 2px;
+}
 
 .imgbit.full .source:hover {
 	color: #FF4444;
 }
 
-.imgbit.full .text {
+.imgbit.full .text,
+.imgbit.edit .text {
 	padding: 5px;
+}
+
+.imgbit.edit .caption {
+	margin: 0;
+	outline: none;
+	background-color: #f2f2f2;
+	font-family: 'Lucida Console', 'Monaco', sans-serif;
+	padding: 5px;
+	resize: none;
+	font-size: 15px;
 }
