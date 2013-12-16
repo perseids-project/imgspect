@@ -40,7 +40,6 @@
 		//------------------------------------------------------------
 		self.options = $.extend({
 			zoom_unit: .1,
-			style: 'basic',
 			lite_color: self.colors['YELLOW'],
 			lite_opacity: .4,
 			secs: .5 // default number of seconds it takes for goTo() animations
@@ -76,7 +75,7 @@
 		//------------------------------------------------------------
 		//	Build the application and get ready for interactivity
 		//------------------------------------------------------------
-		self.buildDom();
+		self.build();
 		self.resize();
 		self.start();
 	}
@@ -84,7 +83,7 @@
 	/**
 	 * Build the imgspect DOM elements
 	 */
-	imgspect.prototype.buildDom = function() {
+	imgspect.prototype.build = function() {
 		var self = this;
 		
 		//------------------------------------------------------------
@@ -92,13 +91,6 @@
 		//------------------------------------------------------------
 		$( self.elem ).wrap( '<div class="imgspect">' );
 		self.elem = $( self.elem ).parent();
-		
-		//------------------------------------------------------------
-		//  Add the style class if it is not null
-		//------------------------------------------------------------
-		if ( self.options['style'] != null ) {
-			$( self.elem ).addClass( self.options['style'] );
-		}
 		
 		//------------------------------------------------------------
 		//  Create the navigation window aka the 'nav'
@@ -131,7 +123,12 @@
 		//------------------------------------------------------------
 		//  Create the tool buttons
 		//------------------------------------------------------------
-		self.buildTools();
+		self.toolsBuild();
+		
+		//------------------------------------------------------------
+		//  Create the output window
+		//------------------------------------------------------------
+		self.outputBuild();
 		
 		//------------------------------------------------------------
 		//  Clear element so no unexpected wrapping occurs
@@ -142,7 +139,7 @@
 	/**
 	 * Add the DOM elements that make up the tools
 	 */
-	imgspect.prototype.buildTools = function() {
+	imgspect.prototype.toolsBuild = function() {
 		var self = this;
 		
 		//------------------------------------------------------------
@@ -164,7 +161,25 @@
 				'background-color': self.colors[i]
 			});
 		}
-		
+	}
+
+	/**
+	 * Build the output area
+	 */
+	imgspect.prototype.outputBuild = function() {
+		var self = this;
+		$( '.tools', self.elem ).append( '<textarea class="output"></textarea>' );
+	}
+	
+	/**
+	 * Update the output area
+	 */
+	imgspect.prototype.outputUpdate = function() {
+		var self = this;
+		$( '.output', self.elem ).val('');
+		var output = '';
+		for ( var i in self.lites ) {}
+		$( '.output', self.elem ).val( output );
 	}
 	
 	/**

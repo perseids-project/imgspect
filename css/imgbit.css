@@ -22,8 +22,7 @@
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 }
 
-.imgbit.full .source,
-.imgbit.edit .switcher {
+.imgbit.full .source {
 	float: right;
 	background-color: #DDD;
 	color: #FF8888;
@@ -53,7 +52,7 @@
 	margin: 0;
 	border: none;
 	outline: none;
-	background-color: #f9f9c9;
+	background-color: #FFF;
 	padding: 6px 5px 4px 5px;
 	resize: none;
 }
@@ -62,4 +61,8 @@
 .imgbit.edit .caption {
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	font-size: 15px;
+}
+
+.imgbit.edit .text {
+	min-height: 16pxd;
 }

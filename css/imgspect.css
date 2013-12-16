@@ -1,4 +1,5 @@
-.imbspect {
+.imgspect {
+	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	width: auto;
 }
 
@@ -30,7 +31,7 @@
 	position: absolute;
 	z-index: 100;
 	background-color: #FFF;
-	opacity: .4;
+	opacity: .3;
 	outline: 1px solid #444;
 	border: 1px solid #BBB;
 }
@@ -51,13 +52,13 @@
 	outline: 1px solid #BBB;
 }
 
-.imgspect.basic {
+.imgspect {
 	padding: 5px;
 	margin: 5px;
-	font-family: 'Lucida Console', 'Monaco', sans-serif;
+	padding-bottom: 20px;
 }
 
-.imgspect.basic .tool {
+.imgspect .tool {
 	background-color: #444;
 	color: #FF8888;
 	margin-top: 5px;
@@ -66,6 +67,20 @@
 	font-size: 40px;
 }
 
-.imgspect.basic .tool:hover {
+.imgspect .tool:hover {
 	color: #FF4444;
+}
+
+.imgspect .output {
+	color: #DDD;
+	display: block;
+	word-wrap: break-word;
+	margin-top: 5px;
+	float: left;
+	border: none;
+	outline: none;
+	background-color: #444;
+	padding: 6px 5px 4px 5px;
+	resize: none;
+	width: 300px;
 }

@@ -50,23 +50,23 @@
 		
 		var arr = self.href.split('?');
 		self.src = arr[0];
-		self.area = self.getToJson( arr[1] );
+		self.param = self.getToJson( arr[1] );
 		
 		//------------------------------------------------------------
 		//  Explicit width?
 		//------------------------------------------------------------
-		if ( self.area.w != undefined ) {
-			self.area.z = self.area.w / ( self.area.x2 - self.area.x1 );
+		if ( self.param.w != undefined ) {
+			self.param.z = self.param.w / ( self.param.x2 - self.param.x1 );
 		}
 		
 		//------------------------------------------------------------
 		//  Explicit height?
 		//------------------------------------------------------------
-		if ( self.area.h != undefined ) {
-			self.area.z = self.area.h / ( self.area.y2 - self.area.y1 );
+		if ( self.param.h != undefined ) {
+			self.param.z = self.param.h / ( self.param.y2 - self.param.y1 );
 		}
 		
-		self.area.z = ( self.area.z == undefined ) ? 1 : self.area.z;
+		self.param.z = ( self.param.z == undefined ) ? 1 : self.param.z;
 		
 		//------------------------------------------------------------
 		//  Check to see if special style classes have been passed
@@ -81,13 +81,13 @@
 		//------------------------------------------------------------
 		//  Check to see if img is in album
 		//------------------------------------------------------------
-		self.buildDom();
+		self.build();
 	}
 	
 	/**
 	 * Build the imgbit DOM elements
 	 */
-	imgbit.prototype.buildDom = function() {
+	imgbit.prototype.build = function() {
 		var self = this;
 		
 		//------------------------------------------------------------
@@ -177,6 +177,15 @@
 			//  If the edit tag is set create the edit dom elements
 			//------------------------------------------------------------
 			self.editStart();
+			
+			//------------------------------------------------------------
+			//  If the color has been set... set the color
+			//------------------------------------------------------------
+			if ( self.param.c != undefined ) {
+				$( self.elem ).css({
+					'background-color': '#'+self.param.c
+				});
+			}
 		}
 		img.src = self.src;
 	}
@@ -268,17 +277,12 @@
 		 $( '.caption', self.elem ).css({ 
 			width: $( '.view', self.elem).width()
 		});
-		
-		//------------------------------------------------------------
-		//  Build a switcher
-		//------------------------------------------------------------
-		$( '.caption', self.elem ).after( '<a href="#" class="switcher">edit</a>' );
 		$( '.caption', self.elem ).hide();
 		
 		//------------------------------------------------------------
 		//  Switch between editable and static captions
 		//------------------------------------------------------------
-		$( '.switcher', self.elem ).click( function( _e ) {
+		$( '.text', self.elem ).click( function( _e ) {
 			self.editSwitch();
 			_e.preventDefault();
 		});
@@ -290,16 +294,36 @@
 	imgbit.prototype.editSwitch = function() {
 		var self = this;
 		if ( $( '.caption', self.elem ).is(":visible") ) {
-			$( '.caption', self.elem ).hide();
-			$( '.text', self.elem ).show();
-			$( '.switcher', self.elem ).text( 'edit' );
+			self.editHide();
 		}
 		else {
-			$( '.caption', self.elem ).show();
-			$( '.text', self.elem ).hide();
-			$( '.switcher', self.elem ).text( 'save' );
-			$( '.caption', self.elem ).cursorToEnd();
+			//------------------------------------------------------------
+			//  There can only be one imgbit caption editor
+			//  Calling editHide() on the prototype object will
+			//  call that method for all instances.
+			//------------------------------------------------------------
+			imgbit.prototype.editHide();
+			self.editShow();
 		}
+	}
+	
+	/**
+	 * Hide caption textarea
+	 */
+	imgbit.prototype.editHide = function() {
+		var self = this;
+		$( '.caption', self.elem ).hide();
+		$( '.text', self.elem ).show();
+	}
+	
+	/**
+	 * Show caption textarea
+	 */
+	imgbit.prototype.editShow = function() {
+		var self = this;
+		$( '.text', self.elem ).hide();
+		$( '.caption', self.elem ).show();
+		$( '.caption', self.elem ).cursorToEnd();
 	}
 	
 	/**
@@ -308,8 +332,8 @@
 	imgbit.prototype.viewCrop = function() {
 		var self = this;
 		$( '.view', self.elem ).css({
-			width: ( self.area.x2 - self.area.x1 ) * self.area.z,
-			height: ( self.area.y2 - self.area.y1 ) * self.area.z
+			width: ( self.param.x2 - self.param.x1 ) * self.param.z,
+			height: ( self.param.y2 - self.param.y1 ) * self.param.z
 		});
 	}
 	
@@ -319,10 +343,10 @@
 	imgbit.prototype.imgMove = function() {
 		var self = this;
 		$( 'img.star', self.elem ).css({
-			width: $( 'img.star', self.elem ).width() * self.area.z,
-			height: $( 'img.star', self.elem ).height() * self.area.z,
-			left: self.area.x1*-1*self.area.z,
-			top: self.area.y1*-1*self.area.z
+			width: $( 'img.star', self.elem ).width() * self.param.z,
+			height: $( 'img.star', self.elem ).height() * self.param.z,
+			left: self.param.x1*-1*self.param.z,
+			top: self.param.y1*-1*self.param.z
 		});
 	}
 	

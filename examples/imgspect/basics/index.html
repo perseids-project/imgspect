@@ -69,29 +69,56 @@
 		$( '.imgspect' ).on( 'IMGSPECT-CHANGE', function() {
 			var lite = spect.liteLast();
 			var id = 'imgbit-'+lite.id;
-			var elem = '<a id="'+id+'" class="imgbit min" href="../../img/the-garden-of-earthly-delights.jpg\
+			
+			//------------------------------------------------------------
+			//  Make the CMY colors pastel so eyes aren't totally damaged.
+			//  This needs revision...
+			//------------------------------------------------------------
+			var color = lite.color.replace('#','').toUpperCase();
+			switch ( color ) {
+				case '00FFFF':
+					color = 'A5FFFF';
+					break;
+				case 'FF00FF':
+					color = 'FFA5FF';
+					break;
+				case 'FFFF00':
+					color = 'FFFFA5';
+					break;
+			}
+			
+			var elem = '<a id="'+id+'" class="imgbit edit" href="../../img/the-garden-of-earthly-delights.jpg\
 				?x1='+lite.x1+'\
 				&y1='+lite.y1+'\
 				&x2='+lite.x2+'\
 				&y2='+lite.y2+'\
-				&h=200\
-				"></a>';
+				&c='+color+'\
+				&w=200\
+				">[click to caption]</a>';
 			$( '#imgbits' ).append( elem );
 			
 			//------------------------------------------------------------
 			//  Activate imgbit
 			//------------------------------------------------------------
 			$( '#'+id+'.imgbit' ).imgbit();
+			spect.outputUpdate();
 			
 			//------------------------------------------------------------
 			//  Clicking an imgbit will take you to its position in
 			//  the original image.
 			//------------------------------------------------------------
-			$( '#'+id+'.imgbit' ).click( function( _e ) {
-				var id = $(this).attr('id');
+			$( '#'+id+'.imgbit .view' ).click( function( _e ) {
+				var id = $(this).parent().attr('id');
 				i = parseInt( id.replace('imgbit-', '' ) );
 				spect.liteShow( i );
 				_e.preventDefault();
+			});
+			
+			//------------------------------------------------------------
+			//  Imgbit caption edit.
+			//------------------------------------------------------------
+			$( '#'+id+'.imgbit' ).on( 'IMGBIT-CHANGE', function( _e, _id ) {
+				spect.outputUpdate();
 			});
 		});
 	});
