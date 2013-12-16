@@ -54,9 +54,12 @@
 	border: none;
 	outline: none;
 	background-color: #f9f9c9;
-	font-family: 'Lucida Console', 'Monaco', sans-serif;
-	padding: 5px;
-	padding-top: 6px;
+	padding: 6px 5px 4px 5px;
 	resize: none;
+}
+
+.imgbit .text,
+.imgbit.edit .caption {
+	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	font-size: 15px;
 }
