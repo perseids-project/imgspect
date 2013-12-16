@@ -154,3 +154,19 @@ Below the main app area with explicit heights ain't cuttin' it for me.
 I created a github repo for it.
 imgspect will pull it in as a submodule now.
 It will create a imgbit grid drop-down over the main app area.
+
+## 2013-12-16
+
+### imgbit
+
+Added the ability to set colors with parameters.  Added caption editing functionality.
+
+### imgspect
+
+I think I should replace the drop down menu from the top with one that will rise from the bottom.
+It makes more sense to cover the nav and tools than the main draw area.
+
+I also need to roll some of the javascript code in the example page into the plug-in itself.
+I will spend some time doing that tomorrow.
+Other than that I need to work on displaying output.
+By default I think that output should be imgbit constructors, but I'll add the ability to turn it into epidoc facs XML fragments with a constructor option.
