@@ -81,6 +81,9 @@
 	outline: none;
 	background-color: #444;
 	padding: 6px 5px 4px 5px;
-	resize: none;
 	width: 300px;
+	overflow-y: scroll;
+}
+.imgspect .output pre {
+	margin: 0;
 }

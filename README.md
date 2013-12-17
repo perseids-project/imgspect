@@ -170,3 +170,11 @@ I also need to roll some of the javascript code in the example page into the plu
 I will spend some time doing that tomorrow.
 Other than that I need to work on displaying output.
 By default I think that output should be imgbit constructors, but I'll add the ability to turn it into epidoc facs XML fragments with a constructor option.
+
+## 2013-12-17
+
+### imgspect
+
+I'm realizing I should breakout lites into their own class.
+Things are starting to get a bit unruly...
+Started work on the output window.

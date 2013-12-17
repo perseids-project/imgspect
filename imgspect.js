@@ -73,10 +73,21 @@
 		self.nav_scale = 1;
 		
 		//------------------------------------------------------------
+		//  Will store the source of the img
+		//------------------------------------------------------------
+		self.src = null;
+		
+		//------------------------------------------------------------
 		//	Build the application and get ready for interactivity
 		//------------------------------------------------------------
 		self.build();
 		self.resize();
+		
+		//------------------------------------------------------------
+		//  Create the output window after the nav resize
+		//------------------------------------------------------------
+		self.outputBuild();
+		
 		self.start();
 	}
 	
@@ -115,20 +126,15 @@
 		//------------------------------------------------------------
 		//  Set image as drawing area background
 		//------------------------------------------------------------
-		var src = $( '.nav img', self.elem ).attr('src');
+		self.src = $( '.nav img', self.elem ).attr('src');
 		$( '.draw', self.elem ).css({ 
-			'background-image': "url('"+src+"')",
+			'background-image': "url('"+self.src+"')",
 		});
 
 		//------------------------------------------------------------
 		//  Create the tool buttons
 		//------------------------------------------------------------
 		self.toolsBuild();
-		
-		//------------------------------------------------------------
-		//  Create the output window
-		//------------------------------------------------------------
-		self.outputBuild();
 		
 		//------------------------------------------------------------
 		//  Clear element so no unexpected wrapping occurs
@@ -168,7 +174,10 @@
 	 */
 	imgspect.prototype.outputBuild = function() {
 		var self = this;
-		$( '.tools', self.elem ).append( '<textarea class="output"></textarea>' );
+		$( '.tools', self.elem ).append( '<div class="output"><pre></pre></div>' );
+		$( '.output', self.elem ).css({
+			'max-height': $( '.nav', self.elem ).height()
+		});
 	}
 	
 	/**
@@ -176,10 +185,12 @@
 	 */
 	imgspect.prototype.outputUpdate = function() {
 		var self = this;
-		$( '.output', self.elem ).val('');
+		$( '.output pre', self.elem ).text('');
 		var output = '';
-		for ( var i in self.lites ) {}
-		$( '.output', self.elem ).val( output );
+		for ( var i in self.lites ) {
+			output += self.liteToImgbit( i ) + "\r\n" + "\r\n";
+		}
+		$( '.output pre', self.elem ).text( output );
 	}
 	
 	/**
@@ -258,6 +269,11 @@
 			//  Remove the lite preview from the nav
 			//------------------------------------------------------------
 			$( '.nav .lite:last', self.elem ).remove();
+			
+			//------------------------------------------------------------
+			//  Update the output window
+			//------------------------------------------------------------
+			self.outputUpdate();
 			
 			//------------------------------------------------------------
 			//  Let the world know what's happened here.
@@ -478,6 +494,23 @@
 			//------------------------------------------------------------
 			self.options['lite_color'] = _color;
 		}
+	}
+	
+	/**
+	 * Turn a lite into an imgbit
+	 *
+	 * @param { int } _id Lite id
+	 */
+	imgspect.prototype.liteToImgbit = function( _id ) {
+		var self = this;
+		var lite = self.lites[_id];
+		var tag = '<a class="imgbit" href="'+self.src+'"\
+				?x1='+lite.x1+'\
+				&y1='+lite.y1+'\
+				&x2='+lite.x2+'\
+				&y2='+lite.y2+'\
+				></a>';
+		return tag.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
 	}
 	
 	/**
