@@ -47,7 +47,6 @@
 		//  Separate the image source and clipping coordinates
 		//------------------------------------------------------------
 		self.href = $( self.elem ).attr( 'href' );
-		
 		var arr = self.href.split('?');
 		self.src = arr[0];
 		self.param = self.getToJson( arr[1] );

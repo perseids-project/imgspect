@@ -205,7 +205,6 @@
 		$( self.elem ).append( '<div id="'+id+'" class="slidepop"><div class="imgbits"></div></div>' );
 		id = '#'+id+'.slidepop';
 		self.slidepop = $( id ).slidepop({ 
-			close: 'hide',
 			click_out: false
 		}).data( id );
 	}
@@ -234,10 +233,10 @@
 		var self = this;
 		var lite = self.lites[_id];
 		var elem = self.liteToImgbit( _id );
-		$( elem ).attr('id', 'imgbit-'+_id );
+		$( elem ).attr( 'id', 'imgbit-'+_id );
 		$( '.slidepop .imgbits', self.elem ).append( elem );
-		$( '#imgbit-'+_id+'.imgbit', self.elem ).imgbit();
-		self.imgbitStart();
+		$( '.slidepop #imgbit-'+_id+'.imgbit', self.elem ).imgbit();
+		self.imgbitStart( _id );
 	}
 	
 	/**
@@ -247,7 +246,7 @@
 	 */
 	imgspect.prototype.imgbitStart = function( _id ) {
 		var self = this;
-		$( '#imgbit-'+_id+'.imgbit .view' ).click( function( _e ) {
+		$( '#imgbit-'+_id+'.imgbit .view', self.elem ).click( function( _e ) {
 			var id = $(this).parent().attr('id');
 			i = parseInt( id.replace('imgbit-', '' ) );
 			self.liteShow( i );

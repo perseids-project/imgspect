@@ -90,18 +90,16 @@
 }
 
 .imgspect .slidepop {
-	background-color: rgba( 0, 0, 0, 0.8 );
+	background-color: rgba( 75, 75, 75, 0.8 );
 	padding-bottom: 50px;
 	width: 100%;
 }
 
 .imgspect .slidepop a {
 	padding: 5px;
-	padding-left: 20px;
 	display: block;
 	width: 100%;
 	color: #CCC;
-	background-color: 111;
 }
 
 .imgspect .slidepop .imgbits {
