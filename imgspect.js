@@ -459,6 +459,27 @@
 		}
 	}
 	
+	
+	/**
+	 * Change the color of future lites
+	 *
+	 * @param { string } _color CMYK name as defined in self.colors
+	 *						    OR a hex color value
+	 */
+	imgspect.prototype.liteColor = function( _color ) {
+		var self = this;
+		_color = _color.toUpperCase();
+		if ( _color in self.colors ) {
+			self.options['lite_color'] = self.colors[ _color ];
+		}
+		else {
+			//------------------------------------------------------------
+			//  TODO: Comeback and check to make sure _color is a hex
+			//------------------------------------------------------------
+			self.options['lite_color'] = _color;
+		}
+	}
+	
 	/**
 	 * Start the zoom event listeners
 	 */
@@ -555,45 +576,6 @@
 	}
 	
 	/**
-	 * Positions the view origin to the passed coordinates.
-	 * AKA it GOES to the coordinates.
-	 *
-	 * @param { float } _x x coordinate
-	 * @param { float } _y y coordinate
-	 * @param { float } _sec number of seconds the dragger movement takes
-	 */
-	imgspect.prototype.goTo = function( _x, _y, _sec ) {
-		var self = this;
-		
-		//------------------------------------------------------------
-		//  Set defaults
-		//------------------------------------------------------------
-		_x = ( _x == undefined ) ? 0 : _x;
-		_y = ( _y == undefined ) ? 0 : _y;
-		_sec = ( _sec == undefined ) ? self.options['secs'] : _sec;
-		
-		//------------------------------------------------------------
-		//  Start the drag animation
-		//------------------------------------------------------------
-		var nav_pos = $( '.nav', this.elem ).position();
-		$( '.drag', self.elem ).animate({
-			left: _x / self.nav_scale + nav_pos.left,
-			top: _y / self.nav_scale + nav_pos.top
-		},
-		{
-			duration: _sec * 1000, // to milliseconds
-			
-			//------------------------------------------------------------
-			//  Reuse the drag handler function...
-			//------------------------------------------------------------
-			step: function() {
-				var drag_pos = $( '.drag', this.elem ).position();
-				self.dragHandler( nav_pos, drag_pos );
-			}
-		});
-	}
-	
-	/**
 	 * Resize drag window
 	 */
 	imgspect.prototype.dragResize = function() {
@@ -685,23 +667,42 @@
 	}
 	
 	/**
-	 * Change the color of future lites
+	 * Positions the view origin to the passed coordinates.
+	 * AKA it GOES to the coordinates.
 	 *
-	 * @param { string } _color CMYK name as defined in self.colors
-	 *						    OR a hex color value
+	 * @param { float } _x x coordinate
+	 * @param { float } _y y coordinate
+	 * @param { float } _sec number of seconds the dragger movement takes
 	 */
-	imgspect.prototype.liteColor = function( _color ) {
+	imgspect.prototype.goTo = function( _x, _y, _sec ) {
 		var self = this;
-		_color = _color.toUpperCase();
-		if ( _color in self.colors ) {
-			self.options['lite_color'] = self.colors[ _color ];
-		}
-		else {
+		
+		//------------------------------------------------------------
+		//  Set defaults
+		//------------------------------------------------------------
+		_x = ( _x == undefined ) ? 0 : _x;
+		_y = ( _y == undefined ) ? 0 : _y;
+		_sec = ( _sec == undefined ) ? self.options['secs'] : _sec;
+		
+		//------------------------------------------------------------
+		//  Start the drag animation
+		//------------------------------------------------------------
+		var nav_pos = $( '.nav', this.elem ).position();
+		$( '.drag', self.elem ).animate({
+			left: _x / self.nav_scale + nav_pos.left,
+			top: _y / self.nav_scale + nav_pos.top
+		},
+		{
+			duration: _sec * 1000, // to milliseconds
+			
 			//------------------------------------------------------------
-			//  TODO: Comeback and check to make sure _color is a hex
+			//  Reuse the drag handler function...
 			//------------------------------------------------------------
-			self.options['lite_color'] = _color;
-		}
+			step: function() {
+				var drag_pos = $( '.drag', this.elem ).position();
+				self.dragHandler( nav_pos, drag_pos );
+			}
+		});
 	}
 	
 	/**
