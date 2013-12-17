@@ -78,6 +78,11 @@
 		self.src = null;
 		
 		//------------------------------------------------------------
+		//  Stores the slidepop handler
+		//------------------------------------------------------------
+		self.slidepop = null;
+		
+		//------------------------------------------------------------
 		//	Build the application and get ready for interactivity
 		//------------------------------------------------------------
 		self.build();
@@ -87,6 +92,11 @@
 		//  Create the output window after the nav resize
 		//------------------------------------------------------------
 		self.outputBuild();
+		
+		//------------------------------------------------------------
+		//  Create the slidepop area to store imgbits
+		//------------------------------------------------------------
+		self.slidepopBuild();
 		
 		self.start();
 	}
@@ -181,6 +191,75 @@
 	}
 	
 	/**
+	 * Build the slidepop which holds the imgbits
+	 */
+	imgspect.prototype.slidepopBuild = function() {
+		var self = this;
+		//------------------------------------------------------------
+		//  This is a sloppy way of generating an id...
+		//  Please forgive me!
+		//  I need a unique id to grab a plugin handle from jQuery.
+		//  It's a hack, but it's the only one I know!
+		//------------------------------------------------------------
+		var id = 's' + ( parseInt( Math.random()*100 ) ) + 1;
+		$( self.elem ).append( '<div id="'+id+'" class="slidepop"><div class="imgbits"></div></div>' );
+		id = '#'+id+'.slidepop';
+		self.slidepop = $( id ).slidepop({ 
+			close: 'hide',
+			click_out: false
+		}).data( id );
+	}
+	
+	/**
+	 * Update the slidepop area by building imgbits from lite objects
+	 */
+	imgspect.prototype.slidepopUpdate = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
+		//  Remove the old imgbits
+		//------------------------------------------------------------
+		$( '.slidepop .imgbit', self.elem ).remove();
+		for ( var i in self.lites ) {
+			self.imgbitAdd( i );
+		}
+	}
+	
+	/**
+	 * Build an imgbit.
+	 *
+	 * @param {int} _id Lite id
+	 */
+	imgspect.prototype.imgbitAdd = function( _id ) {
+		var self = this;
+		var lite = self.lites[_id];
+		var elem = self.liteToImgbit( _id );
+		$( elem ).attr('id', 'imgbit-'+_id );
+		$( '.slidepop .imgbits', self.elem ).append( elem );
+		$( '#imgbit-'+_id+'.imgbit', self.elem ).imgbit();
+		self.imgbitStart();
+	}
+	
+	/**
+	 * Start the imgbit listeners
+	 *
+	 * @param {int} _id Lite id
+	 */
+	imgspect.prototype.imgbitStart = function( _id ) {
+		var self = this;
+		$( '#imgbit-'+_id+'.imgbit .view' ).click( function( _e ) {
+			var id = $(this).parent().attr('id');
+			i = parseInt( id.replace('imgbit-', '' ) );
+			self.liteShow( i );
+			_e.preventDefault();
+		});
+		
+		$( '#'+_id+'.imgbit', self.elem ).on( 'IMGBIT-CHANGE', function( _e, _id ) {
+			spect.outputUpdate();
+		});
+	}
+	
+	/**
 	 * Update the output area
 	 */
 	imgspect.prototype.outputUpdate = function() {
@@ -188,6 +267,9 @@
 		$( '.output pre', self.elem ).text('');
 		var output = '';
 		for ( var i in self.lites ) {
+			//------------------------------------------------------------
+			//  TODO: Check if this is the best way to actually add spaces
+			//------------------------------------------------------------
 			output += self.liteToImgbit( i ) + "\r\n" + "\r\n";
 		}
 		$( '.output pre', self.elem ).text( output );
@@ -360,6 +442,12 @@
 			self.c_lite = null;
 			
 			//------------------------------------------------------------
+			//  Refresh the slidepop area
+			//------------------------------------------------------------
+			self.slidepopUpdate();
+			self.slidepop.show();
+						
+			//------------------------------------------------------------
 			//  Let the world know the app state has changed
 			//------------------------------------------------------------
 			$( self.elem ).trigger( self.events['change'] );
@@ -504,12 +592,12 @@
 	imgspect.prototype.liteToImgbit = function( _id ) {
 		var self = this;
 		var lite = self.lites[_id];
-		var tag = '<a class="imgbit" href="'+self.src+'"\
+		var tag = '<a id="imgbit-'+_id+'" class="imgbit edit" href="'+self.src+'\
 				?x1='+lite.x1+'\
 				&y1='+lite.y1+'\
 				&x2='+lite.x2+'\
 				&y2='+lite.y2+'\
-				></a>';
+				"></a>';
 		return tag.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
 	}
 	

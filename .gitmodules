@@ -1,3 +1,6 @@
 [submodule "third_party/menumucil"]
 	path = third_party/menumucil
 	url = https://github.com/caesarfeta/menumucil
+[submodule "third_party/slidepop"]
+	path = third_party/slidepop
+	url = https://github.com/caesarfeta/slidepop

@@ -178,3 +178,17 @@ By default I think that output should be imgbit constructors, but I'll add the a
 I'm realizing I should breakout lites into their own class.
 Things are starting to get a bit unruly...
 Started work on the output window.
+
+Okay let me regroup my thoughts here.
+
+The drop down menu should be a slide-up menu.
+It's bettter to cover the tools than the main draw area.
+
+I need to breakout lites into their own class and make sure that DOM manipulations to imgbits make their way back to the lite class.
+One stop shopping is necessary.
+
+Each imgbit should have a little delete button.
+Things should be reorganized accordingly.
+If deletes happen anywhere in the lite array then an array may not be the best way of storing them all...
+Hmmmm...
+
