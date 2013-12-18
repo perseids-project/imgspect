@@ -147,6 +147,11 @@
 		self.toolsBuild();
 		
 		//------------------------------------------------------------
+		//  Create the dropdown
+		//------------------------------------------------------------
+		self.dropBuild();
+		
+		//------------------------------------------------------------
 		//  Clear element so no unexpected wrapping occurs
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div style="clear:both">' );
@@ -177,6 +182,68 @@
 				'background-color': self.colors[i]
 			});
 		}
+	}
+	
+	/**
+	 * Build the dropdown
+	 */	
+	imgspect.prototype.dropBuild = function() {
+		var self = this;
+		$( self.elem ).before( '<div id="drop"><div class="imgbits"></div></div>' );
+		self.drop = $( '#drop' ).menumucil({ cover: true }).data( '#drop' );
+		self.dropStart();
+	}
+	
+	/**
+	 * Start the dropdown listener
+	 */	
+	imgspect.prototype.dropStart = function() {
+		var self = this;
+		$( self.elem ).on( 'IMGSPECT-CHANGE', function( _e ) {
+			var id = self.liteLast().id;
+			self.imgbitAdd( id );
+		});
+		$( self.elem ).on( 'IMGSPECT-UNDO', function( _e, _obj ) {
+			$( '#drop #imgbit-'+_obj.id+'.imgbit' ).remove();
+		});
+	}
+	
+	/**
+	 * Add an imgbit to the drop down
+	 *
+	 * @param { int } _id Lite id
+	 */	
+	imgspect.prototype.imgbitAdd = function( _id ) {
+		var self = this;
+		var imgbit = self.liteToImgbit( _id );
+		$( '#drop .imgbits' ).append( imgbit );
+		$( '#drop #imgbit-'+_id ).imgbit();
+		self.imgbitStart( _id );
+	}
+	
+	/**
+	 * Start imgbit event listeners
+	 *
+	 * @param { int } _id Lite id
+	 */
+	imgspect.prototype.imgbitStart = function( _id ) {
+		var self = this;
+		//------------------------------------------------------------
+		//  Clicking an imgbit will take you to its position in
+		//  the original image.
+		//------------------------------------------------------------
+		$( '#drop #imgbit-'+_id+' .view' ).click( function( _e ) {
+			self.drop.close();
+			var id = $(this).parent().attr('id');
+			var i = parseInt( id.replace( 'imgbit-', '') );
+			//------------------------------------------------------------
+			//  Wait a bit before moving
+			//------------------------------------------------------------
+			setTimeout( function() {
+				spect.liteShow( i );
+			}, 500 );
+			_e.preventDefault();
+		});
 	}
 
 	/**
@@ -529,7 +596,6 @@
 		//  I'm not convinced this is best.  If people complain
 		//  here's where you can constrain the coordinates.
 		//------------------------------------------------------------
-
 		self.goTo( x, y );
 	}
 	
