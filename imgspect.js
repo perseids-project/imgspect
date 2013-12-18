@@ -160,12 +160,17 @@
 		var self = this;
 		
 		//------------------------------------------------------------
-		//  Create the tool buttons
+		//  Build the tool area
 		//------------------------------------------------------------
-		$( '.ui', self.elem ).append( '<div class="tools">' );
-		$( '.tools', self.elem ).append( '<a href="#" class="tool zoom in">+</a>' );
-		$( '.tools', self.elem ).append( '<a href="#" class="tool zoom out">-</a>' );
-		$( '.tools', self.elem ).append( '<a href="#" class="tool undo">&larr;</a>' );
+		$( '.ui', self.elem ).prepend( '<div class="tools">' );
+		
+		//------------------------------------------------------------
+		//  Create the zoom buttons
+		//------------------------------------------------------------
+		$( '.tools', self.elem ).append('\
+				<a href="#" class="tool zoom in">+</a>\
+				<a href="#" class="tool zoom out">-</a>\
+		 ');
 		
 		//------------------------------------------------------------
 		//  Build the color
@@ -178,6 +183,8 @@
 				'background-color': self.colors[i]
 			});
 		}
+		$( '.tools', self.elem ).append( '<a href="#" class="tool undo">&larr;</a>' );
+		$( '.tools', self.elem ).append( '<div style="clear:both">' );
 	}
 	
 	/**
@@ -258,10 +265,37 @@
 	 */
 	imgspect.prototype.outputBuild = function() {
 		var self = this;
-		$( '.ui', self.elem ).prepend( '<div class="output"><pre></pre></div>' );
+		$( '.tools', self.elem ).append( '<div class="output"><pre></pre></div>' );
+		console.log( $( '.tool', self.elem ).outerHeight() );
 		$( '.output', self.elem ).css({
-			'max-height': $( '.nav', self.elem ).height()
+			'max-height': $( '.nav', self.elem ).innerHeight() - $( '.tool', self.elem ).outerHeight()
 		});
+		self.outputInitText();
+	}
+	
+	/**
+	 * Initial preformatted text for the output area
+	 */
+	imgspect.prototype.outputInitText = function() {
+		var self = this;
+		var output = '\
+WELCOME TO IMGSPECT \n\
+------------------- \n\
+Imgspect is a tool for captioning or transcribing select areas of large images.\n\n\
+Unique identifiers for your captioned areas will be written to this output window once you begin. \n\n\
+\n\
+HOW TO USE IMGSPECT \n\
+------------------- \n\
+Drag the see-through white rectangle over the area of the smaller image you want to inspect. \n\n\
+Click and drag your mouse over the larger image to highlight areas you\'re interested in. \n\n\
+Click the color squares to change the highlight color. \n\n\
+Click the plus and minus buttons to zoom the larger image in and out. \n\n\
+Click the back-arrow to remove the last highlight. \n\n\
+Click the triangle to open a drop-down of just your highlighted areas. \n\n\
+In the drop-down view click the hash tag to caption or transcribe the highlighted area.\n\n\
+In the drop-down view click an img to find its original position in the larger image.\n\n\
+';
+		$( '.output pre', self.elem ).text( output.trim() );
 	}
 	
 	/**
@@ -414,6 +448,15 @@
 		
 		$( '.view', self.elem ).mouseup( function( _e ) {
 			//------------------------------------------------------------
+			//  Check to see if the current lite is not just 
+			//  a trivial mouse slip up.
+			//------------------------------------------------------------
+			if ( self.c_lite.width() == 0 || self.c_lite.height() == 0 ) {
+				self.c_lite = null;
+				return;
+			}
+			
+			//------------------------------------------------------------
 			//  Store lite position in relation to original
 			//------------------------------------------------------------
 			var cp = self.c_lite.position();
@@ -421,6 +464,7 @@
 			var y1 = cp.top / self.zoom_n;
 			var x2 = x1 + self.c_lite.width() / self.zoom_n;
 			var y2 = y1 + self.c_lite.height() / self.zoom_n;
+			
 			self.lites.push({ 
 				x1: parseInt(x1),
 				y1: parseInt(y1),
@@ -806,7 +850,9 @@
 	/**
 	 * Positions the view origin to the passed coordinates.
 	 * AKA it GOES to the coordinates.
-	 * It will center 
+	 *
+	 * It will center the coordinates within the dragger but
+	 * constrain the edges of the dragger to the nav box
 	 *
 	 * @param { float } _x x coordinate
 	 * @param { float } _y y coordinate

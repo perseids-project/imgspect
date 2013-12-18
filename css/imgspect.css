@@ -1,6 +1,7 @@
 .imgspect {
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	width: auto;
+	background-color: #222;
 }
 
 .imgspect .view {
@@ -47,6 +48,10 @@
 	position: absolute;
 }
 
+.imgspect .colors {
+	display: block;
+}
+
 .imgspect .color.selected {
 	border: 1px solid #444;
 	outline: 1px solid #BBB;
@@ -58,36 +63,46 @@
 	padding-bottom: 20px;
 }
 
-.imgspect .tool {
-	background-color: #444;
-	color: #FF8888;
-	margin-top: 5px;
-	text-decoration: none;
-	padding: 2px 6px;
-	font-size: 40px;
+.imgspect .tools {
+	float: left;
 }
 
+.imgspect .tools .group {
+	display: block;
+	clear: both;
+}
+
+.imgspect .tool {
+	background-color: #444;
+	color: #888888;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	text-decoration: none;
+	padding: 2px 6px;
+	font-size: 20px;
+}
+
+#drop .clicker:hover,
 .imgspect .tool:hover {
-	color: #FF4444;
+	color: #FF8888;
 }
 
 .imgspect .output {
-	color: #DDD;
-	display: block;
+	color: #888;
 	word-wrap: break-word;
-	margin-top: 5px;
 	margin-right: 5px;
-	float: left;
 	border: none;
 	outline: none;
-	background-color: #444;
+	background-color: #111;
 	padding: 6px 5px 4px 5px;
 	width: 300px;
 	overflow-y: scroll;
+	text-align: left;
 }
 
 .imgspect .output pre {
 	margin: 0;
+	font-size: 12px;
 }
 
 .imgspect .center {
@@ -97,6 +112,7 @@
 
 .imgspect .ui {
 	display: inline-block;
+	width: 955px;
 }
 
 #drop {
