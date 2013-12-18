@@ -114,6 +114,12 @@
 		$( '.nav', self.elem ).prepend( '<div class="drag">' );
 		
 		//------------------------------------------------------------
+		//  Wrap containers so nav and tools can be center aligned
+		//------------------------------------------------------------
+		$( '.nav', self.elem ).wrap( '<div class="ui">' );
+		$( '.ui', self.elem ).wrap( '<div class="center">' );
+		
+		//------------------------------------------------------------
 		//  Create the viewport aka the 'view
 		//------------------------------------------------------------
 		$( self.elem ).prepend( '<div class="view">' );
@@ -156,7 +162,7 @@
 		//------------------------------------------------------------
 		//  Create the tool buttons
 		//------------------------------------------------------------
-		$( self.elem ).append( '<div class="tools">' );
+		$( '.ui', self.elem ).append( '<div class="tools">' );
 		$( '.tools', self.elem ).append( '<a href="#" class="tool zoom in">+</a>' );
 		$( '.tools', self.elem ).append( '<a href="#" class="tool zoom out">-</a>' );
 		$( '.tools', self.elem ).append( '<a href="#" class="tool undo">&larr;</a>' );
@@ -180,8 +186,19 @@
 	imgspect.prototype.dropBuild = function() {
 		var self = this;
 		$( self.elem ).before( '<div id="drop"><div class="imgbits"></div></div>' );
-		self.drop = $( '#drop' ).menumucil({ cover: true }).data( '#drop' );
+		self.drop = $( '#drop' ).menumucil({ 
+			cover: true,
+			closed: '&#9660',
+			open: '&#9650'
+		 }).data( '#drop' );
 		self.dropStart();
+	}
+	
+	imgspect.prototype.dropCount = function() {
+		var self = this;
+		var count = self.lites.length;
+		console.log( count );
+		$( '#drop .extra' ).text( count );
 	}
 	
 	/**
@@ -189,11 +206,12 @@
 	 */	
 	imgspect.prototype.dropStart = function() {
 		var self = this;
-		$( self.elem ).on( 'IMGSPECT-CHANGE', function( _e ) {
+		$( self.elem ).on( self.events['change'], function( _e ) {
 			var id = self.liteLast().id;
 			self.imgbitAdd( id );
+			self.dropCount();
 		});
-		$( self.elem ).on( 'IMGSPECT-UNDO', function( _e, _obj ) {
+		$( self.elem ).on( self.events['undo'], function( _e, _obj ) {
 			$( '#drop #imgbit-'+_obj.id+'.imgbit' ).remove();
 		});
 	}
@@ -241,7 +259,7 @@
 	 */
 	imgspect.prototype.outputBuild = function() {
 		var self = this;
-		$( '.tools', self.elem ).append( '<div class="output"><pre></pre></div>' );
+		$( '.ui', self.elem ).prepend( '<div class="output"><pre></pre></div>' );
 		$( '.output', self.elem ).css({
 			'max-height': $( '.nav', self.elem ).height()
 		});
@@ -419,7 +437,7 @@
 			//  Draw the lite on the nav image.
 			//  ( Make this optional with a config option? )
 			//------------------------------------------------------------
-			self.liteDrawNav();
+			self.navLiteDraw( self.liteLast().id );
 			
 			//------------------------------------------------------------
 			//  Reset current lite
@@ -446,14 +464,16 @@
 	
 	/**
 	 * Build the imgspect DOM elements
+	 *
+	 * @param { int } _id Lite id
 	 */
-	imgspect.prototype.liteDrawNav = function() {
+	imgspect.prototype.navLiteDraw = function( _id ) {
 		var self = this;
 		var lite = self.liteDom();
 		var nav = $( '.nav', self.elem );
 		nav.append( lite );
 		var np = nav.position();
-		var lp = self.liteLast();
+		var lp = self.lites[_id];
 		lite.css({
 			left: lp.x1 / self.nav_scale + np.left,
 			top: lp.y1 / self.nav_scale + np.top,
@@ -541,6 +561,24 @@
 		}
 	}
 	
+	/**
+	*  Remove all lites preview from the nav
+	*/
+	imgspect.prototype.navLiteClear = function() {
+		var self = this;
+		$( '.nav .lite', self.elem ).remove();
+	}
+	
+	/**
+	*  Remove all lites preview from the nav
+	*/
+	imgspect.prototype.navLiteRedraw = function() {
+		var self = this;
+		self.navLiteClear();
+		for ( var id in self.lites ) {
+			self.navLiteDraw( id );
+		}
+	}
 	
 	/**
 	 * Change the color of future lites
@@ -575,7 +613,7 @@
 				&y1='+lite.y1+'\
 				&x2='+lite.x2+'\
 				&y2='+lite.y2+'\
-				"></a>';
+				">#</a>';
 		return tag.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
 	}
 	
@@ -740,6 +778,7 @@
 		$( '.nav img', self.elem ).css({
 			width: width
 		});
+		self.navLiteRedraw();
 	}
 	
 	/**
