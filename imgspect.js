@@ -266,7 +266,6 @@
 	imgspect.prototype.outputBuild = function() {
 		var self = this;
 		$( '.tools', self.elem ).append( '<div class="output"><pre></pre></div>' );
-		console.log( $( '.tool', self.elem ).outerHeight() );
 		$( '.output', self.elem ).css({
 			'max-height': $( '.nav', self.elem ).innerHeight() - $( '.tool', self.elem ).outerHeight()
 		});
@@ -651,6 +650,14 @@ In the drop-down view click an img to find its original position in the larger i
 	imgspect.prototype.liteToImgbit = function( _id ) {
 		var self = this;
 		var lite = self.lites[_id];
+		
+		//------------------------------------------------------------
+		//  TODO: add color handling sometime you get a hex sometimes
+		//  a string representation of an RGB object.
+		//------------------------------------------------------------
+		console.log( typeof lite.color );
+		console.log( lite.color );
+		
 		var tag = '<a id="imgbit-'+_id+'" class="imgbit edit" href="'+self.src+'\
 				?x1='+lite.x1+'\
 				&y1='+lite.y1+'\

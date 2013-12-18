@@ -178,3 +178,25 @@ By default I think that output should be imgbit constructors, but I'll add the a
 I'm realizing I should breakout lites into their own class.
 Things are starting to get a bit unruly...
 Started work on the output window.
+
+## 2013-12-18
+
+### imgspect
+
+Just tried to clean-up the layout and improve the user experience today.
+I'm a sucker for aesthetics.
+It's in a good place.
+I just need to button up a few things.
+Like imgbit colors.
+Being able to delete imgbits from the drop-down.
+Maybe have the imgbits in the drop-down record zoom levels too.
+
+And output events, naturally.
+That's still broken.
+
+And I need to add CITE URN support.
+And roll the whole thing into Perseids.
+
+It's a great prototype I'd say.
+I might refactor.
+Breakout the nav, draw area, drop-down, and tools and output into their own modules, imgspect.js is getting to be a bit of a beast.
