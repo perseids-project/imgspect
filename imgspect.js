@@ -197,7 +197,6 @@
 	imgspect.prototype.dropCount = function() {
 		var self = this;
 		var count = self.lites.length;
-		console.log( count );
 		$( '#drop .extra' ).text( count );
 	}
 	
@@ -807,6 +806,7 @@
 	/**
 	 * Positions the view origin to the passed coordinates.
 	 * AKA it GOES to the coordinates.
+	 * It will center 
 	 *
 	 * @param { float } _x x coordinate
 	 * @param { float } _y y coordinate
@@ -826,9 +826,30 @@
 		//  Start the drag animation
 		//------------------------------------------------------------
 		var nav_pos = $( '.nav', this.elem ).position();
+		var nav_width = $( '.nav', this.elem ).width();
+		var nav_height = $( '.nav', this.elem ).height();
+		var drag_width = $( '.drag', this.elem ).width();
+		var drag_height = $( '.drag', this.elem ).height();
+		
+		var left = _x / self.nav_scale + nav_pos.left;
+		var top = _y / self.nav_scale + nav_pos.top;
+		
+		//------------------------------------------------------------
+		//  Constrain the dragger
+		//------------------------------------------------------------		
+		left = ( left < nav_pos.left ) ? nav_pos.left : left;
+		top = ( top < nav_pos.top ) ? nav_pos.top : top;
+		var drag_max_x = nav_pos.left + nav_width - drag_width;
+		var drag_max_y = nav_pos.top + nav_height - drag_height;
+		left = ( left > drag_max_x ) ? drag_max_x : left;
+		top = ( top > drag_max_y ) ? drag_max_y : top;
+		
+		//------------------------------------------------------------
+		//  Start the drag animation
+		//------------------------------------------------------------
 		$( '.drag', self.elem ).animate({
-			left: _x / self.nav_scale + nav_pos.left,
-			top: _y / self.nav_scale + nav_pos.top
+			left: left,
+			top: top
 		},
 		{
 			duration: _sec * 1000, // to milliseconds
