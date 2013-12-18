@@ -84,6 +84,27 @@
 	width: 300px;
 	overflow-y: scroll;
 }
+
 .imgspect .output pre {
 	margin: 0;
+}
+
+#drop {
+	width: 100%;
+}
+#drop .inner {
+	background-color: rgba( 0, 0, 0, 0.8 );
+	padding: 10px;
+}
+#drop .inner .imgbit {
+	margin: 10px;
+}
+#drop .clicker {
+	display: block;
+	width: 100%;
+	text-align: center;
+	text-decoration: none;
+	background-color: rgba( 25, 25, 25, 0.9 );
+	color: #666;
+	padding: 5px 0;
 }
