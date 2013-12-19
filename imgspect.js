@@ -40,7 +40,7 @@
 		//------------------------------------------------------------
 		self.options = $.extend({
 			zoom_unit: .1,
-			lite_color: self.colors['YELLOW'],
+			lite_color: new Culuh( self.colors['YELLOW'] ),
 			lite_opacity: .4,
 			secs: .5 // default number of seconds it takes for goTo() animations
 		}, _options);
@@ -426,7 +426,7 @@ In the drop-down view click an img to find its original position in the larger i
 			self.c_lite.css({
 				left: mp.x - dp.left,
 				top: mp.y - dp.top,
-				'background-color': self.options['lite_color'],
+				'background-color': '#'+self.options['lite_color'].hex(),
 				opacity: self.options['lite_opacity']
 			});
 			_e.preventDefault();
@@ -521,7 +521,7 @@ In the drop-down view click an img to find its original position in the larger i
 			top: lp.y1 / self.nav_scale + np.top,
 			width: lp.x2 / self.nav_scale - lp.x1 / self.nav_scale,
 			height: lp.y2 / self.nav_scale - lp.y1 / self.nav_scale,
-			'background-color': lp.color,
+			'background-color': '#'+lp.color.hex(),
 			opacity: lp.opacity
 		});
 	}
@@ -597,7 +597,7 @@ In the drop-down view click an img to find its original position in the larger i
 				top: self.lites[i].y1 * self.zoom_n,
 				width: ( self.lites[i].x2 - self.lites[i].x1 ) * self.zoom_n,
 				height: ( self.lites[i].y2 - self.lites[i].y1 ) * self.zoom_n,
-				'background-color': self.lites[i].color,
+				'background-color': '#'+self.lites[i].color.hex(),
 				opacity: self.lites[i].opacity
 			});
 		}
@@ -632,13 +632,10 @@ In the drop-down view click an img to find its original position in the larger i
 		var self = this;
 		_color = _color.toUpperCase();
 		if ( _color in self.colors ) {
-			self.options['lite_color'] = self.colors[ _color ];
+			self.options['lite_color'] = new Culuh( self.colors[ _color ] );
 		}
 		else {
-			//------------------------------------------------------------
-			//  TODO: Comeback and check to make sure _color is a hex
-			//------------------------------------------------------------
-			self.options['lite_color'] = _color;
+			self.options['lite_color'] = new Culuh( _color );
 		}
 	}
 	
@@ -651,18 +648,13 @@ In the drop-down view click an img to find its original position in the larger i
 		var self = this;
 		var lite = self.lites[_id];
 		
-		//------------------------------------------------------------
-		//  TODO: add color handling sometime you get a hex sometimes
-		//  a string representation of an RGB object.
-		//------------------------------------------------------------
-		console.log( typeof lite.color );
-		console.log( lite.color );
-		
+		var color = lite.color;
 		var tag = '<a id="imgbit-'+_id+'" class="imgbit edit" href="'+self.src+'\
 				?x1='+lite.x1+'\
 				&y1='+lite.y1+'\
 				&x2='+lite.x2+'\
 				&y2='+lite.y2+'\
+				&c='+color.hex()+'\
 				">#</a>';
 		return tag.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
 	}

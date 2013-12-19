@@ -1,3 +1,6 @@
 [submodule "third_party/menumucil"]
 	path = third_party/menumucil
 	url = https://github.com/caesarfeta/menumucil
+[submodule "third_party/jslib"]
+	path = third_party/jslib
+	url = https://github.com/caesarfeta/jslib

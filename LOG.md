@@ -177,3 +177,7 @@ And roll the whole thing into Perseids.
 It's a great prototype I'd say.
 I might refactor.
 Breakout the nav, draw area, drop-down, and tools and output into their own modules, imgspect.js is getting to be a bit of a beast.
+
+## 2013-12-19
+
+## imgspect
