@@ -57,6 +57,7 @@
 		//  Plugin properties
 		//------------------------------------------------------------
 		self.lites = [];
+		self.imgbits = [];
 		self.zoom_n = 1;
 		self.pan = { x:0, y:0 };
 		self.c_lite = null;
@@ -231,7 +232,12 @@
 		var self = this;
 		var imgbit = self.liteToImgbit( _id );
 		$( '#drop .imgbits' ).append( imgbit );
-		$( '#drop #imgbit-'+_id ).imgbit();
+		
+		//------------------------------------------------------------
+		//  Start the imgbit and store a reference to it
+		//------------------------------------------------------------
+		var id = '#drop #imgbit-'+_id;
+		self.imgbits.push( $( id ).imgbit().data( id ) );
 		self.imgbitStart( _id );
 	}
 	
@@ -257,6 +263,13 @@
 				spect.liteShow( i );
 			}, 500 );
 			_e.preventDefault();
+		});
+		
+		//------------------------------------------------------------
+		//  Listen for any changes
+		//------------------------------------------------------------
+		$( '#drop #imgbit-'+_id ).on( 'IMGBIT-CHANGE', function() {
+			self.outputUpdate();
 		});
 	}
 
@@ -304,8 +317,11 @@ In the drop-down view click an img to find its original position in the larger i
 		var self = this;
 		$( '.output pre', self.elem ).text('');
 		var output = '';
-		for ( var i in self.lites ) {
-			output += self.liteToImgbit( i ) + "\r\n" + "\r\n";
+		//------------------------------------------------------------
+		//  Loop through all the imgbits and return their HTML
+		//------------------------------------------------------------
+		for ( var i in self.imgbits ) {
+			output += self.imgbits[i].html() + "\n";
 		}
 		$( '.output pre', self.elem ).text( output );
 	}
@@ -376,6 +392,11 @@ In the drop-down view click an img to find its original position in the larger i
 			//  Remove the last lite
 			//------------------------------------------------------------
 			var lite = self.lites.pop();
+			
+			//------------------------------------------------------------
+			//  Remove the last imgbit
+			//------------------------------------------------------------
+			var imgbit = self.imgbits.pop();
 			
 			//------------------------------------------------------------
 			//  Redraw the lites
@@ -654,9 +675,9 @@ In the drop-down view click an img to find its original position in the larger i
 				&y1='+lite.y1+'\
 				&x2='+lite.x2+'\
 				&y2='+lite.y2+'\
-				&c='+color.hex()+'\
+				&c='+color.sat( 0.8, true ).hex()+'\
 				">#</a>';
-		return tag.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
+		return tag.smoosh();
 	}
 	
 	/**
@@ -703,7 +724,7 @@ In the drop-down view click an img to find its original position in the larger i
 				self.zoom_n += self.options['zoom_unit'];
 				break;
 			case 'OUT':
-				self.zoom_n = ( self.zoom_n <= 1 ) ? 1 : self.zoom_n-self.options['zoom_unit'];
+				self.zoom_n -= self.options['zoom_unit'];
 				break;
 		}
 		

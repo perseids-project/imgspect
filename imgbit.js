@@ -44,10 +44,19 @@
 		}
 		
 		//------------------------------------------------------------
+		//  Store original element in plain text
+		//------------------------------------------------------------
+		self.original = $( self.elem ).myHtml();
+		
+		//------------------------------------------------------------
 		//  Separate the image source and clipping coordinates
 		//------------------------------------------------------------
 		self.href = $( self.elem ).attr( 'href' );
+		self.caption = $( self.elem ).text();
 		
+		//------------------------------------------------------------
+		//  Get the imgbit parameters
+		//------------------------------------------------------------
 		var arr = self.href.split('?');
 		self.src = arr[0];
 		self.param = self.getToJson( arr[1] );
@@ -186,6 +195,11 @@
 					'background-color': '#'+self.param.c
 				});
 			}
+			
+			//------------------------------------------------------------
+			//  Let the world know you've changed
+			//------------------------------------------------------------
+			$( self.elem ).trigger( self.events['change'] );
 		}
 		img.src = self.src;
 	}
@@ -238,7 +252,6 @@
 			
 			//------------------------------------------------------------
 			//  Listen for return key.  
-			//  That's the same as clicking 'save'.
 			//------------------------------------------------------------
 			$( '.caption', self.elem ).keypress( function( _e ) {
 				if ( _e.which == 13) {
@@ -250,7 +263,8 @@
 			//  Keep editable and static caption synched.
 			//------------------------------------------------------------
 			$( '.caption', self.elem ).bind( 'input propertychange', function() {
-				$( '.text', self.elem ).text( $( '.caption', self.elem ).val() );
+				self.caption = $( '.caption', self.elem ).val();
+				$( '.text', self.elem ).text( self.caption );
 				self.captionResize();
 				//------------------------------------------------------------
 				//  Let the application know you've changed.
@@ -268,7 +282,8 @@
 		//------------------------------------------------------------
 		//  Build a caption
 		//------------------------------------------------------------
-		$( '.text', self.elem ).after( '<textarea class="caption">'+$( '.text', self.elem ).text()+'</textarea>' );
+		var textarea = '<textarea class="caption">'+$( '.text', self.elem ).text()+'</textarea>';
+		$( '.text', self.elem ).after( textarea );
 		
 		//------------------------------------------------------------
 		//  Set the width of the caption textarea to the size of the 
@@ -368,6 +383,27 @@
     }
 	
 	/**
+	 * Turn imgbit into imgbit constructor HTML
+	 * You know the markup you need to start imgbit
+	 *
+	 * @return { string } HTML representation
+	 */
+	imgbit.prototype.html = function() {
+		var self = this;
+		var html = '<a class="imgbit" \
+						href="'+self.src+'\
+						?x1='+self.param['x1']+'\
+						&y1='+self.param['y1']+'\
+						&x2='+self.param['x2']+'\
+						&y2='+self.param['y2']+'\
+						&c='+self.param['c']+'\
+						&z='+self.param['z']+'">\
+						'+self.caption+'\
+					<a>';
+		return html.smoosh();
+	}
+	
+	/**
 	 * "Register" this plugin with jQuery
 	 */
 	jQuery(document).ready( function($) {
@@ -380,8 +416,8 @@
 	})
 })(jQuery);
 
-/*
- *  Extend jQuery
+/**
+ * Extend jQuery
  */
 jQuery.fn.cursorToEnd = function() {
 	return this.each( function() {
@@ -413,3 +449,10 @@ jQuery.fn.cursorToEnd = function() {
 		this.scrollTop = 999999;
 	});
 };
+
+/**
+ *  Get an element's html
+ */
+jQuery.fn.myHtml = function() {
+	return $( this ).clone().wrap('<div>').parent().html();
+}
