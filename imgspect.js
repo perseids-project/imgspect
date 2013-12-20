@@ -675,7 +675,7 @@ In the drop-down view click an img to find its original position in the larger i
 				&y1='+lite.y1+'\
 				&x2='+lite.x2+'\
 				&y2='+lite.y2+'\
-				&c='+color.sat( 0.8, true ).hex()+'\
+				&c='+color.sat( 0.5, true ).hex()+'\
 				">#</a>';
 		return tag.smoosh();
 	}
