@@ -439,33 +439,95 @@ In the drop-down view click an img to find its original position in the larger i
 	imgspect.prototype.liteStart = function() {
 		var self = this;
 		
+		//------------------------------------------------------------
+		//  Mouse Down
+		//------------------------------------------------------------
 		$( '.view', self.elem ).mousedown( function( _e ) {
+			
+			//------------------------------------------------------------
+			//  Create a new lite
+			//------------------------------------------------------------
 			self.c_lite = $( document.createElement('div') ).addClass( 'lite' );
 			$( '.draw', self.elem ).append( self.c_lite );
-			var dp = $( '.draw', self.elem ).position();
+			
+			//------------------------------------------------------------
+			//  Get the mouse and draw position
+			//------------------------------------------------------------
 			var mp = self.viewMousePos( _e );
+			var dp = $( '.draw', self.elem ).position();
+			
+			//------------------------------------------------------------
+			//  Stash the current coordinates in 'img' space
+			//------------------------------------------------------------
+			self.c_pos = {
+				left: mp.left - dp.left,
+				top: mp.top - dp.top
+			};
+			
+			//------------------------------------------------------------
+			//  Start drawing the highlight
+			//------------------------------------------------------------
 			self.c_lite.css({
-				left: mp.x - dp.left,
-				top: mp.y - dp.top,
+				left: self.c_pos.left,
+				top: self.c_pos.top,
 				'background-color': '#'+self.options['lite_color'].hex(),
 				opacity: self.options['lite_opacity']
 			});
 			_e.preventDefault();
 		});
 		
+		//------------------------------------------------------------
+		//  Mouse Move
+		//------------------------------------------------------------
 		$( '.view', self.elem ).mousemove( function( _e ) {
 			if ( self.c_lite != null ) {
-				var lp = self.c_lite.position();
+				var cp = self.c_pos;
 				var mp = self.viewMousePos( _e );
 				var dp = $( '.draw', self.elem ).position();
-				self.c_lite.css({
-					width: mp.x - lp.left - dp.left,
-					height: mp.y - lp.top - dp.top
-				});
+				
+				//------------------------------------------------------------
+				//  Get mouse position coordinates in 'img' space
+				//------------------------------------------------------------
+				mp.left -= dp.left;
+				mp.top -= dp.top;
+				
+				//------------------------------------------------------------
+				//  This logic controls left-handed highlight support.
+				//  The origin of the highlight will change to the mouse's
+				//  current position if it's less than the original click
+				//  position.
+				//------------------------------------------------------------
+				if ( cp.left > mp.left ) {
+					self.c_lite.css({
+						left: mp.left,
+						width: cp.left - mp.left
+					});
+				}
+				else {
+					self.c_lite.css({
+						left: cp.left,
+						width: mp.left - cp.left,
+					});
+				}
+				if ( cp.top > mp.top ) {
+					self.c_lite.css({
+						top: mp.top,
+						height: cp.top - mp.top
+					});
+				}
+				else {
+					self.c_lite.css({
+						top: cp.top,
+						height: mp.top - cp.top
+					});
+				}
 			}
 			
 		});
 		
+		//------------------------------------------------------------
+		//  Mouse Up
+		//------------------------------------------------------------
 		$( '.view', self.elem ).mouseup( function( _e ) {
 			//------------------------------------------------------------
 			//  Check to see if the current lite is not just 
@@ -485,6 +547,9 @@ In the drop-down view click an img to find its original position in the larger i
 			var x2 = x1 + self.c_lite.width() / self.zoom_n;
 			var y2 = y1 + self.c_lite.height() / self.zoom_n;
 			
+			//------------------------------------------------------------
+			//  Stash that lite
+			//------------------------------------------------------------
 			self.lites.push({ 
 				x1: parseInt(x1),
 				y1: parseInt(y1),
@@ -506,6 +571,7 @@ In the drop-down view click an img to find its original position in the larger i
 			//  Reset current lite
 			//------------------------------------------------------------
 			self.c_lite = null;
+			self.c_pos = null;
 			
 			//------------------------------------------------------------
 			//  Let the world know the app state has changed
@@ -862,9 +928,9 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.viewMousePos = function( _e ) {
 		var vp = $( '.view', this.elem ).position();
-		var x = _e.clientX - vp.left;
-		var y = _e.clientY - vp.top + $(window).scrollTop();
-		return { 'x':x, 'y':y }
+		var left = _e.clientX - vp.left;
+		var top = _e.clientY - vp.top + $(window).scrollTop();
+		return { 'left':left, 'top':top }
 	}
 	
 	/**
