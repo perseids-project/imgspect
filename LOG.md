@@ -178,6 +178,19 @@ It's a great prototype I'd say.
 I might refactor.
 Breakout the nav, draw area, drop-down, and tools and output into their own modules, imgspect.js is getting to be a bit of a beast.
 
-## 2013-12-19
+## 2013-12-23
 
-## imgspect
+### imgspect
+
+I haven't begun the integration into sosol or other perseids services yet.
+That's going to be challenging and I've delayed taking the plunge until after the holiday when I can have enough uninterrupted time to do it properly.
+It's not something I can pick up and put down easily.
+
+Today I decided to start fixing up some minor issues that would have eventually reared their ugly head.
+So I added "left-handed" highlighting.
+
+In the near future I should fix issues with the zoom.
+	Let me list those issues to begin...
+
+* When zooming in the center of the view should be the focus.  Right now it's the upper-left corner.
+* Drag rectangle should stay constrained in the nav preview.  It's an eyesore to see it pop-out of it's cage.
