@@ -2,10 +2,15 @@
 The imgspect project is the home of two closesly related jQuery plug-ins, the eponymouse imgspect and its friendly helper, imgbit.
 
 ## imgspect
-**imgspect** builds an application for captioning or transcribing select areas of any large image.
+**imgspect** builds an application for captioning / transcribing select areas of large images.
 
 ## imgbit
 **imgbit** is the plugin used to display areas you highlight with imgspect as if you cropped them with Photoshop and saved them as new files.
+
+# Use imgspect for...
+* Serious research
+* Art critiques
+* Amusing your friends
 
 ## Requirements
 * jQuery ( http://jquery.com )
