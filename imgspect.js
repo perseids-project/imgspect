@@ -50,7 +50,8 @@
 		//------------------------------------------------------------
 		self.events = {
 			change: 'IMGSPECT-CHANGE',
-			undo: 'IMGSPECT-UNDO'
+			undo: 'IMGSPECT-UNDO',
+			error: 'IMGSPECT-ERROR'
 		}
 		
 		//------------------------------------------------------------
@@ -249,9 +250,18 @@
 	 */
 	imgspect.prototype.imgbitRemove = function( _id ) {
 		var self = this;
-		if ( _id < 0 || _id >= self.imgbits.length ) {
-			return;
+		
+		//------------------------------------------------------------
+		//  Make sure id is in range.
+		//------------------------------------------------------------
+		try {
+			if ( _id < 0 || _id >= self.imgbits.length ) throw "out of range"
 		}
+		catch ( _err ) {
+			$( self.elem ).trigger( self.events['error'], { error: _err } );
+			return
+		}
+		
 		self.imgbits[_id].remove();
 		var imgbit = self.imgbits.splice( _id, 1 );
 		
@@ -437,10 +447,14 @@ In the drop-down view click an img to find its original position in the larger i
 		var self = this;
 		
 		//------------------------------------------------------------
-		//  
+		//  Make sure id is in range.
 		//------------------------------------------------------------
-		if ( _id < 0 || _id >= self.lites.length ) {
-			return;
+		try {
+			if ( _id < 0 || _id >= self.imgbits.length ) throw "out of range"
+		}
+		catch ( _err ) {
+			$( self.elem ).trigger( self.events['error'], { error: _err } );
+			return
 		}
 		
 		//------------------------------------------------------------
@@ -482,7 +496,7 @@ In the drop-down view click an img to find its original position in the larger i
 		var timer;
 		$(window).resize( function(){
 			timer && clearTimeout(timer);
-			timer = setTimeout( function(){ self.resize(); }, 100 );
+			timer = setTimeout( function(){ self.resize(); }, 50 );
 		});
 	}
 	
