@@ -275,6 +275,22 @@
 	}
 	
 	/**
+	 * Remove the imgbit from the DOM
+	 */
+	imgbit.prototype.remove = function() {
+		var self = this;
+		$( self.elem ).remove();
+	}
+	
+	/**
+	 * Change the ids
+	 */
+	imgbit.prototype.idUpdate = function( _id ) {
+		var self = this;
+		$( self.elem ).attr( 'id', _id );
+	}
+	
+	/**
 	 * Build the edit DOM elements
 	 */
 	imgbit.prototype.editBuild = function() {

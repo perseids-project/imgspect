@@ -203,6 +203,9 @@
 		self.dropStart();
 	}
 	
+	/**
+	 * Update the dropdown counter
+	 */	
 	imgspect.prototype.dropCount = function() {
 		var self = this;
 		var count = self.lites.length;
@@ -218,9 +221,6 @@
 			var id = self.liteLast().id;
 			self.imgbitAdd( id );
 			self.dropCount();
-		});
-		$( self.elem ).on( self.events['undo'], function( _e, _obj ) {
-			$( '#drop #imgbit-'+_obj.id+'.imgbit' ).remove();
 		});
 	}
 	
@@ -240,6 +240,32 @@
 		var id = '#drop #imgbit-'+_id;
 		self.imgbits.push( $( id ).imgbit().data( id ) );
 		self.imgbitStart( _id );
+	}
+	
+	/**
+	 * Remove an imgbit from the DOM
+	 *
+	 * @param { int } _id imgbit id
+	 */
+	imgspect.prototype.imgbitRemove = function( _id ) {
+		var self = this;
+		if ( _id < 0 || _id >= self.imgbits.length ) {
+			return;
+		}
+		self.imgbits[_id].remove();
+		var imgbit = self.imgbits.splice( _id, 1 );
+		
+		//------------------------------------------------------------
+		//  Reshuffle ids
+		//------------------------------------------------------------
+		for ( var i in self.imgbits ) {
+			self.imgbits[i].idUpdate( 'imgbit-'+i );
+		}
+		
+		//------------------------------------------------------------
+		//  Update the count
+		//------------------------------------------------------------
+		self.dropCount();
 	}
 	
 	/**
@@ -425,7 +451,7 @@ In the drop-down view click an img to find its original position in the larger i
 		//------------------------------------------------------------
 		//  Remove the imgbit
 		//------------------------------------------------------------
-		var imgbit = self.imgbits.splice( _id, 1 );
+		self.imgbitRemove( _id );
 		
 		//------------------------------------------------------------
 		//  Redraw the lites
