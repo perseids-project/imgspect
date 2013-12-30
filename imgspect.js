@@ -59,6 +59,7 @@
 		self.lites = [];
 		self.imgbits = [];
 		self.zoom_n = 1;
+		self.zoom_shift = null;
 		self.pan = { x:0, y:0 };
 		self.c_lite = null;
 		
@@ -785,6 +786,7 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.zoom = function( _dir ) {
 		var self = this;
+		var old_zoom = self.zoom_n;
 		switch( _dir.toUpperCase() ) {
 			case 'IN':
 				self.zoom_n += self.options['zoom_unit'];
@@ -793,6 +795,15 @@ In the drop-down view click an img to find its original position in the larger i
 				self.zoom_n -= self.options['zoom_unit'];
 				break;
 		}
+		
+		//------------------------------------------------------------
+		//  Calculate zoom shift
+		//------------------------------------------------------------
+		var top = $( '.draw', self.elem ).position().top;
+		var left = $( '.draw', self.elem ).position().left;
+		top = top / old_zoom - top / self.zoom_n;
+		left = left / old_zoom - left / self.zoom_n;
+		self.zoom_shift = { top: top, left: left };
 		
 		//------------------------------------------------------------
 		//  Resize draw window & nav drag
@@ -860,6 +871,17 @@ In the drop-down view click an img to find its original position in the larger i
 			width: img.width() * w_ratio,
 			height: img.height() * h_ratio
 		});
+		
+		//------------------------------------------------------------
+		//  Calculate zoom shift
+		//------------------------------------------------------------
+		if ( self.zoom_shift != null ) {
+			var pos = $( '.draw', self.elem ).position();
+			var top = Math.abs( pos.top / self.zoom_n + self.zoom_shift.top );
+			var left = Math.abs( pos.left / self.zoom_n + self.zoom_shift.left );
+			self.goTo( left, top, 0 );
+		}
+		self.zoom_shift = null;
 	}
 	
 	/**

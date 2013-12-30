@@ -194,3 +194,15 @@ In the near future I should fix issues with the zoom.
 
 * When zooming in the center of the view should be the focus.  Right now it's the upper-left corner.
 * Drag rectangle should stay constrained in the nav preview.  It's an eyesore to see it pop-out of it's cage.
+
+## 2013-12-30
+
+### imgspect
+
+* Drag rectangle should stay constrained in the nav preview.  It's an eyesore to see it pop-out of it's cage.
+
+Fixed!
+
+* When zooming in the center of the view should be the focus.  Right now it's the upper-left corner.
+
+Mostly fixed.  There are some issues... there is slight shifting at high zoom levels.  I don't know what's causing it just yet.

@@ -70,9 +70,9 @@ The imgspect project is the home of two closesly related jQuery plug-ins, the ep
 		});
 	</script>
 
-## For further documentation...
+## For further documentation browse the examples
 ### imgspect
-	...	see ./examples/imgspect/basics/index.html
+	...	see ./examples/imgspect
 
 ### imgbit
-	... see ./examples/imgbit/basics/index.html
+	... see ./examples/imgbit
