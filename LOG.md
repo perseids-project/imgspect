@@ -206,3 +206,5 @@ Fixed!
 * When zooming in the center of the view should be the focus.  Right now it's the upper-left corner.
 
 Mostly fixed.  There are some issues... there is slight shifting at high zoom levels.  I don't know what's causing it just yet.
+
+There are more important problems I need to work out.  The first problem I should tackle is creating x buttons on the imgbits to delete them.
