@@ -32,12 +32,22 @@
 	padding: 2px 6px;
 	font-size: 9px;
 }
+
+.imgbit .close {
+	background-color: #444;
+	color: #888;
+	margin-bottom: 5px;
+}
+
+.imgbit .close:hover {
+	color: #FF8888;
+}
+
 .imgbit.edit .switcher {
 	margin-top: 2px;
 }
 
-.imgbit.full .source:hover,
-.imgbit .close:hover {
+.imgbit.full .source:hover {
 	color: #FF4444;
 }
 
