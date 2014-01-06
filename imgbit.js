@@ -41,7 +41,8 @@
 		//  Events
 		//------------------------------------------------------------
 		self.events = {
-			change: 'IMGBIT-CHANGE'
+			change: 'IMGBIT-CHANGE',
+			closed: 'IMGBIT-CLOSED'
 		}
 		
 		//------------------------------------------------------------
@@ -222,7 +223,8 @@
 		var self = this;
 		$( self.elem ).prepend( '<a href="" class="close">x</a>' );
 		$( '.close', self.elem ).click( function( _e ) {
-			self.remove();
+			$( self.elem ).trigger( self.events['closed'] );
+			$( self.elem ).trigger( self.events['change'] );
 			_e.preventDefault();
 		});
 	}

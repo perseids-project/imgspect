@@ -247,8 +247,9 @@
 	 * Remove an imgbit from the DOM
 	 *
 	 * @param { int } _id imgbit id
+	 * @param { bool } _imgbit Remove imgbit from the DOM
 	 */
-	imgspect.prototype.imgbitRemove = function( _id ) {
+	imgspect.prototype.imgbitRemove = function( _id, _imgbit ) {
 		var self = this;
 		
 		//------------------------------------------------------------
@@ -307,6 +308,13 @@
 		//------------------------------------------------------------
 		$( '#drop #imgbit-'+_id ).on( 'IMGBIT-CHANGE', function() {
 			self.outputUpdate();
+		});
+		
+		//------------------------------------------------------------
+		//  Listen for remove click
+		//------------------------------------------------------------
+		$( '#drop #imgbit-'+_id ).on( 'IMGBIT-CLOSED', function() {
+			self.liteRemove( _id );
 		});
 	}
 
@@ -838,7 +846,7 @@ In the drop-down view click an img to find its original position in the larger i
 		var lite = self.lites[_id];
 		
 		var color = lite.color;
-		var tag = '<a id="imgbit-'+_id+'" class="imgbit edit" href="'+self.src+'\
+		var tag = '<a id="imgbit-'+_id+'" class="imgbit edit closable" href="'+self.src+'\
 				?x1='+lite.x1+'\
 				&y1='+lite.y1+'\
 				&x2='+lite.x2+'\

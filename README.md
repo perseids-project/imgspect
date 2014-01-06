@@ -16,6 +16,7 @@ The imgspect project is the home of two closesly related jQuery plug-ins, the ep
 * jQuery ( http://jquery.com )
 * jQuery UI Draggable ( http://jqueryui.com/draggable )
 * menumucil ( https://github.com/caesarfeta/menumucil )
+* jslib ( https://github.com/caesarfeta/jslib )
 
 ## Install
 ### Clone the repository and submodules
