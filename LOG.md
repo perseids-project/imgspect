@@ -208,3 +208,15 @@ Fixed!
 Mostly fixed.  There are some issues... there is slight shifting at high zoom levels.  I don't know what's causing it just yet.
 
 There are more important problems I need to work out.  The first problem I should tackle is creating x buttons on the imgbits to delete them.
+
+## 2014-01-06
+
+### imgspect
+
+So let me reiterate my tasks.
+
+1. Fix the imgbit removal bug.
+2. Fix the zoom.
+3. Roll into perseids.
+
+12:55 - So I think I just fixed the imgbit removal bug.

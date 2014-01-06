@@ -271,8 +271,19 @@
 		//------------------------------------------------------------
 		for ( var i in self.imgbits ) {
 			self.imgbits[i].idUpdate( 'imgbit-'+i );
+			
+			//------------------------------------------------------------
+			//  Remove the listeners
+			//------------------------------------------------------------
+			self.imgbits[i].elem.off( 'IMGBIT-CHANGE' );
+			self.imgbits[i].elem.off( 'IMGBIT-CLOSED' );
+			
+			//------------------------------------------------------------
+			//  Reset the listeners
+			//------------------------------------------------------------
+			self.imgbitStart( i );
 		}
-		
+				
 		//------------------------------------------------------------
 		//  Update the count
 		//------------------------------------------------------------
@@ -983,6 +994,7 @@ In the drop-down view click an img to find its original position in the larger i
 			height: height
 		});
 		
+		/*
 		//------------------------------------------------------------
 		//  Calculate zoom shift
 		//------------------------------------------------------------
@@ -999,6 +1011,7 @@ In the drop-down view click an img to find its original position in the larger i
 			var left = Math.abs( Math.ceil( pos.left/self.zoom_n )) - sw;
 			self.goTo( left, top, 0 );
 		}
+		*/
 		self.zoom_shift = null;
 	}
 	
