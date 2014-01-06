@@ -33,7 +33,8 @@
 		// 	User options 
 		//------------------------------------------------------------
 		self.options = $.extend({
-			style: 'full'
+			style: 'full',
+			closable: false
 		}, _options);
 		
 		//------------------------------------------------------------
@@ -85,6 +86,9 @@
 		}
 		if ( $( self.elem ).hasClass('edit') ) {
 			self.options['style'] = 'edit';
+		}
+		if ( $( self.elem ).hasClass('closable') ) {
+			self.options['closable'] = true;
 		}
 		
 		//------------------------------------------------------------
@@ -197,11 +201,30 @@
 			}
 			
 			//------------------------------------------------------------
+			//  If the imgbit is closable add the close button
+			//------------------------------------------------------------
+			if ( self.options['closable'] == true ) {
+				self.closeBuild();
+			}
+			
+			//------------------------------------------------------------
 			//  Let the world know you've changed
 			//------------------------------------------------------------
 			$( self.elem ).trigger( self.events['change'] );
 		}
 		img.src = self.src;
+	}
+
+	/**
+	 * Build the close button and start the click listener
+	 */	
+	imgbit.prototype.closeBuild = function() {
+		var self = this;
+		$( self.elem ).prepend( '<a href="" class="close">x</a>' );
+		$( '.close', self.elem ).click( function( _e ) {
+			self.remove();
+			_e.preventDefault();
+		});
 	}
 	
 	/**

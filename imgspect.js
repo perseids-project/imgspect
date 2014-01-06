@@ -665,6 +665,18 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.navLiteDraw = function( _id ) {
 		var self = this;
+		
+		//------------------------------------------------------------
+		//  Make sure id is in range.
+		//------------------------------------------------------------
+		try {
+			if ( _id < 0 || _id >= self.lites.length ) throw "out of range"
+		}
+		catch ( _err ) {
+			$( self.elem ).trigger( self.events['error'], { error: _err } );
+			return
+		}
+		
 		var lite = self.liteDom();
 		var nav = $( '.nav', self.elem );
 		nav.append( lite );
@@ -704,6 +716,18 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.liteShow = function( _id ) {
 		var self = this;
+		
+		//------------------------------------------------------------
+		//  Make sure id is in range.
+		//------------------------------------------------------------
+		try {
+			if ( _id < 0 || _id >= self.lites.length ) throw "out of range"
+		}
+		catch ( _err ) {
+			$( self.elem ).trigger( self.events['error'], { error: _err } );
+			return
+		}
+		
 		var lite = self.lites[ _id ];
 		
 		//------------------------------------------------------------
@@ -800,6 +824,17 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.liteToImgbit = function( _id ) {
 		var self = this;
+		//------------------------------------------------------------
+		//  Make sure id is in range.
+		//------------------------------------------------------------
+		try {
+			if ( _id < 0 || _id >= self.lites.length ) throw "out of range"
+		}
+		catch ( _err ) {
+			$( self.elem ).trigger( self.events['error'], { error: _err } );
+			return
+		}
+		
 		var lite = self.lites[_id];
 		
 		var color = lite.color;
@@ -933,9 +968,11 @@ In the drop-down view click an img to find its original position in the larger i
 		h_ratio = ( h_ratio > 1 ) ? 1 : h_ratio;
 		
 		var img = $( '.nav img', self.elem );
+		var width = img.width() * w_ratio; 
+		var height = img.height() * h_ratio;
 		$( '.drag', self.elem ).css({
-			width: img.width() * w_ratio,
-			height: img.height() * h_ratio
+			width: width,
+			height: height
 		});
 		
 		//------------------------------------------------------------
@@ -943,8 +980,15 @@ In the drop-down view click an img to find its original position in the larger i
 		//------------------------------------------------------------
 		if ( self.zoom_shift != null ) {
 			var pos = $( '.draw', self.elem ).position();
-			var top = Math.abs( pos.top / self.zoom_n + self.zoom_shift.top );
-			var left = Math.abs( pos.left / self.zoom_n + self.zoom_shift.left );
+			//------------------------------------------------------------
+			//  Find the of the view
+			//------------------------------------------------------------
+			var sh = ( view.height()/2 ) * self.zoom_n;
+			var sw = ( view.width()/2 ) * self.zoom_n;
+			console.log( 'sh = ' + sh );
+			console.log( 'sw = ' + sw );
+			var top = Math.abs( Math.ceil( pos.top/self.zoom_n )) - sh;
+			var left = Math.abs( Math.ceil( pos.left/self.zoom_n )) - sw;
 			self.goTo( left, top, 0 );
 		}
 		self.zoom_shift = null;

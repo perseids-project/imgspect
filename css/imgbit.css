@@ -22,7 +22,8 @@
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 }
 
-.imgbit.full .source {
+.imgbit.full .source,
+.imgbit .close {
 	float: right;
 	background-color: #DDD;
 	color: #FF8888;
@@ -35,7 +36,8 @@
 	margin-top: 2px;
 }
 
-.imgbit.full .source:hover {
+.imgbit.full .source:hover,
+.imgbit .close:hover {
 	color: #FF4444;
 }
 
