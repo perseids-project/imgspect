@@ -413,7 +413,7 @@
         if ( _get == "" ) return {};
         var json = {};
 		var key_vals = _get.split('&');
-        for ( var i=0; i < key_vals.length; i++ ) {
+        for ( var i=0, ii=key_vals.length; i<ii; i++ ) {
 			var param = key_vals[i].split('=');
 			if ( param.length != 2 ) {
 				continue;

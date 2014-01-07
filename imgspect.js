@@ -57,8 +57,8 @@
 		//------------------------------------------------------------
 		//  Plugin properties
 		//------------------------------------------------------------
-		self.lites = [];
-		self.imgbits = [];
+		self.lites = new Array();
+		self.imgbits = new Array();
 		self.zoom_n = 1;
 		self.zoom_shift = null;
 		self.pan = { x:0, y:0 };
@@ -269,7 +269,7 @@
 		//------------------------------------------------------------
 		//  Reshuffle ids
 		//------------------------------------------------------------
-		for ( var i in self.imgbits ) {
+		for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
 			self.imgbits[i].idUpdate( 'imgbit-'+i );
 			
 			//------------------------------------------------------------
@@ -376,7 +376,7 @@ In the drop-down view click an img to find its original position in the larger i
 		//------------------------------------------------------------
 		//  Loop through all the imgbits and return their HTML
 		//------------------------------------------------------------
-		for ( var i in self.imgbits ) {
+		for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
 			output += self.imgbits[i].html() + "\n";
 		}
 		$( '.output pre', self.elem ).text( output );
@@ -786,7 +786,7 @@ In the drop-down view click an img to find its original position in the larger i
 		//  Redraw at different dimensions
 		//------------------------------------------------------------
 		var dp = $( '.draw', self.elem ).position();
-		for ( var i in self.lites ) {
+		for ( var i=0, ii=self.lites.length; i<ii; i++ ) {
 			var lite = self.liteDom();
 			$( '.draw' ).append( lite );
 			lite.css({
@@ -814,8 +814,8 @@ In the drop-down view click an img to find its original position in the larger i
 	imgspect.prototype.navLiteRedraw = function() {
 		var self = this;
 		self.navLiteClear();
-		for ( var id in self.lites ) {
-			self.navLiteDraw( id );
+		for ( var i=0, ii=self.lites.length; i<ii; i++ ) {
+			self.navLiteDraw( i );
 		}
 	}
 	

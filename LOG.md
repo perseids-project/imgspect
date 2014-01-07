@@ -311,3 +311,38 @@ HAML format is very touchy when it comes to whitespace.
 So I need to come up with a decent workflow.  I'll just scp the files to the server and refresh I suppose.  Not ideal but it will work.
 
 	scp /var/www/imgspect/imgspect.js sosol-test:/usr/local/sosol/public/javascripts/imgspect/imgspect.js
+
+Links I'll need.
+
+	http://sosol-test.perseids.org:3000/
+	http://sosol-test.perseids.org:3000/publications/4/epi_cts_identifiers/6/editxml
+	http://sosol-test.perseids.org:3000/javascripts
+	http://sosol-test.perseids.org:3000/javascripts/imgspect/examples/imgspect/basics/index.html
+
+
+## 2014-01-07
+
+So I've been getting some nasty errors.
+I think they have to do with prototype.js
+
+	[each: function, eachSlice: function, all: function, any: function, collect: function…]
+
+What library extends a base class so you can't even iterate over the array reliably?!
+Who wrote this crap?
+Break everybody else's code that don't fit your pet paradigm.
+Arghghghghggh!!!
+
+	= render :partial => 'identifiers/header'
+
+http://prototypejs.org/doc/latest/language/Array/
+Don't use for..in loops because 
+I hate these kinds of developers.  Purists.  Creating problems where they don't have to exist... 
+
+God listen to these morons...
+
+"This same standard explicitly defines that the for...in construct (§12.6.4) exists to enumerate the properties of the object appearing on the right side of the in keyword. Only properties specifically marked as non-enumerable are ignored by such a loop. By default, the prototype and length properties are so marked, which prevents you from enumerating over array methods when using for...in. This comfort led developers to use for...in as a shortcut for indexing loops, when it is not its actual purpose.
+
+However, Prototype has no way to mark the methods it adds to Array.prototype as non-enumerable. Therefore, using for...in on arrays when using Prototype will enumerate all extended methods as well, such as those coming from the Enumerable module, and those Prototype puts in the Array namespace (listed further below)."
+
+Okay
+
