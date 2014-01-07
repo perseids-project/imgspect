@@ -678,7 +678,7 @@ In the drop-down view click an img to find its original position in the larger i
 	}
 	
 	/**
-	 * Build the imgspect DOM elements
+	 * Draw a lite in the nav
 	 *
 	 * @param { int } _id Lite id
 	 */

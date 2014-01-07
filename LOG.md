@@ -220,3 +220,94 @@ So let me reiterate my tasks.
 3. Roll into perseids.
 
 12:55 - So I think I just fixed the imgbit removal bug.
+
+Rolling into perseids... 
+That's where things get tricky...  
+Let's do a little research first... 
+Development begins on sosol-test
+
+ubuntu@sosol-test:~$ cd /usr/local/sosol/
+ubuntu@sosol-test:/usr/local/sosol$ jruby -S script/server 
+http://sosol-test.perseids.org:3000/
+
+//------------------------------------------------------------
+//  So let's get adjusted.
+//  Log output is here.
+//  What files are these associated with?
+//------------------------------------------------------------
+Processing EpiCtsIdentifiersController#editxml
+Rendering template within layouts/perseus >> ./app/views/layouts/perseus.haml
+
+sudo vim ./app/views/layouts/perseus.haml
+
+	So this is the main wrapper template I believe.
+
+So where is the #editxml content
+
+	./app/controllers/epi_cts_identifiers_controller.rb
+
+	sudo vim ./app/controllers/epi_cts_identifiers_controller.rb
+
+    def editxml
+      find_identifier
+      @identifier[:xml_content] = @identifier.xml_content
+      @is_editor_view = true
+      render :template => 'epi_cts_identifiers/editxml'
+    end
+
+find . | grep editxml
+
+	sudo vim ./app/views/epi_cts_identifiers/editxml.haml
+		render :partial => 'identifiers/edit_commit'
+
+Edit commit
+
+	sudo vim ./app/views/identifiers/_edit_commit.haml
+
+This is what needs to change.
+
+    %iframe{:id => 'ict_frame'}
+
+So let's add imgspect as a submodule in this directory.
+
+	/usr/local/sosol/public/javascripts
+	git submodule add https://github.com/PerseusDL/imgspect public/javascripts/imgspect
+	git submodule update --init --recursive
+
+So everything needed is working.
+
+	http://sosol-test.perseids.org:3000/javascripts/imgspect/examples/imgspect/basics/index.html
+
+Ok so let's just load the example imgspect app. I need to load these files in the HAML template.
+
+
+	<link rel="stylesheet" href="../../../third_party/menumucil/css/menumucil.css">
+	<link rel="stylesheet" href="../../../css/imgspect.css">
+	<link rel="stylesheet" href="../../../css/imgbit.css">
+		
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script src="../../../third_party/jslib/src/js/StringExt.js"></script>
+	<script src="../../../third_party/jslib/src/js/Culuh.js"></script>
+	<script src="../../../third_party/menumucil/menumucil.js"></script>
+	<script src="../../../imgspect.js"></script>
+	<script src="../../../imgbit.js"></script>
+
+	%link{:rel => "stylesheet", :type => "text/css", :href => "/javascripts/imgspect/third_party/menumucil/css/menumucil.css"}
+	%link{:rel => "stylesheet", :type => "text/css", :href => "/javascripts/imgspect/css/imgspect.css"}
+	%link{:rel => "stylesheet", :type => "text/css", :href => "/javascripts/imgspect/css/imgbit.css"}
+	%script{:src => "/javascripts/imgspect/third_party/jslib/src/js/StringExt.js"}
+	%script{:src => "/javascripts/imgspect/third_party/jslib/src/js/Culuh.js"}
+	%script{:src => "/javascripts/imgspect/third_party/menumucil/menumucil.js"}
+	%script{:src => "/javascripts/imgspect/imgspect.js"}
+	%script{:src => "/javascripts/imgspect/imgbit.js"}
+
+Add the imgspect source image
+
+	%img{:src => "/javascripts/imgspect/examples/img/the-garden-of-earthly-delights.jpg" :id => "bosch"}
+
+HAML format is very touchy when it comes to whitespace.
+
+So I need to come up with a decent workflow.  I'll just scp the files to the server and refresh I suppose.  Not ideal but it will work.
+
+	scp /var/www/imgspect/imgspect.js sosol-test:/usr/local/sosol/public/javascripts/imgspect/imgspect.js
