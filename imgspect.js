@@ -57,8 +57,8 @@
 		//------------------------------------------------------------
 		//  Plugin properties
 		//------------------------------------------------------------
-		self.lites = new Array();
-		self.imgbits = new Array();
+		self.lites = [];
+		self.imgbits = [];
 		self.zoom_n = 1;
 		self.zoom_shift = null;
 		self.pan = { x:0, y:0 };
@@ -941,16 +941,14 @@ In the drop-down view click an img to find its original position in the larger i
 			containment: 'parent',
 			scroll: false,
 			drag: function() {
-				var nav_pos = $( '.nav', this.elem ).position();
-				var drag_pos = $( '.drag', this.elem ).position();
-				self.dragHandler( nav_pos, drag_pos );
+				self.drawResize();
 			}
 		});
 		
 		//------------------------------------------------------------
 		//  Set the dragger to the nav's origin
 		//------------------------------------------------------------
-		var nav_pos = $( '.nav', this.elem ).position();
+		var nav_pos = $( '.nav', this.elem ).offset();
 		$( '.drag', self.elem ).css({
 			left: nav_pos.left,
 			top: nav_pos.top
