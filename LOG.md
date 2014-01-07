@@ -305,6 +305,8 @@ Ok so let's just load the example imgspect app. I need to load these files in th
 Add the imgspect source image
 
 	%img{:src => "/javascripts/imgspect/examples/img/the-garden-of-earthly-delights.jpg" :id => "bosch"}
+	
+	
 
 HAML format is very touchy when it comes to whitespace.
 
@@ -344,5 +346,46 @@ God listen to these morons...
 
 However, Prototype has no way to mark the methods it adds to Array.prototype as non-enumerable. Therefore, using for...in on arrays when using Prototype will enumerate all extended methods as well, such as those coming from the Enumerable module, and those Prototype puts in the Array namespace (listed further below)."
 
-Okay
+## 2014-01-07 (BALMAS FEEDBACK)
 
+Requirements/Ideas for Perseids integration:
+
+### CITE URN Functionality
+This could be triggered in a general way by either of the following on the image element for which imgspect() is triggered:
+* @src URL value which references urn:cite:.... as the last path element
+    * this would be the case if we have proxy resolution of CITE served images e.g. at http://data.perseus.org/images/urn:cite:perseus:epifacsimg.1
+* @resource value containing a CITE urn 
+
+Imgspect and Imgbit would each have an non-null URN property if 
+one of the above conditions is met. For imgbit, the coordinates of the selected ROI of interest would be appended to the URN
+
+### Export/Serialization
+
+Add Export option which creates an ordered JSON object of serialized imgbits (see below) and either:
+* if a callback function specified as a parameter to the imgspect constructor, then the JSON object is sent as the first argument to that function
+* if no callback is supplied, then the seraialized object is just offered for download
+
+Serialization format:
+* use OAC data module, JSON-LD output format (http://www.openannotation.org/spec/core/)
+* perhaps the motivation could be an extension of oa:describing, defined as oa:transcribing?
+* serializedBy provAgent identifying the imgspect tool and version #
+* include serializedDate
+* annotatedBy foaf:agent could be provided either by calling app in imgspec contructor or as an optional user-entered item (nice to support both but not essential at this stage)
+* target URI is either the CITE URN or image url (both with properly configured ROI coordinates) depending upon construction options as above
+* body is inline content item
+    * either cntAsText or cntAsXML 
+    * cntAsXML could be triggered on imgspec constructor configuration option
+        * UI could ask user to select semantic tag of region highlighted as one of the options available from EpiDoc (w, c, gap, ..)
+        * with targetURI (but see below notes on integration) inserted as @facs attribute value
+
+### Perseids SoSOL Integration
+Assuming the above functionality, then we could do something like:
+
+* have an interface element that allows the user to scroll through the available images for a text (replacing the dropdown and  iframe of the ICT tool, but populated in the same way from the PerseidsLD Linked Data query)
+* activate a double-click handler on the text input area of the Perseids edit interface that activates imgspect on the currently visible image and supplies a function as a callback which 
+    * parses the text body(ies) from JSON-LD object of annotations 
+    * inserts it at the X/Y coordinates of the doubleclick 
+
+Note: Ultimately I'd like to  eliminate the use of the @facs attribute at all, and instead have the image mappings just kept as a separate related data file of annotations. This relies on some API functionality that isn't yet fully developed in SoSOL though so the above approach is provisional and the callback functionality would change to this when the Perseids SoSOL API is ready for it.
+
+What do you think?
