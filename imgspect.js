@@ -42,7 +42,8 @@
 			zoom_unit: .1,
 			lite_color: new Culuh( self.colors['YELLOW'] ),
 			lite_opacity: .4,
-			secs: .5 // default number of seconds it takes for goTo() animations
+			secs: .5, // default number of seconds it takes for goTo() animations
+			load: null // object to load at startup to build lites and imgbits
 		}, _options);
 		
 		//------------------------------------------------------------
@@ -90,8 +91,22 @@
 		//  Create the output window after the nav resize
 		//------------------------------------------------------------
 		self.outputBuild();
-		
 		self.start();
+		
+		//------------------------------------------------------------
+		//  If a load parameter is passed to the constructor then
+		//  load it.
+		//------------------------------------------------------------
+		if ( self.options['load'] != null ) {
+			self.load( self.options['load'] );
+		}
+	}
+	
+	/**
+	 * Dump an imgspect object to the console
+	 */	
+	imgspect.prototype.dump = function() {
+		console.log( this );
 	}
 	
 	/**
@@ -1145,6 +1160,20 @@ In the drop-down view click an img to find its original position in the larger i
 				self.dragHandler( nav_pos, drag_pos );
 			}
 		});
+	}
+	
+	/**
+	 * Load an imgspect object TODO
+	 */	
+	imgspect.prototype.load = function( _obj ) {
+		var self = this;
+	}
+	
+	/**
+	 * Export an imgspect object TODO
+	 */	
+	imgspect.prototype.export = function() {
+		var self = this;
 	}
 	
 	/**

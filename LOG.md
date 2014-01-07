@@ -331,20 +331,23 @@ I think they have to do with prototype.js
 
 What library extends a base class so you can't even iterate over the array reliably?!
 Who wrote this crap?
-Break everybody else's code that don't fit your pet paradigm.
+Break all code that doesn't fit your ideals.
+Fascists!
 Arghghghghggh!!!
 
 	= render :partial => 'identifiers/header'
 
 http://prototypejs.org/doc/latest/language/Array/
-Don't use for..in loops because 
-I hate these kinds of developers.  Purists.  Creating problems where they don't have to exist... 
-
-God listen to these morons...
+Don't use for..in loops because...
 
 "This same standard explicitly defines that the for...in construct (§12.6.4) exists to enumerate the properties of the object appearing on the right side of the in keyword. Only properties specifically marked as non-enumerable are ignored by such a loop. By default, the prototype and length properties are so marked, which prevents you from enumerating over array methods when using for...in. This comfort led developers to use for...in as a shortcut for indexing loops, when it is not its actual purpose.
 
 However, Prototype has no way to mark the methods it adds to Array.prototype as non-enumerable. Therefore, using for...in on arrays when using Prototype will enumerate all extended methods as well, such as those coming from the Enumerable module, and those Prototype puts in the Array namespace (listed further below)."
+
+I can't stand this kind of attitude.
+Purists.
+Idealogues.
+Hmmmmm... No wonder everyone is using jQuery instead...
 
 ## 2014-01-07 (BALMAS FEEDBACK)
 
@@ -389,3 +392,76 @@ Assuming the above functionality, then we could do something like:
 Note: Ultimately I'd like to  eliminate the use of the @facs attribute at all, and instead have the image mappings just kept as a separate related data file of annotations. This relies on some API functionality that isn't yet fully developed in SoSOL though so the above approach is provisional and the callback functionality would change to this when the Perseids SoSOL API is ready for it.
 
 What do you think?
+
+## 02:09:40 PM
+
+## Reaction to ( BALMAS FEEDBACK )
+
+Okay let me get my ducks in a row...
+
+We need to serve up images to the imgspect tool.
+Each of those images needs a unique id aka the CITE URN...
+
+	http://data.perseus.org/images/urn:cite:perseus:epifacsimg.1
+
+our data ( image ) server: 
+
+	http://data.perseus.org/images/
+
+the cite urn: 
+
+	urn:cite:perseus:epifacsimg.1
+
+Imgspect can accept a URN without any coordinates.
+Imgbit needs coordinates otherwise it's just an image.
+Here's what the urn will look like with coordinates
+
+	urn:cite:perseus:epifacsimg.1 [coming soon!]
+
+So we have images and associated URNs without ROIs defined.
+So we need to get those images into imgspect.
+Right now we have a drop-down with the URN name as the means of selection.
+This is not optimal.
+It would be best to have an image preview of each image associated with a text.
+Clicking the image preview will open it inside of imgspect.
+This will be trivial to implement really, as long as image previews are available...
+
+So we need a serialized object to get data in and out of imgspect.
+That object is essentially an array of JSON-LD objects in Open Annotation format.
+So if I can define this object I will know how to proceed.
+
+So I'm trying to piece this together from Bridget's notes...
+
+	* body is inline content item
+	    * either cntAsText or cntAsXML 
+	    * cntAsXML could be triggered on imgspec constructor configuration option
+	        * UI could ask user to select semantic tag of region highlighted as one of the options available from EpiDoc (w, c, gap, ..)
+	        * with targetURI (but see below notes on integration) inserted as @facs attribute value
+
+I really don't understand what she means.  
+I'll have to ask her for clarification.
+
+In the meantime I'll define to the best of my ability the complete JSON-LD export object.
+
+	var citations=[
+		{
+			"@context": "",
+			"@id": "",
+			"@type": "",
+			"serializedBy": "Imgspect-0.1"
+			"annotatedAt": "",
+			"annotatedBy": {
+				"@id" : "",
+				"@type": "foaf:Person",
+				"name": "Person One"
+			}
+			"hasBody": {
+			},
+			"hasTarget": {
+			}
+		}
+	];
+
+Imgspect's dump method will help me to get a handle on its internal datastructure.
+It just prints the plugins variables and structure to the console.
+Once I get the JSON-LD object defined creating export and load methods should be easy.
