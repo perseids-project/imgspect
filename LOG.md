@@ -465,3 +465,23 @@ In the meantime I'll define to the best of my ability the complete JSON-LD expor
 Imgspect's dump method will help me to get a handle on its internal datastructure.
 It just prints the plugins variables and structure to the console.
 Once I get the JSON-LD object defined creating export and load methods should be easy.
+
+The only thing I'm really concerned with is the imgbit.
+
+	imgbit = {
+		caption: "Pegasus cherries and some extra goodies.",
+		elem: x.fn.x.init[1],
+		events: Object,
+		href: "../../img/the-garden-of-earthly-delights.jpg?x1=211&y1=81&x2=510&y2=273&c=FFFF7F",
+		id: "#drop #imgbit-0",
+		options: Object,
+		original: "<a id="imgbit-0" class="imgbit edit closable" href="../../img/the-garden-of-earthly-delights.jpg?x1=211&amp;y1=81&amp;x2=510&amp;y2=273&amp;c=FFFF7F">#</a>",
+		param: Object,
+		src: "../../img/the-garden-of-earthly-delights.jpg"
+	};
+
+	imgbit.toCite()
+
+I probably need to create some logic inside of the build method to handle Cite URNs.
+A way of checking for the format...
+The urn is included in the href attribute.

@@ -445,6 +445,18 @@
 	}
 	
 	/**
+	 * Returns an imgbit transcription in open annotation spec JSON
+	 *
+	 * @param { json } JSON with additional info 
+	 *                 needed to construct a complete JSON LD object
+	 *
+	 * @return { json } JSON LD http://www.openannotation.org/spec/core/
+	 */
+	imgbit.prototype.toJsonLD = function() {
+		var self = this;
+	}
+	
+	/**
 	 * "Register" this plugin with jQuery
 	 */
 	jQuery(document).ready( function($) {
