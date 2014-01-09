@@ -459,7 +459,7 @@ In the meantime I'll define to the best of my ability the complete JSON-LD expor
 			},
 			"hasTarget": {
 			}
-		}
+		},
 	];
 
 Imgspect's dump method will help me to get a handle on its internal datastructure.
@@ -480,8 +480,28 @@ The only thing I'm really concerned with is the imgbit.
 		src: "../../img/the-garden-of-earthly-delights.jpg"
 	};
 
-	imgbit.toCite()
+	imgbit.toJsonLd( _info )
 
 I probably need to create some logic inside of the build method to handle Cite URNs.
 A way of checking for the format...
 The urn is included in the href attribute.
+
+# 2014-01-08
+
+Met with Bridget to work out some details.
+Here's what needs to be done.
+
+	imgbit.toJsonLd( _info )
+
+	imgbit.citeCoord()
+
+Coordinates...
+Collect Width and Height of source
+	1 = total width
+	1 = total height
+	all numbers must be 0 to 1
+	@left-ratio,top-ratio,width,height
+
+contentAsXML
+Motivation - perseus:transcribing
+

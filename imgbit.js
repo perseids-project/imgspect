@@ -57,6 +57,12 @@
 		self.caption = $( self.elem ).text();
 		
 		//------------------------------------------------------------
+		//  Store the images original height and width
+		//------------------------------------------------------------
+		self.imgWidth = null;
+		self.imgHeight = null;
+		
+		//------------------------------------------------------------
 		//  Get the imgbit parameters
 		//------------------------------------------------------------
 		var arr = self.href.split('?');
@@ -152,6 +158,11 @@
 		var img = new Image();
 		img.onload = function() {
 			$( this ).addClass('star');
+			//------------------------------------------------------------
+			//  Store the orignal size of the image
+			//------------------------------------------------------------
+			self.imgWidth = img.width;
+			self.imgHeight = img.height;
 			
 			//------------------------------------------------------------
 			//  Add the image to the view
@@ -188,7 +199,7 @@
 			});
 			
 			//------------------------------------------------------------
-			//  If the edit tag is set create the edit dom elements
+			//  If the edit tag is set, create the edit dom elements
 			//------------------------------------------------------------
 			self.editStart();
 			
@@ -442,6 +453,25 @@
 						'+self.caption+'\
 					<a>';
 		return html.smoosh();
+	}
+	
+	/**
+	 * Returns coordinates for cite urns.
+	 * All coordinates are stored as ratios to the original height and width
+	 * 
+	 * @return { array } [ top-left-x, top-left-y, width, height ]
+	 */
+	imgbit.prototype.citeCoords = function() {
+		var self = this;
+		var output = [];
+		output[0] = self.param['x1'] / self.imgWidth;
+		output[1] = self.param['y1'] / self.imgHeight;
+		output[2] = ( self.param['x2'] - self.param['x1'] ) / self.imgWidth;
+		output[3] = ( self.param['y2'] - self.param['y1'] ) / self.imgHeight;
+		for( var i=0, ii=output.length; i<ii; i++ ) {
+			output[i] = output[i].toFixed(5);
+		}
+		return output;
 	}
 	
 	/**
