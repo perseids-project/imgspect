@@ -37,6 +37,7 @@ The imgspect project is the home of two closesly related jQuery plug-ins, the ep
 	<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 	<script src="{% js-dir %}/imgspect/third_party/jslib/Culuh.js"></script>
 	<script src="{% js-dir %}/imgspect/third_party/jslib/StringExt.js"></script>
+	<script src="{% js-dir %}/imgspect/third_party/jslib/TimeStamp.js"></script>
 	<script src="{% js-dir %}/imgspect/third_party/menumucil/menumucil.js"></script>
 	<script src="{% js-dir %}/imgspect/imgspect.js"></script>
 	<script src="{% js-dir %}/imgspect/imgbit.js"></script>
@@ -58,6 +59,7 @@ The imgspect project is the home of two closesly related jQuery plug-ins, the ep
 	<!-- JS -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="{% js-dir %}/imgspect/third_party/jslib/StringExt.js"></script>
+	<script src="{% js-dir %}/imgspect/third_party/jslib/TimeStamp.js"></script>
 	<script src="{% js-dir %}/imgspect/imgbit.js"></script>
 	
 	<!-- HTML -->

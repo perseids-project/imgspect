@@ -63,6 +63,12 @@
 		self.imgHeight = null;
 		
 		//------------------------------------------------------------
+		//  Time created with UTC offset
+		//------------------------------------------------------------
+		var timeStamp = new TimeStamp();
+		self.timeCreated = timeStamp.withUtc();
+		
+		//------------------------------------------------------------
 		//  Get the imgbit parameters
 		//------------------------------------------------------------
 		var arr = self.href.split('?');
@@ -482,8 +488,26 @@
 	 *
 	 * @return { json } JSON LD http://www.openannotation.org/spec/core/
 	 */
-	imgbit.prototype.toJsonLD = function() {
+	imgbit.prototype.toJsonLD = function( _info ) {
 		var self = this;
+		return {
+			"@context": "http://www.w3.org/ns/oa-context-20130208.json",
+			"@id": "",
+			"@type": "oa:Annotation",
+			"annotatedAt": self.timeCreated,
+			"annotatedBy": {
+				"@id": "",
+				"@type": "foaf:Person",
+				"mbox": {
+					"@id": ""
+				},
+				"name": ""
+			},
+			"hasBody": "",
+			"hasTarget": "",
+			"motivatedBy": "perseus:transcribing",
+			"label": "isQuotationOf"
+		}
 	}
 	
 	/**
