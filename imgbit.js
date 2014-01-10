@@ -89,6 +89,16 @@
 			self.param.z = self.param.h / ( self.param.y2 - self.param.y1 );
 		}
 		
+		//------------------------------------------------------------
+		//  Color?
+		//------------------------------------------------------------
+		if ( self.param.c != undefined ) {
+			self.culuh = new Culuh( self.param.c );
+		}
+		
+		//------------------------------------------------------------
+		//  Zoom?
+		//------------------------------------------------------------
 		self.param.z = ( self.param.z == undefined ) ? 1 : self.param.z;
 		
 		//------------------------------------------------------------
@@ -353,6 +363,16 @@
 		 $( '.caption', self.elem ).css({ 
 			width: $( '.view', self.elem).width()
 		});
+		
+		//------------------------------------------------------------
+		//  If a color has been set desaturate the color.
+		//------------------------------------------------------------
+		if ( self.culuh != undefined ) {
+			$( '.caption', self.elem ).css({
+				'background-color': self.culuh.sat( 0.25, true ).hex()
+			});
+		}
+		
 		$( '.caption', self.elem ).hide();
 		
 		//------------------------------------------------------------

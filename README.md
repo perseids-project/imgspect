@@ -60,6 +60,7 @@ The imgspect project is the home of two closesly related jQuery plug-ins, the ep
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	<script src="{% js-dir %}/imgspect/third_party/jslib/StringExt.js"></script>
 	<script src="{% js-dir %}/imgspect/third_party/jslib/TimeStamp.js"></script>
+	<script src="{% js-dir %}/imgspect/third_party/jslib/Culuh.js"></script>
 	<script src="{% js-dir %}/imgspect/imgbit.js"></script>
 	
 	<!-- HTML -->
