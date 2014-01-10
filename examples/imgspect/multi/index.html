@@ -14,9 +14,15 @@
 			padding: 20px;
 			background-color: #222;
 		}
+		#images a {
+			display: inline-block;
+		}
 		#images img {
 			max-height: 100px;
 			margin: 5px;
+		}
+		#images a.selected {
+			outline: solid 1px #666;
 		}
 	</style>
 </head>
@@ -40,7 +46,6 @@
 	$(window).load( function(){
 		$('#images a').click( function(_e) {
 			var src = $(this).attr('href');
-			
 			//------------------------------------------------------------
 			//  Load the image
 			//------------------------------------------------------------
@@ -51,6 +56,13 @@
 				spect = $('#app img').imgspect().data( '#app img' );
 			}
 			img.src = src;
+			
+			//------------------------------------------------------------
+			//  Set the image as selected
+			//------------------------------------------------------------
+			$('#images a').removeClass('selected');
+			$(this).addClass('selected');
+			
 			_e.preventDefault();
 		})
 	});
