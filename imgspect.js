@@ -1068,10 +1068,10 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.navResize = function() {
 		var self = this;
-		var width = $( '.nav', self.elem ).width();
-		self.nav_scale = self.orig_w / width;
+		var height = $( '.nav', self.elem ).height();
+		self.nav_scale = self.orig_h / height;
 		$( '.nav img', self.elem ).css({
-			width: width
+			height: height
 		});
 		self.navLiteRedraw();
 	}

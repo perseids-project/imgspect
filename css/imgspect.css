@@ -13,7 +13,8 @@
 
 .imgspect .nav {
 	float: left;
-	width: 640px;
+	max-width: 640px;
+	max-height: 400px;
 	display: block;
 }
 

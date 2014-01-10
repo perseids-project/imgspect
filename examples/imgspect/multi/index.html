@@ -1,0 +1,58 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../../../third_party/menumucil/css/menumucil.css">
+	<link rel="stylesheet" href="../../../css/imgspect.css">
+	<link rel="stylesheet" href="../../../css/imgbit.css">
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+		#app {
+			background-color: #222;
+		}
+		#images {
+			padding: 20px;
+			background-color: #222;
+		}
+		#images img {
+			max-height: 100px;
+			margin: 5px;
+		}
+	</style>
+</head>
+<body>
+	<div id="images">
+		<a href="../../img/the-garden-of-earthly-delights.jpg"><img src="../../img/the-garden-of-earthly-delights.jpg" /></a>
+		<a href="../../img/operating_theatre.gif"><img src="../../img/operating_theatre.gif" /></a>
+	</div>
+	<div id="app"></div>
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="../../../third_party/jslib/src/js/StringExt.js"></script>
+<script src="../../../third_party/jslib/src/js/TimeStamp.js"></script>
+<script src="../../../third_party/jslib/src/js/Culuh.js"></script>
+<script src="../../../third_party/menumucil/menumucil.js"></script>
+<script src="../../../imgspect.js"></script>
+<script src="../../../imgbit.js"></script>
+<script type="text/javascript">
+	var spect = null;
+	$(window).load( function(){
+		$('#images a').click( function(_e) {
+			var src = $(this).attr('href');
+			
+			//------------------------------------------------------------
+			//  Load the image
+			//------------------------------------------------------------
+			var img = new Image();
+			img.onload = function() {
+				$('#app').empty();
+				$('#app').append( this );
+				spect = $('#app img').imgspect().data( '#app img' );
+			}
+			img.src = src;
+			_e.preventDefault();
+		})
+	});
+</script>
+</html>
