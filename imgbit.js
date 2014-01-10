@@ -369,7 +369,7 @@
 		//------------------------------------------------------------
 		if ( self.culuh != undefined ) {
 			$( '.caption', self.elem ).css({
-				'background-color': self.culuh.sat( 0.25, true ).hex()
+				'background-color': self.culuh.sat( 0.35, true ).hex()
 			});
 		}
 		
