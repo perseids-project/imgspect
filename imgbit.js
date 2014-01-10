@@ -210,19 +210,22 @@
 			self.editStart();
 			
 			//------------------------------------------------------------
+			//  If the imgbit is closable add the close button
+			//------------------------------------------------------------
+			if ( self.options['closable'] == true ) {
+				self.closeBuild();
+			}
+			
+			//------------------------------------------------------------
 			//  If the color has been set... set the color
 			//------------------------------------------------------------
 			if ( self.param.c != undefined ) {
 				$( self.elem ).css({
 					'background-color': '#'+self.param.c
 				});
-			}
-			
-			//------------------------------------------------------------
-			//  If the imgbit is closable add the close button
-			//------------------------------------------------------------
-			if ( self.options['closable'] == true ) {
-				self.closeBuild();
+				$( '.close', self.elem ).css({
+					'background-color': '#'+self.param.c
+				})
 			}
 			
 			//------------------------------------------------------------
