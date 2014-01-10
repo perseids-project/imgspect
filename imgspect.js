@@ -43,7 +43,8 @@
 			lite_color: new Culuh( self.colors['YELLOW'] ),
 			lite_opacity: .4,
 			secs: .5, // default number of seconds it takes for goTo() animations
-			load: null // object to load at startup to build lites and imgbits
+			load: null, // object to load at startup to build lites and imgbits
+			info: null
 		}, _options);
 		
 		//------------------------------------------------------------
@@ -100,6 +101,18 @@
 		if ( self.options['load'] != null ) {
 			self.load( self.options['load'] );
 		}
+	}
+	
+	/**
+	 * Return a jsonLD object
+	 */
+	imgspect.prototype.toJsonLD = function() {
+		var self = this;
+		var jsonLD = [];
+		for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
+			jsonLD[i] = self.imgbits[i].toJsonLD( self.options['info'] );
+		}
+		return jsonLD;
 	}
 	
 	/**

@@ -509,25 +509,29 @@
 	 * @param { json } JSON with additional info 
 	 *                 needed to construct a complete JSON LD object
 	 *
+	 *		"@id": "http://perseids.org/collections/urn:cite:perseus:annsimp.1.1",
+	 *		"annotatedBy": {
+	 *			"@id": "http://data.perseids.org/people/1",
+	 *			"mbox": {
+	 *				"@id": "mailto:name@email.com"
+	 *			}
+	 *			"name": "Name"
+	 *		}
+	 *		"hasBody": "http://perseids.org/collections/urn:cite:perseus:lci.1",
+	 *		"hasTarget": "http://perseids.org/citations/urn:cts:greekLit:tlg0008.tlg001.perseus-grc1:6.103"
+	 *
+	 *
 	 * @return { json } JSON LD http://www.openannotation.org/spec/core/
 	 */
 	imgbit.prototype.toJsonLD = function( _info ) {
 		var self = this;
 		return {
 			"@context": "http://www.w3.org/ns/oa-context-20130208.json",
-			"@id": "",
 			"@type": "oa:Annotation",
 			"annotatedAt": self.timeCreated,
 			"annotatedBy": {
-				"@id": "",
 				"@type": "foaf:Person",
-				"mbox": {
-					"@id": ""
-				},
-				"name": ""
 			},
-			"hasBody": "",
-			"hasTarget": "",
 			"motivatedBy": "perseus:transcribing",
 			"label": "isQuotationOf"
 		}
