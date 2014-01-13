@@ -487,7 +487,6 @@ A way of checking for the format...
 The urn is included in the href attribute.
 
 # 2014-01-08
-
 Met with Bridget to work out some details.
 Here's what needs to be done.
 
@@ -505,3 +504,5 @@ Collect Width and Height of source
 contentAsXML
 Motivation - perseus:transcribing
 
+# 2014-01-13
+So I've been pretty good about making code reusable by breaking bits out into submodules and documenting things.  But that causes problems, especially in the Javascript world.  Looking at my installation documentation makes me realize that having developers import half a dozen or more scripts in the right sequence is only going to make them angry.  So I need to implement a build system.  I already have one in another project.  I just need to roll that build system into this one, and document everything.

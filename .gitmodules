@@ -4,3 +4,6 @@
 [submodule "third_party/jslib"]
 	path = third_party/jslib
 	url = https://github.com/caesarfeta/jslib
+[submodule "third_party/sqUIsh"]
+	path = third_party/sqUIsh
+	url = https://github.com/caesarfeta/sqUIsh
