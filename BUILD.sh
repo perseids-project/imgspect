@@ -8,10 +8,10 @@ build() {
 	
 	# Build imgbit
 	./sqUI.sh $_home/build/imgbit.list
-#	mv $_squish/build/imgbit* $_home/
+	mv $_squish/build/imgbit* $_home/
 	
 	# Build imgspect
 	./sqUI.sh $_home/build/imgspect.list
-#	mv $_squish/build/imgspect* $_home/
+	mv $_squish/build/imgspect* $_home/
 }
 build $DIR

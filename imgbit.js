@@ -530,7 +530,7 @@
 			"@type": "oa:Annotation",
 			"annotatedAt": self.timeCreated,
 			"annotatedBy": {
-				"@type": "foaf:Person",
+				"@type": "foaf:Person"
 			},
 			"motivatedBy": "perseus:transcribing",
 			"label": "isQuotationOf"

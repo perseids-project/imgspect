@@ -165,7 +165,7 @@
 		//------------------------------------------------------------
 		self.src = $( '.nav img', self.elem ).attr('src');
 		$( '.draw', self.elem ).css({ 
-			'background-image': "url('"+self.src+"')",
+			'background-image': "url('"+self.src+"')"
 		});
 
 		//------------------------------------------------------------
@@ -620,7 +620,7 @@ In the drop-down view click an img to find its original position in the larger i
 				else {
 					self.c_lite.css({
 						left: cp.left,
-						width: mp.left - cp.left,
+						width: mp.left - cp.left
 					});
 				}
 				if ( cp.top > mp.top ) {
