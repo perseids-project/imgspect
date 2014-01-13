@@ -1,5 +1,5 @@
 # imgspect
-The imgspect project is the home of two closesly related jQuery plug-ins, the eponymouse imgspect and its friendly helper, imgbit.
+The imgspect project is the home of two closesly related jQuery plug-ins, the eponymous imgspect and its friendly helper, imgbit.
 
 ## imgspect
 **imgspect** builds an application for captioning / transcribing select areas of large images.
