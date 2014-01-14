@@ -8,10 +8,12 @@ build() {
 	
 	# Build imgbit
 	./sqUI.sh $_home/build/imgbit.js.list
+	./sqUI.sh $_home/build/imgbit.css.list
 	mv $_squish/build/imgbit* $_home/
 	
 	# Build imgspect
 	./sqUI.sh $_home/build/imgspect.js.list
+	./sqUI.sh $_home/build/imgspect.css.list
 	mv $_squish/build/imgspect* $_home/
 }
 build $DIR

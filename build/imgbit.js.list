@@ -1,4 +1,4 @@
-../../js/imgbit.js
+../../src/js/imgbit.js
 ../jslib/src/js/jQueryPlus.js
 ../jslib/src/js/StringExt.js
 ../jslib/src/js/TimeStamp.js
