@@ -167,7 +167,7 @@
 		$( '.draw', self.elem ).css({ 
 			'background-image': "url('"+self.src+"')"
 		});
-
+		
 		//------------------------------------------------------------
 		//  Create the tool buttons
 		//------------------------------------------------------------
@@ -337,7 +337,7 @@
 			//  Wait a bit before moving
 			//------------------------------------------------------------
 			setTimeout( function() {
-				spect.liteShow( i );
+				self.liteShow( i );
 			}, 500 );
 			_e.preventDefault();
 		});
@@ -762,6 +762,7 @@ In the drop-down view click an img to find its original position in the larger i
 	 * @ param { int } _id The lite id
 	 */
 	imgspect.prototype.liteShow = function( _id ) {
+		console.log( _id );
 		var self = this;
 		
 		//------------------------------------------------------------
@@ -885,12 +886,14 @@ In the drop-down view click an img to find its original position in the larger i
 		var lite = self.lites[_id];
 		
 		var color = lite.color;
+		var questAnd = ( self.src.indexOf('?') == -1 ) ? '?' : '&'
 		var tag = '<a id="imgbit-'+_id+'" class="imgbit edit closable" href="'+self.src+'\
-				?x1='+lite.x1+'\
-				&y1='+lite.y1+'\
-				&x2='+lite.x2+'\
-				&y2='+lite.y2+'\
-				&c='+color.sat( 0.5, true ).hex()+'\
+				'+questAnd+'imgbit=\
+				x1='+lite.x1+'\
+				%y1='+lite.y1+'\
+				%x2='+lite.x2+'\
+				%y2='+lite.y2+'\
+				%c='+color.sat( 0.5, true ).hex()+'\
 				">#</a>';
 		return tag.smoosh();
 	}
@@ -1205,7 +1208,7 @@ In the drop-down view click an img to find its original position in the larger i
  * imgbit
  *
  * The format of the <a> tag needed by imgbit
- * <a href="path.to/your/img.jpg?x1=0&y1=0&x2=100&y2=100">Display text or markup!</a>
+ * <a href="path.to/your/img.jpg?imgbit=x1=0%y1=0%x2=100%y2=100">Display text or markup!</a>
  */
 ;(function($) {
 	
@@ -1274,8 +1277,8 @@ In the drop-down view click an img to find its original position in the larger i
 		//------------------------------------------------------------
 		//  Get the imgbit parameters
 		//------------------------------------------------------------
-		var arr = self.href.split('?');
-		self.src = arr[0];
+		var arr = self.href.split('imgbit=');
+		self.src = arr[0].substring( 0, arr[0].length-1 );
 		self.param = self.getToJson( arr[1] );
 		
 		//------------------------------------------------------------
@@ -1655,7 +1658,7 @@ In the drop-down view click an img to find its original position in the larger i
 	imgbit.prototype.getToJson = function( _get ) {
         if ( _get == "" ) return {};
         var json = {};
-		var key_vals = _get.split('&');
+		var key_vals = _get.split('%');
         for ( var i=0, ii=key_vals.length; i<ii; i++ ) {
 			var param = key_vals[i].split('=');
 			if ( param.length != 2 ) {
@@ -1674,14 +1677,16 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgbit.prototype.html = function() {
 		var self = this;
+		var questAnd = ( self.src.indexOf('?') == -1 ) ? '?' : '&';
 		var html = '<a class="imgbit" \
 						href="'+self.src+'\
-						?x1='+self.param['x1']+'\
-						&y1='+self.param['y1']+'\
-						&x2='+self.param['x2']+'\
-						&y2='+self.param['y2']+'\
-						&c='+self.param['c']+'\
-						&z='+self.param['z']+'">\
+						'+questAnd+'imgbit=\
+						x1='+self.param['x1']+'\
+						%y1='+self.param['y1']+'\
+						%x2='+self.param['x2']+'\
+						%y2='+self.param['y2']+'\
+						%c='+self.param['c']+'\
+						%z='+self.param['z']+'">\
 						'+self.caption+'\
 					<a>';
 		return html.smoosh();

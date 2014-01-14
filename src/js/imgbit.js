@@ -2,7 +2,7 @@
  * imgbit
  *
  * The format of the <a> tag needed by imgbit
- * <a href="path.to/your/img.jpg?x1=0&y1=0&x2=100&y2=100">Display text or markup!</a>
+ * <a href="path.to/your/img.jpg?imgbit=x1=0%y1=0%x2=100%y2=100">Display text or markup!</a>
  */
 ;(function($) {
 	
@@ -71,8 +71,8 @@
 		//------------------------------------------------------------
 		//  Get the imgbit parameters
 		//------------------------------------------------------------
-		var arr = self.href.split('?');
-		self.src = arr[0];
+		var arr = self.href.split('imgbit=');
+		self.src = arr[0].substring( 0, arr[0].length-1 );
 		self.param = self.getToJson( arr[1] );
 		
 		//------------------------------------------------------------
@@ -452,7 +452,7 @@
 	imgbit.prototype.getToJson = function( _get ) {
         if ( _get == "" ) return {};
         var json = {};
-		var key_vals = _get.split('&');
+		var key_vals = _get.split('%');
         for ( var i=0, ii=key_vals.length; i<ii; i++ ) {
 			var param = key_vals[i].split('=');
 			if ( param.length != 2 ) {
@@ -471,14 +471,16 @@
 	 */
 	imgbit.prototype.html = function() {
 		var self = this;
+		var questAnd = ( self.src.indexOf('?') == -1 ) ? '?' : '&';
 		var html = '<a class="imgbit" \
 						href="'+self.src+'\
-						?x1='+self.param['x1']+'\
-						&y1='+self.param['y1']+'\
-						&x2='+self.param['x2']+'\
-						&y2='+self.param['y2']+'\
-						&c='+self.param['c']+'\
-						&z='+self.param['z']+'">\
+						'+questAnd+'imgbit=\
+						x1='+self.param['x1']+'\
+						%y1='+self.param['y1']+'\
+						%x2='+self.param['x2']+'\
+						%y2='+self.param['y2']+'\
+						%c='+self.param['c']+'\
+						%z='+self.param['z']+'">\
 						'+self.caption+'\
 					<a>';
 		return html.smoosh();

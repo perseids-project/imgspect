@@ -167,7 +167,7 @@
 		$( '.draw', self.elem ).css({ 
 			'background-image': "url('"+self.src+"')"
 		});
-
+		
 		//------------------------------------------------------------
 		//  Create the tool buttons
 		//------------------------------------------------------------
@@ -337,7 +337,7 @@
 			//  Wait a bit before moving
 			//------------------------------------------------------------
 			setTimeout( function() {
-				spect.liteShow( i );
+				self.liteShow( i );
 			}, 500 );
 			_e.preventDefault();
 		});
@@ -762,6 +762,7 @@ In the drop-down view click an img to find its original position in the larger i
 	 * @ param { int } _id The lite id
 	 */
 	imgspect.prototype.liteShow = function( _id ) {
+		console.log( _id );
 		var self = this;
 		
 		//------------------------------------------------------------
@@ -885,12 +886,14 @@ In the drop-down view click an img to find its original position in the larger i
 		var lite = self.lites[_id];
 		
 		var color = lite.color;
+		var questAnd = ( self.src.indexOf('?') == -1 ) ? '?' : '&'
 		var tag = '<a id="imgbit-'+_id+'" class="imgbit edit closable" href="'+self.src+'\
-				?x1='+lite.x1+'\
-				&y1='+lite.y1+'\
-				&x2='+lite.x2+'\
-				&y2='+lite.y2+'\
-				&c='+color.sat( 0.5, true ).hex()+'\
+				'+questAnd+'imgbit=\
+				x1='+lite.x1+'\
+				%y1='+lite.y1+'\
+				%x2='+lite.x2+'\
+				%y2='+lite.y2+'\
+				%c='+color.sat( 0.5, true ).hex()+'\
 				">#</a>';
 		return tag.smoosh();
 	}

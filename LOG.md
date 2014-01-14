@@ -506,3 +506,64 @@ Motivation - perseus:transcribing
 
 # 2014-01-13
 So I've been pretty good about making code reusable by breaking bits out into submodules and documenting things.  But that causes problems, especially in the Javascript world.  Looking at my installation documentation makes me realize that having developers import half a dozen or more scripts in the right sequence is only going to make them angry.  So I need to implement a build system.  I already have one in another project.  I just need to roll that build system into this one, and document everything.
+
+# 2014-01-14
+Brainstorm what needs to be done.
+That way working prototype will be ready for presentation day. 
+1-14 is today 1-22 is presentation day.
+8 days!
+
+
+
+		#ict_tool{:class=> 'perseidsld_query_obj_simple', 'data-sbj' => @identifier.work_urn, 'data-verb' => 'http://www.cidoc-crm.org/cidoc-crm/P138i_has_representation', 'data-formatter' => 'make_ICT_link'}
+
+	perseidsld_query_obj_simple
+	/usr/local/sosol/public/javascripts/perseids-ld.js
+	
+	# The XML edit template
+	GET	scp sosol-test:/usr/local/sosol/app/views/epi_cts_identifiers/editxml.haml /var/www/imgspect/scratch/editxml.haml
+	PUT scp /var/www/imgspect/scratch/editxml.haml sosol-test:/usr/local/sosol/app/views/epi_cts_identifiers/editxml.haml
+	
+	# PERSEIDS-LD -- Makes call to sparql server to get cite urns to images related to current document.
+	GET scp sosol-test:/usr/local/sosol/public/javascripts/perseids-ld.js /var/www/imgspect/scratch/perseids-ld.js
+	PUT scp /var/www/imgspect/scratch/perseids-ld.js sosol-test:/usr/local/sosol/public/javascripts/perseids-ld.js
+
+	# PERSEIDS-TOOLS -- Formats data returned by PERSEIDS-LD
+	GET scp sosol-test:/usr/local/sosol/public/javascripts/perseids-tools.js /var/www/imgspect/scratch/perseids-tools.js
+	PUT scp /var/www/imgspect/scratch/perseids-tools.js sosol-test:/usr/local/sosol/public/javascripts/perseids-tools.js
+	
+	//------------------------------------------------------------
+	// So I guess I need to figure out how the ICT tool works really.
+	//------------------------------------------------------------
+	PERSEIDS-TOOLS just builds an iframe passing along the cite URN to the image.
+
+	//------------------------------------------------------------
+	// So where does our ICT tool live?
+	//------------------------------------------------------------
+	http://perseids.org/tools/ict2/index.html
+	
+	Aha!  So I don't need to know where that code lives.
+	I can just pass the URN on.
+	So maybe I can get a thumbnail just by passing a different width.
+	http://services.perseus.tufts.edu/sparqlimg/api?request=GetBinaryImage&amp;urn=urn:cite:perseus:epifacsimg.83&amp;w=100
+	http://services.perseus.tufts.edu/sparqlimg/api?request=GetBinaryImage&amp;urn=urn:cite:perseus:epifacsimg.83&amp;w=1000
+	
+	//------------------------------------------------------------
+	// IMG src
+	//------------------------------------------------------------
+	<img src="http://services.perseus.tufts.edu/sparqlimg/api?request=GetBinaryImage&amp;urn=urn:cite:perseus:epifacsimg.83&amp;w=100" />
+	<img src="http://services.perseus.tufts.edu/sparqlimg/api?request=GetBinaryImage&amp;urn=urn:cite:perseus:epifacsimg.83&amp;w=1000" />
+
+
+Okay I ran into a snag.
+Imgbit made the assumption that an image would never have a question mark in the URL.
+Well I just found out that isn't the case.
+So I need to rewrite some code that will allow for source to have.
+Where does that code reside?
+
+* imgspect.liteToImgbit()
+* imgbit.html()
+* imgbit.init()
+
+
+
