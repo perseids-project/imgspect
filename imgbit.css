@@ -1,0 +1,78 @@
+.imgbit {
+	display: inline-block;
+}
+.imgbit .view {
+	position: relative;
+	overflow: hidden;
+}
+
+.imgbit img.star {
+	position: absolute;
+	display: block;
+	vertical-align: baseline;
+	max-width: none;
+	max-height: none;
+}
+
+.imgbit.full,
+.imgbit.edit {
+	background-color: #f2f2f2;
+	padding: 5px;
+	margin: 5px;
+	font-family: 'Lucida Console', 'Monaco', sans-serif;
+}
+
+.imgbit.full .source,
+.imgbit .close {
+	float: right;
+	background-color: #DFDFDF;
+	color: #FF8888;
+	margin-bottom: 2px;
+	text-decoration: none;
+	padding: 2px 6px;
+	font-size: 9px;
+}
+
+.imgbit .close {
+	color: #444;
+	margin-bottom: 5px;
+}
+
+.imgbit .close:hover {
+	color: #FF8888;
+}
+
+.imgbit.edit .switcher {
+	margin-top: 2px;
+}
+
+.imgbit.full .source:hover {
+	color: #FF4444;
+}
+
+.imgbit.full .text,
+.imgbit.edit .text {
+	word-wrap: break-word;
+	padding: 5px;
+}
+
+.imgbit.edit .caption {
+	overflow: hidden;
+	display: block;
+	word-wrap: break-word;
+	margin: 0;
+	border: none;
+	outline: none;
+	padding: 6px 5px 4px 5px;
+	resize: none;
+}
+
+.imgbit .text,
+.imgbit.edit .caption {
+	font-family: 'Lucida Console', 'Monaco', sans-serif;
+	font-size: 15px;
+}
+
+.imgbit.edit .text {
+	min-height: 16pxd;
+}
