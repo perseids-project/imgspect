@@ -53,7 +53,8 @@
 		self.events = {
 			change: 'IMGSPECT-CHANGE',
 			undo: 'IMGSPECT-UNDO',
-			error: 'IMGSPECT-ERROR'
+			error: 'IMGSPECT-ERROR',
+			update: 'IMGSPECT-UPDATE'
 		}
 		
 		//------------------------------------------------------------
@@ -408,6 +409,7 @@ In the drop-down view click an img to find its original position in the larger i
 			output += self.imgbits[i].html() + "\n";
 		}
 		$( '.output pre', self.elem ).text( output );
+		$( self.elem ).trigger( self.events['update'] );
 	}
 	
 	/**
@@ -762,7 +764,6 @@ In the drop-down view click an img to find its original position in the larger i
 	 * @ param { int } _id The lite id
 	 */
 	imgspect.prototype.liteShow = function( _id ) {
-		console.log( _id );
 		var self = this;
 		
 		//------------------------------------------------------------

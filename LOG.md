@@ -556,9 +556,9 @@ That way working prototype will be ready for presentation day.
 
 
 Okay I ran into a snag.
-Imgbit made the assumption that an image would never have a question mark in the URL.
+Imgbit made the assumption that an image would never have a question mark in the src URL.
 Well I just found out that isn't the case.
-So I need to rewrite some code that will allow for source to have.
+So I need to rewrite some code that will allow for img src to have a question mark and other get param characters.
 Where does that code reside?
 
 * imgspect.liteToImgbit()
@@ -566,4 +566,7 @@ Where does that code reside?
 * imgbit.init()
 
 
+# 2014-01-15
 
+
+Okay so I need to build a summary input.
