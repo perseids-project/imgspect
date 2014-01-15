@@ -1,9 +1,40 @@
+/*!
+ * PerseidsBridge
+ *
+ * Makes imgspect and Perseids/Sosol play nicely together.
+ */
 var PerseidsBridge = PerseidsBridge || { REVISION: '1' };
 PerseidsBridge.imgspect = ( function() {
 	var instance;
 	function _init() {
 		var self = this;
-		self.imgspect = null; // store the imgspect instance
+		
+		//------------------------------------------------------------
+		// Store the imgspect instance
+		//------------------------------------------------------------
+		self.imgspect = null;
+		self.load = function( _img ) {
+            //------------------------------------------------------------
+            // Load the image
+            //------------------------------------------------------------
+            $('#imgspect').append( _img );
+            self.imgspect = $('#imgspect img').imgspect().data('#imgspect img');
+			self.urn = self.getUrn();
+            $( self.imgspect.elem ).on( 'IMGSPECT-UPDATE', function() {
+                for ( var i=0, ii=self.imgspect.imgbits.length; i<ii; i++ ) {
+					console.log( urn );
+                    console.log( self.imgspect.imgbits[i].citeCoords() );
+                }
+            });
+		};
+		
+		/**
+		 * Retreive CITE urn
+		 */
+		self.getUrn = function() {
+			var obj = self.imgspect.src.params();
+			return obj['urn'];
+		};
 		
 		return {
 			
@@ -22,7 +53,14 @@ PerseidsBridge.imgspect = ( function() {
 				jQuery( document ).trigger( 'IMGSPECT-LINKS_LOADED' );
 			},
 			
+			/**
+			 * See self.load() function declaration above.
+			 */
+			load: self.load,
 			
+			/**
+			 * Once imgspect links are loaded add some event listeners
+			 */
 			start: function() {
 			    //------------------------------------------------------------
 			    // Images have been loaded.
@@ -35,17 +73,7 @@ PerseidsBridge.imgspect = ( function() {
 			          $('#imgspect').empty();
 			          var img = new Image();
 			          img.onload = function() {
-        
-			              //------------------------------------------------------------
-			              // Load the image
-			              //------------------------------------------------------------
-			              $('#imgspect').append( this );
-			              self.imgspect = $('#imgspect img').imgspect().data('#imgspect img');
-			              $(self.imgspect.elem).on( 'IMGSPECT-UPDATE', function() {
-			                  for ( var i=0, ii=self.imgspect.imgbits.length; i<ii; i++ ) {
-			                      console.log( self.imgspect.imgbits[i].citeCoords() );
-			                  }
-			              });
+        				  self.load( this );
 			          }
 			          var src = $(this).attr('rel');
 			          img.src = src;
