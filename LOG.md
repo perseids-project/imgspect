@@ -567,6 +567,28 @@ Where does that code reside?
 
 
 # 2014-01-15
+So integration with Perseids is nearly complete.
+Nearly all of the code that handles this integration is in PerseidsBridge.js.
+There are some things I still need to do.
+My most pressing TODOs.
+Let me just list them.
 
+* I need to build the summary.  I'm not sure exactly what this should include.
+* In order to do that well I need to figure out what data I need about the user.
+	* That data should be gathered and managed by PerseidsBridge ideally.
+		* grabUserData()
+* I have to fix the layout issues, and once I do that I need to figure out the best place to store that CSS.
+* I need to fix a couple of layout issues inside imgspect itself.
+	* The output window that displays the imgbit "a "tags doesn't need to be visible when editing inside Perseids.
+	* The drop down could be better.  I'm still not totally happy with its appearance.
+* When switching between images I need a reminder to users that their work will be lost.  I should word it something like...
 
-Okay so I need to build a summary input.
+		Switching images will reset imgspect.
+		You will lose your highlights and captions if you have have not copied them to your main XML document.
+	
+* The help info that displays in the "a" tag output area on startup should be turned into a slideshow or something along those lines.
+
+Niceties.
+
+* Hot keys.
+
