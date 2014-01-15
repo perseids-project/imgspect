@@ -500,7 +500,7 @@
 		output[2] = ( self.param['x2'] - self.param['x1'] ) / self.imgWidth;
 		output[3] = ( self.param['y2'] - self.param['y1'] ) / self.imgHeight;
 		for( var i=0, ii=output.length; i<ii; i++ ) {
-			output[i] = output[i].toFixed(5);
+			output[i] = output[i].toFixed(4);
 		}
 		return output;
 	}

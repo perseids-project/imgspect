@@ -13,6 +13,7 @@ PerseidsBridge.imgspect = ( function() {
 		// Store the imgspect instance
 		//------------------------------------------------------------
 		self.imgspect = null;
+		self.output = null;
 		self.load = function( _img ) {
             //------------------------------------------------------------
             // Load the image
@@ -20,13 +21,36 @@ PerseidsBridge.imgspect = ( function() {
             $('#imgspect').append( _img );
             self.imgspect = $('#imgspect img').imgspect().data('#imgspect img');
 			self.urn = self.getUrn();
+			
+			//------------------------------------------------------------
+			//  Everytime Imgspect changes update the output
+			//------------------------------------------------------------
             $( self.imgspect.elem ).on( 'IMGSPECT-UPDATE', function() {
-                for ( var i=0, ii=self.imgspect.imgbits.length; i<ii; i++ ) {
-					console.log( urn );
-                    console.log( self.imgspect.imgbits[i].citeCoords() );
-                }
+				var tags = self.getTags();
+				$('#' + self.output ).val( tags.join("\n") );
             });
 		};
+		
+		/**
+		 * Get the FACS you need
+		 */
+		self.getTags = function() {
+			var tags = [];
+            for ( var i=0, ii=self.imgspect.imgbits.length; i<ii; i++ ) {
+				var fullUrn = self.urnCoords( i );
+				var caption = self.imgspect.imgbits[i].caption;
+				tags[i] = '<w facs="' + fullUrn + '">' + caption + '</w>';
+            }
+			return tags;
+		};
+		
+		/**
+		 * Get the URN coordinates
+		 */
+		self.urnCoords = function( _i ) {
+			var coords = self.imgspect.imgbits[ _i ].citeCoords();
+			return self.urn + '@' + coords.join(',');
+		}
 		
 		/**
 		 * Retreive CITE urn
@@ -60,8 +84,12 @@ PerseidsBridge.imgspect = ( function() {
 			
 			/**
 			 * Once imgspect links are loaded add some event listeners
+			 *
+			 * @param { string } The id of the textarea for imgspect output
 			 */
-			start: function() {
+			start: function( _output ) {
+				self.output = _output;
+				
 			    //------------------------------------------------------------
 			    // Images have been loaded.
 			    //------------------------------------------------------------
