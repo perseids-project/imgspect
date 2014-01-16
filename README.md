@@ -17,8 +17,10 @@ The imgspect project is the home of two closesly related jQuery plug-ins, the ep
 * jQuery UI Draggable ( http://jqueryui.com/draggable )
 	* I have experienced problems with jQuery UI 1.10.3 hosted by Google version 1.10.2 is stabler.
 		* http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js
+		
 * menumucil ( https://github.com/caesarfeta/menumucil )
 * jslib ( https://github.com/caesarfeta/jslib )
+* plopup ( https://github.com/caesarfeta/plopup )
 
 ## Install
 ### Clone the repository and submodules

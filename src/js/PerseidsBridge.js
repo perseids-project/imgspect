@@ -9,26 +9,45 @@ PerseidsBridge.imgspect = ( function() {
 	function _init() {
 		var self = this;
 		
-		//------------------------------------------------------------
-		// Store the imgspect instance
-		//------------------------------------------------------------
 		self.imgspect = null;
 		self.output = null;
-		self.load = function( _img ) {
+		self.warning = null;
+		self.img = null;
+		
+		/**
+		 * Load imgspect
+		 */
+		self.load = function( _override ) {
+			_override = ( _override == undefined ) ? false : _override;
+			
+			//------------------------------------------------------------
+			//  Display the warning dialog
+			//------------------------------------------------------------
+			if ( self.imgspect != null && _override == false ) {
+				self.warning.popup();
+				return;
+			}
+			
             //------------------------------------------------------------
-            // Load the image
+            // Load the image.
             //------------------------------------------------------------
-            $('#imgspect').append( _img );
+			$('#imgspect').empty();
+            $('#imgspect').append( self.img );
             self.imgspect = $('#imgspect img').imgspect().data('#imgspect img');
 			self.urn = self.getUrn();
 			
 			//------------------------------------------------------------
-			//  Everytime Imgspect changes update the output
+			//  Everytime Imgspect changes update the output.
 			//------------------------------------------------------------
             $( self.imgspect.elem ).on( 'IMGSPECT-UPDATE', function() {
 				var tags = self.getTags();
 				$('#' + self.output ).val( tags.join("\n") );
             });
+			
+			//------------------------------------------------------------
+			//  Build the warning.
+			//------------------------------------------------------------
+			self.buildWarning();
 		};
 		
 		/**
@@ -50,7 +69,35 @@ PerseidsBridge.imgspect = ( function() {
 		self.urnCoords = function( _i ) {
 			var coords = self.imgspect.imgbits[ _i ].citeCoords();
 			return self.urn + '@' + coords.join(',');
-		}
+		};
+		
+		/**
+		 * Build the warning
+		 */
+		self.buildWarning = function() {
+			$('#imgspectWarning').remove();
+			$('body').append( '\
+				<div id="imgspectWarning">\
+					<p>\
+					Switching images will reset imgspect. \
+					You will lose your highlights and captions \
+					if you have have not copied them to your main XML document.\
+					</p>\
+					<div id="imgspectButtons">\
+						<a id="imgspectWarningOk" href="">OK</a>\
+						<a id="imgspectWarningCancel" href="">Cancel</a>\
+					</div>\
+				</div>' );
+			self.warning = $('#imgspectWarning').plopup({button:'x'}).data('#imgspectWarning');
+			$( '#imgspectWarningOk' ).click( function( _e ) {
+				self.load( true );
+				_e.preventDefault();
+			});
+			$( '#imgspectWarningCancel' ).click( function( _e ) {
+				self.warning.hide();
+				_e.preventDefault();
+			});
+		};
 		
 		/**
 		 * Retreive CITE urn
@@ -98,13 +145,12 @@ PerseidsBridge.imgspect = ( function() {
 			      	// Once an image is clicked.
 			      	//------------------------------------------------------------
 			      	$('.imgUrn').click( function( _e ) {
-			          $('#imgspect').empty();
-			          var img = new Image();
-			          img.onload = function() {
-        				  self.load( this );
+			          self.img = new Image();
+			          self.img.onload = function() {
+        				  self.load();
 			          }
 			          var src = $(this).attr('rel');
-			          img.src = src;
+			          self.img.src = src;
 			          _e.preventDefault();
 				  });
 			  	});

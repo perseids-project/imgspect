@@ -2,6 +2,7 @@
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	width: auto;
 	background-color: #222;
+	padding: 5px 5px 20px 5px;
 }
 
 .imgspect .view {
@@ -56,12 +57,6 @@
 .imgspect .color.selected {
 	border: 1px solid #444;
 	outline: 1px solid #BBB;
-}
-
-.imgspect {
-	padding: 5px;
-	margin: 5px;
-	padding-bottom: 20px;
 }
 
 .imgspect .tools {

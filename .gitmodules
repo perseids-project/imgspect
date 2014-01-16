@@ -7,3 +7,6 @@
 [submodule "third_party/sqUIsh"]
 	path = third_party/sqUIsh
 	url = https://github.com/caesarfeta/sqUIsh
+[submodule "third_party/plopup"]
+	path = third_party/plopup
+	url = http://github.com/caesarfeta/plopup
