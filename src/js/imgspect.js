@@ -968,7 +968,6 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.dragStart = function() {
 		var self = this;
-		
 		$( '.drag', self.elem ).draggable({
 			containment: 'parent',
 			scroll: false,
