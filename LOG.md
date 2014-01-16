@@ -581,6 +581,7 @@ Let me just list them.
 * I need to fix a couple of layout issues inside imgspect itself.
 	* The output window that displays the imgbit "a "tags doesn't need to be visible when editing inside Perseids.
 	* The drop down could be better.  I'm still not totally happy with its appearance.
+	
 * When switching between images I need a reminder to users that their work will be lost.  I should word it something like...
 
 		Switching images will reset imgspect.

@@ -6,7 +6,7 @@
 }
 
 .imgspect .view {
-	height: 400px;
+	height: 325px;
 	position: relative;
 	overflow: hidden;
 	margin-bottom: 20px;
@@ -126,7 +126,7 @@
 	width: 100%;
 	text-align: center;
 	text-decoration: none;
-	background-color: rgba( 25, 25, 25, 0.9 );
+	background-color: #222;
 	color: #666;
 	padding: 5px 0;
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
