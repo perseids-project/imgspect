@@ -593,3 +593,5 @@ Niceties.
 
 * Hot keys.
 
+# 2014-01-21
+When switching between images don't show reminder if current image is selected.

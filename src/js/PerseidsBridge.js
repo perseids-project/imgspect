@@ -21,12 +21,18 @@ PerseidsBridge.imgspect = ( function() {
             _override = ( _override == undefined ) ? false : _override;
             
             //------------------------------------------------------------
-            //  Display the warning dialog
+            // Display the warning dialog if new thumbnail is clicked
             //------------------------------------------------------------
             if ( self.imgspect != null && _override == false ) {
                 self.warning.popup();
                 return;
             }
+            
+            //------------------------------------------------------------
+            // Visually id the selected thumbnail
+            //------------------------------------------------------------
+            $('.imgUrn').removeClass('selected');
+            $('.imgUrn[rel="'+self.img.src+'"]').addClass('selected');
             
             //------------------------------------------------------------
             // Load the image.
@@ -37,12 +43,12 @@ PerseidsBridge.imgspect = ( function() {
             self.urn = self.getUrn();
             
             //------------------------------------------------------------
-            //  Update the background color of the thumbnail area
+            // Update the background color of the thumbnail area
             //------------------------------------------------------------
             $('#ict_tool').addClass( 'imgspectLoaded' );
             
             //------------------------------------------------------------
-            //  Everytime Imgspect changes update the output.
+            // Everytime imgspect changes update the output.
             //------------------------------------------------------------
             $( self.imgspect.elem ).on( 'IMGSPECT-UPDATE', function() {
                 var tags = self.getTags();
@@ -50,7 +56,7 @@ PerseidsBridge.imgspect = ( function() {
             });
             
             //------------------------------------------------------------
-            //  Build the warning.
+            // Build the warning.
             //------------------------------------------------------------
             self.buildWarning();
         };
@@ -85,8 +91,8 @@ PerseidsBridge.imgspect = ( function() {
                 <div id="imgspectWarning">\
                     <p>\
                         Switching images will reset imgspect. \
-					</p>\
-					<p>\
+                    </p>\
+                    <p>\
                         You will lose your highlights and captions \
                         if you have have not copied them to your main XML document.\
                     </p>\
@@ -144,9 +150,7 @@ PerseidsBridge.imgspect = ( function() {
              *
              * @param { string } The id of the textarea for imgspect output
              */
-            start: function( _output ) {
-                self.output = _output;
-                
+            start: function() {                
                 //------------------------------------------------------------
                 // Images have been loaded.
                 //------------------------------------------------------------
@@ -155,13 +159,25 @@ PerseidsBridge.imgspect = ( function() {
                     // Once an image is clicked.
                     //------------------------------------------------------------
                     $('.imgUrn').click( function( _e ) {
-                      self.img = new Image();
-                      self.img.onload = function() {
-                          self.load();
-                      }
-                      var src = $(this).attr('rel');
-                      self.img.src = src;
-                      _e.preventDefault();
+                        
+                        //------------------------------------------------------------
+                        //  Check to see if the clicked image has currently been
+                        //  loaded.
+                        //------------------------------------------------------------
+                        var src = $(this).attr('rel');
+                        if ( self.imgspect != null && self.imgspect.src == src ) {
+                            return;
+                        }
+                        
+                        //------------------------------------------------------------
+                        // Load the new image
+                        //------------------------------------------------------------
+                        self.img = new Image();
+                        self.img.onload = function() {
+                            self.load();
+                        }
+                        self.img.src = src;
+                        _e.preventDefault();
                   });
                 });
             }
