@@ -52,7 +52,7 @@ PerseidsBridge.imgspect = ( function() {
             //------------------------------------------------------------
             $( self.imgspect.elem ).on( 'IMGSPECT-UPDATE', function() {
                 var tags = self.getTags();
-                $('.imgspect .output' ).text( tags.join("\n\n") );
+                $('.imgspect .output' ).val( tags.join("\n\n") );
             });
             
             //------------------------------------------------------------
