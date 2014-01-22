@@ -194,7 +194,7 @@
 		//------------------------------------------------------------
 		//  Build the tool area
 		//------------------------------------------------------------
-		$( '.ui', self.elem ).prepend( '<div class="tools">' );
+		$( '.ui', self.elem ).append( '<div class="tools">' );
 		
 		//------------------------------------------------------------
 		//  Create the zoom buttons
@@ -363,7 +363,7 @@
 	 */
 	imgspect.prototype.outputBuild = function() {
 		var self = this;
-		$( '.tools', self.elem ).append( '<div class="output"><pre></pre></div>' );
+		$( '.tools', self.elem ).append( '<textarea class="output"></textarea>' );
 		$( '.output', self.elem ).css({
 			'max-height': $( '.nav', self.elem ).innerHeight() - $( '.tool', self.elem ).outerHeight()
 		});
@@ -392,7 +392,7 @@ Click the triangle to open a drop-down of just your highlighted areas. \n\n\
 In the drop-down view click the hash tag to caption or transcribe the highlighted area.\n\n\
 In the drop-down view click an img to find its original position in the larger image.\n\n\
 ';
-		$( '.output pre', self.elem ).text( output.trim() );
+		$( '.output', self.elem ).val( output.trim() );
 	}
 	
 	/**
@@ -400,7 +400,7 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.outputUpdate = function() {
 		var self = this;
-		$( '.output pre', self.elem ).text('');
+		$( '.output', self.elem ).val('');
 		var output = '';
 		//------------------------------------------------------------
 		//  Loop through all the imgbits and return their HTML
@@ -408,7 +408,7 @@ In the drop-down view click an img to find its original position in the larger i
 		for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
 			output += self.imgbits[i].html() + "\n";
 		}
-		$( '.output pre', self.elem ).text( output );
+		$( '.output', self.elem ).val( output );
 		$( self.elem ).trigger( self.events['update'] );
 	}
 	

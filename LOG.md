@@ -595,3 +595,10 @@ Niceties.
 
 # 2014-01-21
 When switching between images don't show reminder if current image is selected.
+
+# 2014-01-22
+So I need a way of grabbing coordinates from a w tag's facs attribute and create an imgspect highlight.
+Right now imgspect is only one way.
+It needs to go the other way ideally.
+
+Also I should change back to a textarea for the output area.
