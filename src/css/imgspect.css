@@ -84,7 +84,7 @@
 	color: #FF8888;
 }
 
-.imgspect .output {
+.imgspect textarea#imgspectOut {
 	color: #888;
 	word-wrap: break-word;
 	margin-right: 5px;

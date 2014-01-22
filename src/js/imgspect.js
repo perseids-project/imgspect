@@ -363,7 +363,7 @@
 	 */
 	imgspect.prototype.outputBuild = function() {
 		var self = this;
-		$( '.tools', self.elem ).append( '<textarea class="output"></textarea>' );
+		$( '.tools', self.elem ).append( '<textarea id="imgspectOut" class="output"></textarea>' );
 		$( '.output', self.elem ).css({
 			'max-height': $( '.nav', self.elem ).innerHeight() - $( '.tool', self.elem ).outerHeight()
 		});
