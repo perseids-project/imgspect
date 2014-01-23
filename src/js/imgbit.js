@@ -318,13 +318,7 @@
 			//  Keep editable and static caption synched.
 			//------------------------------------------------------------
 			$( '.caption', self.elem ).bind( 'input propertychange', function() {
-				self.caption = $( '.caption', self.elem ).val();
-				$( '.text', self.elem ).text( self.caption );
-				self.captionResize();
-				//------------------------------------------------------------
-				//  Let the application know you've changed.
-				//------------------------------------------------------------
-				$( self.elem ).trigger( self.events['change'] );
+				self.setCaption( $( '.caption', self.elem ).val() );
 			});
 		}
 	}
@@ -335,6 +329,20 @@
 	imgbit.prototype.remove = function() {
 		var self = this;
 		$( self.elem ).remove();
+	}
+	
+	/**
+	 * Update the caption
+	 */
+	imgbit.prototype.setCaption = function( _caption ) {
+		var self = this;
+		self.caption = _caption;
+		$( '.text', self.elem ).text( self.caption );
+		self.captionResize();
+		//------------------------------------------------------------
+		//  Let the application know you've changed.
+		//------------------------------------------------------------
+		$( self.elem ).trigger( self.events['change'] );
 	}
 	
 	/**

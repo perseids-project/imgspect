@@ -662,41 +662,50 @@ In the drop-down view click an img to find its original position in the larger i
 			var y1 = cp.top / self.zoom_n;
 			var x2 = x1 + self.c_lite.width() / self.zoom_n;
 			var y2 = y1 + self.c_lite.height() / self.zoom_n;
-			
-			//------------------------------------------------------------
-			//  Stash that lite
-			//------------------------------------------------------------
-			self.lites.push({ 
-				x1: parseInt(x1),
-				y1: parseInt(y1),
-				x2: parseInt(x2),
-				y2: parseInt(y2),
-				zoom: self.zoom_n,
-				color: self.options['lite_color'],
-				opacity: self.options['lite_opacity'],
-				id: self.lites.length
-			});
-			
-			//------------------------------------------------------------
-			//  Draw the lite on the nav image.
-			//  ( Make this optional with a config option? )
-			//------------------------------------------------------------
-			self.navLiteDraw( self.liteLast().id );
-			
-			//------------------------------------------------------------
-			//  Reset current lite
-			//------------------------------------------------------------
-			self.c_lite = null;
-			self.c_pos = null;
-			
-			//------------------------------------------------------------
-			//  Let the world know the app state has changed
-			//------------------------------------------------------------
-			$( self.elem ).trigger( self.events['change'] );
+			self.liteAdd( x1, y1, x2, y2 );
 			
 			_e.preventDefault();
 		});
 	}
+	
+	/**
+	 * Add a lite
+	 */
+	imgspect.prototype.liteAdd = function( _x1, _y1, _x2, _y2 ) {
+		var self = this;
+		//------------------------------------------------------------
+		//  Stash that lite
+		//------------------------------------------------------------
+		self.lites.push({ 
+			x1: parseInt( _x1 ),
+			y1: parseInt( _y1 ),
+			x2: parseInt( _x2 ),
+			y2: parseInt( _y2 ),
+			zoom: self.zoom_n,
+			color: self.options['lite_color'],
+			opacity: self.options['lite_opacity'],
+			id: self.lites.length
+		});
+		
+		//------------------------------------------------------------
+		//  Draw the lite on the nav image.
+		//  ( Make this optional with a config option? )
+		//------------------------------------------------------------
+		self.navLiteDraw( self.liteLast().id );
+		
+		//------------------------------------------------------------
+		//  Reset current lite
+		//------------------------------------------------------------
+		self.c_lite = null;
+		self.c_pos = null;
+		
+		//------------------------------------------------------------
+		//  Let the world know the app state has changed
+		//------------------------------------------------------------
+		$( self.elem ).trigger( self.events['change'] );
+	}
+	
+	
 	
 	/**
 	 * Build the DOM element for a lite

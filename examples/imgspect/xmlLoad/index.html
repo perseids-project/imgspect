@@ -26,9 +26,9 @@
 		                &lt;head type=&quot;chapter&quot;&gt;Satute de Northampton&lt;/head&gt;
 		                &lt;lg type=&quot;section&quot; n=&quot;1&quot;&gt;
 		                    &lt;l n=&quot;1&quot;&gt;
-								&lt;w facs=&quot;urn:cite:perseus:flcimg.329@0.0913,0.0409,0.3226,0.0987&quot;&gt;sample&lt;/w&gt;
-								&lt;w facs=&quot;urn:cite:perseus:flcimg.329@0.5141,0.0418,0.3098,0.0969&quot;&gt;sample2&lt;/w&gt;
-								&lt;w facs=&quot;urn:cite:perseus:flcimg.329@0.1003,0.1760,0.3715,0.0756&quot;&gt;sample&lt;/w&gt;
+								&lt;w facs=&quot;../../img/the-garden-of-earthly-delights.jpg@0.0913,0.0409,0.3226,0.0987&quot;&gt;sample&lt;/w&gt;
+								&lt;w facs=&quot;../../img/the-garden-of-earthly-delights.jpg@0.5141,0.0418,0.3098,0.0969&quot;&gt;sample2&lt;/w&gt;
+								&lt;w facs=&quot;../../img/the-garden-of-earthly-delights.jpg@0.1003,0.1760,0.3715,0.0756&quot;&gt;sample&lt;/w&gt;
 		                    &lt;/l&gt;
 		                &lt;/lg&gt;
 		            &lt;/div&gt;
@@ -57,7 +57,8 @@
 		spect = $( '#bosch' ).imgspect().data( '#bosch' );
 		bridge = new PerseidsBridge.imgspect.init();
 		bridge.imgspect = spect;
-		bridge.fromXml( $('#text').val() );
+		bridge.getTags( $('#text').val() );
+		bridge.loadTags();
 	});
 </script>
 </html>

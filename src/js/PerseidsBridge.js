@@ -14,7 +14,7 @@ PerseidsBridge.imgspect = ( function() {
         self.warning = null;
         self.img = null;
 		self.w_tags = {};
-        
+		        
         /**
          * Load imgspect
          */
@@ -129,7 +129,8 @@ PerseidsBridge.imgspect = ( function() {
 		 *
 		 * @ param { string } _xml An XML string
          */
-		self.fromXml = function( _xml ) {
+		self.getTags = function( _xml ) {
+			var self = this;
 			var xmlDoc = $.parseXML( _xml.smoosh() );
 			var xml = $( xmlDoc );
 			xml.find( "w" ).each( function() {
@@ -155,9 +156,51 @@ PerseidsBridge.imgspect = ( function() {
 				});
 			});
 		};
+		
+        /**
+         * Turn self.w_tags into Imgspect highlights and imgbits
+		 *
+		 * @ param { string } _xml An XML string
+         */
+		self.loadTags = function () {
+			var self = this;
+			
+			//------------------------------------------------------------
+			//  Check to see if src has w_tags associated with it
+			//------------------------------------------------------------
+			if ( self.w_tags != undefined && !( self.imgspect.src in self.w_tags ) ) {
+				return;
+			}
+			
+			//------------------------------------------------------------
+			//  Hey there are w_tags!  Let's convert some coordinates.
+			//------------------------------------------------------------
+			var src = self.imgspect.src;
+			var width = self.imgspect.orig_w;
+			var height = self.imgspect.orig_h;
+			for ( var i=0, ii=self.w_tags[ src ].length; i<ii; i++ ) {
+				var coords = self.w_tags[src][i].coords;
+				var x1 = Math.floor( coords[0] * width );
+				var y1 = Math.floor( coords[1] * height );
+				var x2 = Math.floor( coords[2] * width ) + x1;
+				var y2 = Math.floor( coords[3] * height ) + y1;
+				self.imgspect.liteAdd( x1, y1, x2, y2 );
+				self.imgspect.imgbits[i].setCaption( self.w_tags[src][i].caption );
+			}
+			
+			//------------------------------------------------------------
+			//  Update the location of all the highlights
+			//------------------------------------------------------------
+			self.imgspect.resize();
+		}
         
         return {
-            
+			//------------------------------------------------------------
+			//  Revealed properties
+			//------------------------------------------------------------
+            imgspect: self.imgspect,
+			w_tags: self.w_tags,
+			
             /**
              * Build imgspect links
              *
@@ -174,9 +217,14 @@ PerseidsBridge.imgspect = ( function() {
             },
 			
             /**
-             * See self.fromXML() function declaration above.
+             * See self.getTags() function declaration above.
              */			
-			fromXml: self.fromXml,
+			getTags: self.getTags,
+			
+            /**
+             * See self.loadTags() function declaration above.
+             */			
+			loadTags: self.loadTags,
             
             /**
              * See self.load() function declaration above.
