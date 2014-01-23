@@ -13,6 +13,7 @@ PerseidsBridge.imgspect = ( function() {
         self.output = null;
         self.warning = null;
         self.img = null;
+		self.w_tags = {};
         
         /**
          * Load imgspect
@@ -122,6 +123,38 @@ PerseidsBridge.imgspect = ( function() {
             var obj = self.imgspect.src.params();
             return obj['urn'];
         };
+		
+        /**
+         * Retreive ImgBit coordinates from XML string
+		 *
+		 * @ param { string } _xml An XML string
+         */
+		self.fromXml = function( _xml ) {
+			var xmlDoc = $.parseXML( _xml.smoosh() );
+			var xml = $( xmlDoc );
+			xml.find( "w" ).each( function() {
+				//------------------------------------------------------------
+				//  Extract the info you need to build an imgbit from the XML
+				//------------------------------------------------------------
+				var caption = this.innerHTML;
+				var facs = $(this).attr('facs');
+				var info = facs.split('@');
+				var urn = info[0];
+				var nums = info[1];
+				var coords = nums.split(',');
+				
+				//------------------------------------------------------------
+				//  Store the info in a handy format.
+				//------------------------------------------------------------
+				if ( !( urn in self.w_tags ) ) {
+					self.w_tags[urn] = [];
+				}
+				self.w_tags[urn].push( {
+					caption: caption,
+					coords: coords
+				});
+			});
+		};
         
         return {
             
@@ -139,6 +172,11 @@ PerseidsBridge.imgspect = ( function() {
                 }
                 jQuery( document ).trigger( 'IMGSPECT-LINKS_LOADED' );
             },
+			
+            /**
+             * See self.fromXML() function declaration above.
+             */			
+			fromXml: self.fromXml,
             
             /**
              * See self.load() function declaration above.

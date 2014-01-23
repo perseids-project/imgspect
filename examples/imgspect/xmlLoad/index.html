@@ -1,0 +1,63 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../../../third_party/menumucil/css/menumucil.css">
+	<link rel="stylesheet" href="../../../src/css/imgspect.css">
+	<link rel="stylesheet" href="../../../src/css/imgbit.css">
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+		#app {
+			background-color: #222;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<img id="bosch" src="../../img/the-garden-of-earthly-delights.jpg" />
+	</div>
+	<textarea id="text">
+		&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+		&lt;TEI xmlns=&quot;http://www.tei-c.org/ns/1.0&quot;&gt;
+		   &lt;text xml:lang=&quot;lat&quot;&gt;
+		    &lt;body&gt;
+		        &lt;div type=&quot;edition&quot; subtype=&quot;Normative&quot;&gt;
+		            &lt;div type=&quot;textpart&quot; subtype=&quot;chapter&quot; n=&quot;26&quot;&gt;
+		                &lt;head type=&quot;chapter&quot;&gt;Satute de Northampton&lt;/head&gt;
+		                &lt;lg type=&quot;section&quot; n=&quot;1&quot;&gt;
+		                    &lt;l n=&quot;1&quot;&gt;
+								&lt;w facs=&quot;urn:cite:perseus:flcimg.329@0.0913,0.0409,0.3226,0.0987&quot;&gt;sample&lt;/w&gt;
+								&lt;w facs=&quot;urn:cite:perseus:flcimg.329@0.5141,0.0418,0.3098,0.0969&quot;&gt;sample2&lt;/w&gt;
+								&lt;w facs=&quot;urn:cite:perseus:flcimg.329@0.1003,0.1760,0.3715,0.0756&quot;&gt;sample&lt;/w&gt;
+		                    &lt;/l&gt;
+		                &lt;/lg&gt;
+		            &lt;/div&gt;
+		        &lt;/div&gt;
+		    &lt;/body&gt;
+		    &lt;/text&gt;
+		&lt;/TEI&gt;
+	</textarea>
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script src="../../../third_party/jslib/src/js/jQueryPlus.js"></script>
+<script src="../../../third_party/jslib/src/js/StringExt.js"></script>
+<script src="../../../third_party/jslib/src/js/TimeStamp.js"></script>
+<script src="../../../third_party/jslib/src/js/Culuh.js"></script>
+<script src="../../../third_party/menumucil/menumucil.js"></script>
+<script src="../../../src/js/imgspect.js"></script>
+<script src="../../../src/js/imgbit.js"></script>
+<script src="../../../src/js/PerseidsBridge.js"></script>
+<script type="text/javascript">
+	var spect = null;
+	$(window).load( function(){
+		/**
+		 * Start imgspect and grab a handler
+		 */
+		spect = $( '#bosch' ).imgspect().data( '#bosch' );
+		bridge = new PerseidsBridge.imgspect.init();
+		bridge.imgspect = spect;
+		bridge.fromXml( $('#text').val() );
+	});
+</script>
+</html>
