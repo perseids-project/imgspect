@@ -54,7 +54,8 @@
 			change: 'IMGSPECT-CHANGE',
 			undo: 'IMGSPECT-UNDO',
 			error: 'IMGSPECT-ERROR',
-			update: 'IMGSPECT-UPDATE'
+			update: 'IMGSPECT-UPDATE',
+			ready: 'IMGSPECT-READY'
 		}
 		
 		//------------------------------------------------------------
@@ -102,8 +103,12 @@
 		if ( self.options['load'] != null ) {
 			self.load( self.options['load'] );
 		}
+		
+		//------------------------------------------------------------
+		//  Let everything listening know imgspect is ready
+		//------------------------------------------------------------
+		$( self.elem ).trigger( self.events['ready'] );
 	}
-	
 	/**
 	 * Return a jsonLD object
 	 */

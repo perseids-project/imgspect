@@ -129,3 +129,31 @@
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	font-size: 25px;
 }
+#imgspectWarning {
+	background-color: rgba(255,255,255,0.95);
+	border: solid 2px #AAA;
+	padding: 5px;
+	padding-bottom: 20px;
+}
+#imgspectWarning p {
+	text-align:center;
+	padding: 5px 20px;
+}
+#imgspectWarning div.space {
+	text-align: center;
+	padding-top: 0;
+	padding: 20px;
+}
+#imgspectWarning p:last-of-type {
+	margin-bottom: 40px;
+}
+#imgspectWarning #imgspectButtons {
+	text-align: center;
+}
+#imgspectWarning a {
+	text-decoration: none;
+	margin: 10px;
+}
+#imgspectWarning a:hover {
+	text-decoration: underline;
+}

@@ -25,9 +25,16 @@ PerseidsBridge.imgspect = ( function() {
             // Display the warning dialog if new thumbnail is clicked
             //------------------------------------------------------------
             if ( self.imgspect != null && _override == false ) {
+				self.buildWarning();
                 self.warning.popup();
                 return;
             }
+			
+			//------------------------------------------------------------
+			//  Build the wait screen
+			//------------------------------------------------------------
+			self.buildWait();
+			self.warning.popup();
             
             //------------------------------------------------------------
             // Visually id the selected thumbnail
@@ -52,20 +59,15 @@ PerseidsBridge.imgspect = ( function() {
             // Everytime imgspect changes update the output.
             //------------------------------------------------------------
             $( self.imgspect.elem ).on( 'IMGSPECT-UPDATE', function() {
-                var tags = self.getTags();
+                var tags = self.buildTags();
                 $('.imgspect .output' ).val( tags.join("\n\n") );
             });
-            
-            //------------------------------------------------------------
-            // Build the warning.
-            //------------------------------------------------------------
-            self.buildWarning();
         };
         
         /**
          * Get the FACS you need
          */
-        self.getTags = function() {
+        self.buildTags = function() {
             var tags = [];
             for ( var i=0, ii=self.imgspect.imgbits.length; i<ii; i++ ) {
                 var fullUrn = self.urnCoords( i );
@@ -115,6 +117,31 @@ PerseidsBridge.imgspect = ( function() {
                 _e.preventDefault();
             });
         };
+		
+        /**
+         * Build the wait screen
+         */
+        self.buildWait = function() {
+            $('#imgspectWarning').remove();
+            $('body').append( '\
+                <div id="imgspectWarning">\
+                    <p>\
+                        Loading hi-res image.\
+                    </p>\
+                    <p>\
+						This may take a while.\
+                    </p>\
+					<div class="space"><img src="/javascripts/imgspect/src/img/ajax-loader.gif" /></div>\
+                </div>' );
+            self.warning = $('#imgspectWarning').plopup({ button:'x' }).data('#imgspectWarning');
+			
+			//------------------------------------------------------------
+			//  When imgspect is ready the warning gets removed... natch
+			//------------------------------------------------------------
+			$( document ).on( 'IMGSPECT-READY', function() {
+				$('#imgspectWarning').remove();
+			});
+        };
         
         /**
          * Retreive CITE urn
@@ -158,6 +185,37 @@ PerseidsBridge.imgspect = ( function() {
 		};
 		
         /**
+         * Add a click event listener
+		 *
+		 * @ param { string } _selector jQuery selector string
+         */
+		self.clickListen = function( _selector ) {
+			var self = this;
+            //------------------------------------------------------------
+            // Once an image is clicked.
+            //------------------------------------------------------------
+            $( '#'+_selector ).click( function( _e ) {
+                _e.preventDefault();
+                //------------------------------------------------------------
+                //  Check to see if the clicked image has currently been
+                //  loaded.
+                //------------------------------------------------------------
+                var src = $(this).attr('href');
+                if ( self.imgspect != null && self.imgspect.src == src ) {
+                    return;
+                }
+                //------------------------------------------------------------
+                // Load the new image
+                //------------------------------------------------------------
+                self.img = new Image();
+                self.img.onload = function() {
+                    self.load();
+                }
+                self.img.src = src;
+			});
+		};
+		
+        /**
          * Turn self.w_tags into Imgspect highlights and imgbits
 		 *
 		 * @ param { string } _xml An XML string
@@ -192,7 +250,7 @@ PerseidsBridge.imgspect = ( function() {
 			//  Update the location of all the highlights
 			//------------------------------------------------------------
 			self.imgspect.resize();
-		}
+		};
         
         return {
 			//------------------------------------------------------------
@@ -210,16 +268,21 @@ PerseidsBridge.imgspect = ( function() {
             buildLinks: function( _elem, _results ) {
                 var url = "http://services.perseus.tufts.edu/sparqlimg/api?request=GetBinaryImage&urn=";
                 for ( var i=0, ii=_results.length; i<ii; i++ ) {
-                    var imgUrn = '<a class="imgUrn" rel="' + url + _results[i] + '&w=3000"><img src="'+ url + _results[i] + '&w=100"/></a>';
+                    var imgUrn = '<a id="imgUrn_'+i+'"class="imgUrn" href="' + url + _results[i] + '&w=3000"><img src="'+ url + _results[i] + '&w=100"/></a>';
                     jQuery( _elem ).append( imgUrn );
+					self.clickListen( imgUrn.attr('id'))
                 }
-                jQuery( document ).trigger( 'IMGSPECT-LINKS_LOADED' );
             },
 			
             /**
              * See self.getTags() function declaration above.
              */			
 			getTags: self.getTags,
+			
+            /**
+             * See self.buildTags() function declaration above.
+             */			
+			buildTags: self.buildTags,
 			
             /**
              * See self.loadTags() function declaration above.
@@ -230,42 +293,16 @@ PerseidsBridge.imgspect = ( function() {
              * See self.load() function declaration above.
              */
             load: self.load,
+			
+			clickListen: self.clickListen,
             
             /**
              * Once imgspect links are loaded add some event listeners
-             *
-             * @param { string } The id of the textarea for imgspect output
              */
-            start: function() {                
-                //------------------------------------------------------------
-                // Images have been loaded.
-                //------------------------------------------------------------
-                $(document).on( 'IMGSPECT-LINKS_LOADED', function() {   
-                    //------------------------------------------------------------
-                    // Once an image is clicked.
-                    //------------------------------------------------------------
-                    $('.imgUrn').click( function( _e ) {
-                        
-                        //------------------------------------------------------------
-                        //  Check to see if the clicked image has currently been
-                        //  loaded.
-                        //------------------------------------------------------------
-                        var src = $(this).attr('rel');
-                        if ( self.imgspect != null && self.imgspect.src == src ) {
-                            return;
-                        }
-                        
-                        //------------------------------------------------------------
-                        // Load the new image
-                        //------------------------------------------------------------
-                        self.img = new Image();
-                        self.img.onload = function() {
-                            self.load();
-                        }
-                        self.img.src = src;
-                        _e.preventDefault();
-                  });
-                });
+            start: function() {
+           	 	$( document ).on('IMGSPECT-LINK_LOADED', function( _e, _id ) {
+					self.clickListen( _id );
+           	 	});
             }
         }
     };
