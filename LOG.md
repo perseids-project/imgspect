@@ -602,3 +602,10 @@ Right now imgspect is only one way.
 It needs to go the other way ideally.
 
 Also I should change back to a textarea for the output area.
+
+# 2014-02-03
+Image loading lag.
+New interface so there isn't strange line-wrapping.
+Sorting for the imgbit grid.
+	Sorting by x and y coordinates.
+	Sorting by time selected.

@@ -260,7 +260,7 @@
 	}
 	
 	/**
-	 * Add an imgbit to the drop down
+	 * Add an imgbit to the drop-down
 	 *
 	 * @param { int } _id Lite id
 	 */	
@@ -275,6 +275,36 @@
 		var id = '#drop #imgbit-'+_id;
 		self.imgbits.push( $( id ).imgbit().data( id ) );
 		self.imgbitStart( _id );
+	}
+	
+	/**
+	 * Sort the imgbits in the drop-down menu.
+	 *
+	 * @param { string } _method string time, space
+	 */
+	imgspect.prototype.imgbitsSort = function( _method ) {
+		var self = this;
+		_method = ( _method == undefined ) ? 'time' : _method
+		
+		//------------------------------------------------------------
+		//  Sort the imgbits
+		//------------------------------------------------------------
+		var sorted = [];
+		switch ( _method ) {
+			case 'time':
+				for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
+					var timeCreated = self.imgbits[i].timeCreated;
+					console.log( timeCreated );
+				}
+				break;
+			case 'space':
+				for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
+					var x1 = self.imgbits[i].param.x1;
+					var y1 = self.imgbits[i].param.y1;
+					console.log( x1, y1 );
+				}
+				break;
+		}
 	}
 	
 	/**
