@@ -229,7 +229,15 @@
 	 */	
 	imgspect.prototype.dropBuild = function() {
 		var self = this;
-		$( self.elem ).before( '<div id="drop"><div class="imgbits"></div></div>' );
+		var drop = '\
+			<div id="drop">\
+				<div class="sortBits">\
+					<a href="" id="time" class="sort">Time</a>\
+					<a href="" id="space" class="sort">Space</a>\
+				</div>\
+				<div class="imgbits"></div>\
+			</div>';
+		$( self.elem ).before( drop.smoosh() );
 		self.drop = $( '#drop' ).menumucil({ 
 			cover: true,
 			closed: '&#9660',
@@ -257,6 +265,15 @@
 			self.imgbitAdd( id );
 			self.dropCount();
 		});
+		
+		//------------------------------------------------------------
+		//  Sort listeners
+		//------------------------------------------------------------
+		$( '#drop .sort' ).click( function( _e ) {
+			_e.preventDefault();
+			var type = $( this ).attr('id');
+			self.imgbitsSort( type );
+		})
 	}
 	
 	/**
@@ -289,20 +306,19 @@
 		//------------------------------------------------------------
 		//  Sort the imgbits
 		//------------------------------------------------------------
-		var sorted = [];
+		var timeStamp = new TimeStamp();
+		var out = [];
 		switch ( _method ) {
 			case 'time':
 				for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
 					var timeCreated = self.imgbits[i].timeCreated;
-					console.log( timeCreated );
+					var time = timeStamp.toUnix( timeCreated );
+					console.log( time );
 				}
 				break;
 			case 'space':
-				for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
-					var x1 = self.imgbits[i].param.x1;
-					var y1 = self.imgbits[i].param.y1;
-					console.log( x1, y1 );
-				}
+				var sorted = new Sorted();
+				sorted.areaSort( self.imgbits, 'x1', 'y1', 'y2' )
 				break;
 		}
 	}
@@ -398,7 +414,7 @@
 	 */
 	imgspect.prototype.outputBuild = function() {
 		var self = this;
-		$( '.tools', self.elem ).append( '<textarea id="imgspectOut" class="output"></textarea>' );
+		$( '.tools', self.elem ).append( '<textarea readonly="readonly" id="imgspectOut" class="output"></textarea>' );
 		$( '.output', self.elem ).css({
 			'max-height': $( '.nav', self.elem ).innerHeight() - $( '.tool', self.elem ).outerHeight()
 		});

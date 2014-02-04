@@ -4,21 +4,18 @@
 	background-color: #222;
 	padding: 5px 5px 20px 5px;
 }
-
 .imgspect .view {
 	height: 325px;
 	position: relative;
 	overflow: hidden;
 	margin-bottom: 20px;
 }
-
 .imgspect .nav {
 	float: left;
 	max-width: 640px;
 	max-height: 300px;
 	display: block;
 }
-
 .imgspect .draw {
 	float: left;
 	position: absolute;
@@ -29,7 +26,6 @@
 	margin-right: 10px;
 	background-size: cover;
 }
-
 .imgspect .drag {
 	position: absolute;
 	z-index: 100;
@@ -38,37 +34,30 @@
 	outline: 1px solid #444;
 	border: 1px solid #BBB;
 }
-
 .imgspect .tool {
 	font-size: 30px;
 	display: block;
 	float: left;
 	margin-right: 5px;
 }
-
 .imgspect .lite {
 	position: absolute;
 }
-
 .imgspect .colors {
 	display: block;
 }
-
 .imgspect .color.selected {
 	border: 1px solid #444;
 	outline: 1px solid #BBB;
 }
-
 .imgspect .tools {
 	float: left;
 	margin: 0 20px;
 }
-
 .imgspect .tools .group {
 	display: block;
 	clear: both;
 }
-
 .imgspect .tool {
 	background-color: #444;
 	color: #888888;
@@ -78,12 +67,6 @@
 	padding: 2px 6px;
 	font-size: 20px;
 }
-
-#drop .clicker:hover,
-.imgspect .tool:hover {
-	color: #FF8888;
-}
-
 .imgspect textarea#imgspectOut {
 	color: #888;
 	word-wrap: break-word;
@@ -98,16 +81,13 @@
 	text-align: left;
 	font-size: 10px;
 }
-
 .imgspect .center {
 	width: 100%;
 	text-align: center;
 }
-
 .imgspect .ui {
 	display: inline-block;
 }
-
 #drop {
 	width: 100%;
 }
@@ -128,6 +108,19 @@
 	padding: 5px 0;
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	font-size: 25px;
+}
+#drop .sort {
+	color: #666;
+	text-decoration: none;
+	margin-right: 10px;
+}
+#drop .sort:hover {
+	color: #AAA;
+}
+
+#drop .clicker:hover,
+.imgspect .tool:hover {
+	color: #FF8888;
 }
 #imgspectWarning {
 	background-color: rgba(255,255,255,0.95);

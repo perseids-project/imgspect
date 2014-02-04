@@ -604,8 +604,12 @@ It needs to go the other way ideally.
 Also I should change back to a textarea for the output area.
 
 # 2014-02-03
-Image loading lag.
-New interface so there isn't strange line-wrapping.
-Sorting for the imgbit grid.
-	Sorting by x and y coordinates.
-	Sorting by time selected.
+* Image loading lag.
+* New interface so there isn't strange line-wrapping.
+* Sorting for the imgbit grid.
+	* Sorting by x and y coordinates.
+	* Sorting by time selected.
+* Tablet compatibility
+	* jQuery UI 'draggable()' draggable for touchscreen.
+		* http://stackoverflow.com/questions/3026915/how-can-i-make-a-jquery-ui-draggable-div-draggable-for-touchscreen
+		* Add touch events to jQuery UI -- https://github.com/furf/jquery-ui-touch-punch

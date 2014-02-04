@@ -66,7 +66,7 @@
 		//  Time created with UTC offset
 		//------------------------------------------------------------
 		var timeStamp = new TimeStamp();
-		self.timeCreated = timeStamp.withUtc();
+		self.timeCreated = timeStamp.withUtc( true );
 		
 		//------------------------------------------------------------
 		//  Get the imgbit parameters
