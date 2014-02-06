@@ -318,7 +318,8 @@
 				break;
 			case 'space':
 				var sorted = new Sorted();
-				sorted.areaSort( self.imgbits, 'x1', 'y1', 'y2' )
+				var imgbits = sorted.areaSort( self.imgbits, "param.x1", "param.y1", "param.y2" );
+				console.log( imgbits );
 				break;
 		}
 	}
@@ -610,6 +611,7 @@ In the drop-down view click an img to find its original position in the larger i
 		//  Mouse Down
 		//------------------------------------------------------------
 		$( '.view', self.elem ).mousedown( function( _e ) {
+			_e.preventDefault();
 			
 			//------------------------------------------------------------
 			//  Create a new lite
@@ -640,7 +642,6 @@ In the drop-down view click an img to find its original position in the larger i
 				'background-color': '#'+self.options['lite_color'].hex(),
 				opacity: self.options['lite_opacity']
 			});
-			_e.preventDefault();
 		});
 		
 		//------------------------------------------------------------
@@ -696,6 +697,7 @@ In the drop-down view click an img to find its original position in the larger i
 		//  Mouse Up
 		//------------------------------------------------------------
 		$( '.view', self.elem ).mouseup( function( _e ) {
+			_e.preventDefault();
 			//------------------------------------------------------------
 			//  Check to see if the current lite is not just 
 			//  a trivial mouse slip up.
@@ -704,7 +706,6 @@ In the drop-down view click an img to find its original position in the larger i
 				self.c_lite = null;
 				return;
 			}
-			
 			//------------------------------------------------------------
 			//  Store lite position in relation to original
 			//------------------------------------------------------------
@@ -714,8 +715,6 @@ In the drop-down view click an img to find its original position in the larger i
 			var x2 = x1 + self.c_lite.width() / self.zoom_n;
 			var y2 = y1 + self.c_lite.height() / self.zoom_n;
 			self.liteAdd( x1, y1, x2, y2 );
-			
-			_e.preventDefault();
 		});
 	}
 	
