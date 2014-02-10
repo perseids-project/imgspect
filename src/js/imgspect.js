@@ -732,7 +732,6 @@ In the drop-down view click an img to find its original position in the larger i
 		});
 		$( '.view', self.elem ).bind('touchstart', function( _e ) {
 			_e.preventDefault();
-			console.log( 'touchstart' )
 			self.drawMouseDown( _e );
 		});
 		
@@ -745,7 +744,6 @@ In the drop-down view click an img to find its original position in the larger i
 		});
 		$( '.view', self.elem ).bind( 'touchmove', function( _e ) {
 			_e.preventDefault();
-			console.log( 'touchmove' )
 			self.drawMouseMove( _e );
 		})
 		
@@ -758,7 +756,6 @@ In the drop-down view click an img to find its original position in the larger i
 		});
 		$( self.elem ).bind( 'touchend', function( _e ) {
 			_e.preventDefault();
-			console.log( 'touchend' )
 			self.drawMouseUp( _e );
 		})
 	}
@@ -1214,7 +1211,6 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.viewMousePos = function( _e ) {
 		var vp = $( '.view', this.elem ).position();
-		console.log( _e );
 		var x = ( _e.clientX != undefined ) ? _e.clientX : _e.originalEvent.pageX;
 		var y = ( _e.clientY != undefined ) ? _e.clientY : _e.originalEvent.pageY;
 		var left = x - vp.left;
