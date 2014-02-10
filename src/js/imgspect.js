@@ -313,13 +313,11 @@
 				for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
 					var timeCreated = self.imgbits[i].timeCreated;
 					var time = timeStamp.toUnix( timeCreated );
-					console.log( time );
 				}
 				break;
 			case 'space':
 				var sorted = new Sorted();
 				var imgbits = sorted.areaSort( self.imgbits, "param.x1", "param.y1", "param.y2" );
-				console.log( imgbits );
 				break;
 		}
 	}
@@ -478,6 +476,12 @@ In the drop-down view click an img to find its original position in the larger i
 		self.drawResize();
 		self.dragResize();
 		self.liteResize();
+		
+		//------------------------------------------------------------
+		//  TODO: dragger move with window resize.
+		//------------------------------------------------------------
+		var dleft = $( '.nav .drag' ).offset().left;
+		var nleft = $( '.nav' ).offset().left;
 	}
 	
 	/**
@@ -602,6 +606,118 @@ In the drop-down view click an img to find its original position in the larger i
 	}
 	
 	/**
+	 * Draw area mouse-down listener
+	 */
+	imgspect.prototype.drawMouseDown = function( _e ) {
+		var self = this;
+		//------------------------------------------------------------
+		//  Create a new lite
+		//------------------------------------------------------------
+		self.c_lite = $( document.createElement('div') ).addClass( 'lite' );
+		$( '.draw', self.elem ).append( self.c_lite );
+		
+		//------------------------------------------------------------
+		//  Get the mouse and draw position
+		//------------------------------------------------------------
+		var mp = self.viewMousePos( _e );
+		var dp = $( '.draw', self.elem ).position();
+		
+		//------------------------------------------------------------
+		//  Stash the current coordinates in 'img' space
+		//------------------------------------------------------------
+		self.c_pos = {
+			left: mp.left - dp.left,
+			top: mp.top - dp.top
+		};
+		
+		//------------------------------------------------------------
+		//  Start drawing the highlight
+		//------------------------------------------------------------
+		self.c_lite.css({
+			left: self.c_pos.left,
+			top: self.c_pos.top,
+			'background-color': '#'+self.options['lite_color'].hex(),
+			opacity: self.options['lite_opacity']
+		});
+	}
+	
+	/**
+	 * Draw area mouse-move listener
+	 */
+	imgspect.prototype.drawMouseMove = function( _e ) {
+		var self = this;
+		if ( self.c_lite != null ) {
+			var cp = self.c_pos;
+			var mp = self.viewMousePos( _e );
+			var dp = $( '.draw', self.elem ).position();
+			
+			//------------------------------------------------------------
+			//  Get mouse position coordinates in 'img' space
+			//------------------------------------------------------------
+			mp.left -= dp.left;
+			mp.top -= dp.top;
+			
+			//------------------------------------------------------------
+			//  This logic controls left-handed highlight support.
+			//  The origin of the highlight will change to the mouse's
+			//  current position if it's less than the original click
+			//  position.
+			//------------------------------------------------------------
+			if ( cp.left > mp.left ) {
+				self.c_lite.css({
+					left: mp.left,
+					width: cp.left - mp.left
+				});
+			}
+			else {
+				self.c_lite.css({
+					left: cp.left,
+					width: mp.left - cp.left
+				});
+			}
+			if ( cp.top > mp.top ) {
+				self.c_lite.css({
+					top: mp.top,
+					height: cp.top - mp.top
+				});
+			}
+			else {
+				self.c_lite.css({
+					top: cp.top,
+					height: mp.top - cp.top
+				});
+			}
+		}
+	}
+	
+	/**
+	 * Draw area mouse-up listener
+	 */
+	imgspect.prototype.drawMouseUp = function( _e ) {
+		var self = this;
+		if ( self.c_lite == null ) {
+			return;
+		}
+		//------------------------------------------------------------
+		//  Check to see if the current lite is not just 
+		//  a trivial mouse slip up.
+		//------------------------------------------------------------
+		if ( self.c_lite.width() == 0 || self.c_lite.height() == 0 ) {
+			self.c_lite = null;
+			return;
+		}
+		//------------------------------------------------------------
+		//  Store lite position in relation to original
+		//------------------------------------------------------------
+		var cp = self.c_lite.position();
+		var x1 = cp.left / self.zoom_n;
+		var y1 = cp.top / self.zoom_n;
+		var x2 = x1 + self.c_lite.width() / self.zoom_n;
+		var y2 = y1 + self.c_lite.height() / self.zoom_n;
+		self.liteAdd( x1, y1, x2, y2 );
+	}
+	
+	/**
 	 * Start the lite mouse event listeners
 	 */
 	imgspect.prototype.liteStart = function() {
@@ -612,110 +728,39 @@ In the drop-down view click an img to find its original position in the larger i
 		//------------------------------------------------------------
 		$( '.view', self.elem ).mousedown( function( _e ) {
 			_e.preventDefault();
-			
-			//------------------------------------------------------------
-			//  Create a new lite
-			//------------------------------------------------------------
-			self.c_lite = $( document.createElement('div') ).addClass( 'lite' );
-			$( '.draw', self.elem ).append( self.c_lite );
-			
-			//------------------------------------------------------------
-			//  Get the mouse and draw position
-			//------------------------------------------------------------
-			var mp = self.viewMousePos( _e );
-			var dp = $( '.draw', self.elem ).position();
-			
-			//------------------------------------------------------------
-			//  Stash the current coordinates in 'img' space
-			//------------------------------------------------------------
-			self.c_pos = {
-				left: mp.left - dp.left,
-				top: mp.top - dp.top
-			};
-			
-			//------------------------------------------------------------
-			//  Start drawing the highlight
-			//------------------------------------------------------------
-			self.c_lite.css({
-				left: self.c_pos.left,
-				top: self.c_pos.top,
-				'background-color': '#'+self.options['lite_color'].hex(),
-				opacity: self.options['lite_opacity']
-			});
+			self.drawMouseDown( _e );
+		});
+		$( '.view', self.elem ).bind('touchstart', function( _e ) {
+			_e.preventDefault();
+			console.log( 'touchstart' )
+			self.drawMouseDown( _e );
 		});
 		
 		//------------------------------------------------------------
 		//  Mouse Move
 		//------------------------------------------------------------
 		$( '.view', self.elem ).mousemove( function( _e ) {
-			if ( self.c_lite != null ) {
-				var cp = self.c_pos;
-				var mp = self.viewMousePos( _e );
-				var dp = $( '.draw', self.elem ).position();
-				
-				//------------------------------------------------------------
-				//  Get mouse position coordinates in 'img' space
-				//------------------------------------------------------------
-				mp.left -= dp.left;
-				mp.top -= dp.top;
-				
-				//------------------------------------------------------------
-				//  This logic controls left-handed highlight support.
-				//  The origin of the highlight will change to the mouse's
-				//  current position if it's less than the original click
-				//  position.
-				//------------------------------------------------------------
-				if ( cp.left > mp.left ) {
-					self.c_lite.css({
-						left: mp.left,
-						width: cp.left - mp.left
-					});
-				}
-				else {
-					self.c_lite.css({
-						left: cp.left,
-						width: mp.left - cp.left
-					});
-				}
-				if ( cp.top > mp.top ) {
-					self.c_lite.css({
-						top: mp.top,
-						height: cp.top - mp.top
-					});
-				}
-				else {
-					self.c_lite.css({
-						top: cp.top,
-						height: mp.top - cp.top
-					});
-				}
-			}
-			
+			_e.preventDefault();
+			self.drawMouseMove( _e );
 		});
+		$( '.view', self.elem ).bind( 'touchmove', function( _e ) {
+			_e.preventDefault();
+			console.log( 'touchmove' )
+			self.drawMouseMove( _e );
+		})
 		
 		//------------------------------------------------------------
 		//  Mouse Up
 		//------------------------------------------------------------
-		$( '.view', self.elem ).mouseup( function( _e ) {
+		$( self.elem ).mouseup( function( _e ) {
 			_e.preventDefault();
-			//------------------------------------------------------------
-			//  Check to see if the current lite is not just 
-			//  a trivial mouse slip up.
-			//------------------------------------------------------------
-			if ( self.c_lite.width() == 0 || self.c_lite.height() == 0 ) {
-				self.c_lite = null;
-				return;
-			}
-			//------------------------------------------------------------
-			//  Store lite position in relation to original
-			//------------------------------------------------------------
-			var cp = self.c_lite.position();
-			var x1 = cp.left / self.zoom_n;
-			var y1 = cp.top / self.zoom_n;
-			var x2 = x1 + self.c_lite.width() / self.zoom_n;
-			var y2 = y1 + self.c_lite.height() / self.zoom_n;
-			self.liteAdd( x1, y1, x2, y2 );
+			self.drawMouseUp( _e );
 		});
+		$( self.elem ).bind( 'touchend', function( _e ) {
+			_e.preventDefault();
+			console.log( 'touchend' )
+			self.drawMouseUp( _e );
+		})
 	}
 	
 	/**
@@ -1169,8 +1214,11 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.viewMousePos = function( _e ) {
 		var vp = $( '.view', this.elem ).position();
-		var left = _e.clientX - vp.left;
-		var top = _e.clientY - vp.top + $(window).scrollTop();
+		console.log( _e );
+		var x = ( _e.clientX != undefined ) ? _e.clientX : _e.originalEvent.pageX;
+		var y = ( _e.clientY != undefined ) ? _e.clientY : _e.originalEvent.pageY;
+		var left = x - vp.left;
+		var top = y - vp.top + $(window).scrollTop();
 		return { 'left':left, 'top':top }
 	}
 	

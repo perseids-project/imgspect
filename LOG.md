@@ -613,3 +613,9 @@ Also I should change back to a textarea for the output area.
 	* jQuery UI 'draggable()' draggable for touchscreen.
 		* http://stackoverflow.com/questions/3026915/how-can-i-make-a-jquery-ui-draggable-div-draggable-for-touchscreen
 		* Add touch events to jQuery UI -- https://github.com/furf/jquery-ui-touch-punch
+
+# 2014-02-06
+I've been working on sorting the imgbit grid.
+Sorting algorithms are fun to write.
+Maybe not the most practical use of time but it was a good mother of invention.
+I added some really useful functions to my jslib library which I know will come in handy in the future.

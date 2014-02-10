@@ -53,7 +53,9 @@
 		self.events = {
 			change: 'IMGSPECT-CHANGE',
 			undo: 'IMGSPECT-UNDO',
-			error: 'IMGSPECT-ERROR'
+			error: 'IMGSPECT-ERROR',
+			update: 'IMGSPECT-UPDATE',
+			ready: 'IMGSPECT-READY'
 		}
 		
 		//------------------------------------------------------------
@@ -101,8 +103,12 @@
 		if ( self.options['load'] != null ) {
 			self.load( self.options['load'] );
 		}
+		
+		//------------------------------------------------------------
+		//  Let everything listening know imgspect is ready
+		//------------------------------------------------------------
+		$( self.elem ).trigger( self.events['ready'] );
 	}
-	
 	/**
 	 * Return a jsonLD object
 	 */
@@ -193,7 +199,7 @@
 		//------------------------------------------------------------
 		//  Build the tool area
 		//------------------------------------------------------------
-		$( '.ui', self.elem ).prepend( '<div class="tools">' );
+		$( '.ui', self.elem ).append( '<div class="tools">' );
 		
 		//------------------------------------------------------------
 		//  Create the zoom buttons
@@ -223,7 +229,15 @@
 	 */	
 	imgspect.prototype.dropBuild = function() {
 		var self = this;
-		$( self.elem ).before( '<div id="drop"><div class="imgbits"></div></div>' );
+		var drop = '\
+			<div id="drop">\
+				<div class="sortBits">\
+					<a href="" id="time" class="sort">Time</a>\
+					<a href="" id="space" class="sort">Space</a>\
+				</div>\
+				<div class="imgbits"></div>\
+			</div>';
+		$( self.elem ).before( drop.smoosh() );
 		self.drop = $( '#drop' ).menumucil({ 
 			cover: true,
 			closed: '&#9660',
@@ -251,10 +265,19 @@
 			self.imgbitAdd( id );
 			self.dropCount();
 		});
+		
+		//------------------------------------------------------------
+		//  Sort listeners
+		//------------------------------------------------------------
+		$( '#drop .sort' ).click( function( _e ) {
+			_e.preventDefault();
+			var type = $( this ).attr('id');
+			self.imgbitsSort( type );
+		})
 	}
 	
 	/**
-	 * Add an imgbit to the drop down
+	 * Add an imgbit to the drop-down
 	 *
 	 * @param { int } _id Lite id
 	 */	
@@ -269,6 +292,34 @@
 		var id = '#drop #imgbit-'+_id;
 		self.imgbits.push( $( id ).imgbit().data( id ) );
 		self.imgbitStart( _id );
+	}
+	
+	/**
+	 * Sort the imgbits in the drop-down menu.
+	 *
+	 * @param { string } _method string time, space
+	 */
+	imgspect.prototype.imgbitsSort = function( _method ) {
+		var self = this;
+		_method = ( _method == undefined ) ? 'time' : _method
+		
+		//------------------------------------------------------------
+		//  Sort the imgbits
+		//------------------------------------------------------------
+		var timeStamp = new TimeStamp();
+		var out = [];
+		switch ( _method ) {
+			case 'time':
+				for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
+					var timeCreated = self.imgbits[i].timeCreated;
+					var time = timeStamp.toUnix( timeCreated );
+				}
+				break;
+			case 'space':
+				var sorted = new Sorted();
+				var imgbits = sorted.areaSort( self.imgbits, "param.x1", "param.y1", "param.y2" );
+				break;
+		}
 	}
 	
 	/**
@@ -362,7 +413,7 @@
 	 */
 	imgspect.prototype.outputBuild = function() {
 		var self = this;
-		$( '.tools', self.elem ).append( '<div class="output"><pre></pre></div>' );
+		$( '.tools', self.elem ).append( '<textarea readonly="readonly" id="imgspectOut" class="output"></textarea>' );
 		$( '.output', self.elem ).css({
 			'max-height': $( '.nav', self.elem ).innerHeight() - $( '.tool', self.elem ).outerHeight()
 		});
@@ -391,7 +442,7 @@ Click the triangle to open a drop-down of just your highlighted areas. \n\n\
 In the drop-down view click the hash tag to caption or transcribe the highlighted area.\n\n\
 In the drop-down view click an img to find its original position in the larger image.\n\n\
 ';
-		$( '.output pre', self.elem ).text( output.trim() );
+		$( '.output', self.elem ).val( output.trim() );
 	}
 	
 	/**
@@ -399,7 +450,7 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.outputUpdate = function() {
 		var self = this;
-		$( '.output pre', self.elem ).text('');
+		$( '.output', self.elem ).val('');
 		var output = '';
 		//------------------------------------------------------------
 		//  Loop through all the imgbits and return their HTML
@@ -407,7 +458,8 @@ In the drop-down view click an img to find its original position in the larger i
 		for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
 			output += self.imgbits[i].html() + "\n";
 		}
-		$( '.output pre', self.elem ).text( output );
+		$( '.output', self.elem ).val( output );
+		$( self.elem ).trigger( self.events['update'] );
 	}
 	
 	/**
@@ -424,6 +476,12 @@ In the drop-down view click an img to find its original position in the larger i
 		self.drawResize();
 		self.dragResize();
 		self.liteResize();
+		
+		//------------------------------------------------------------
+		//  TODO: dragger move with window resize.
+		//------------------------------------------------------------
+		var dleft = $( '.nav .drag' ).offset().left;
+		var nleft = $( '.nav' ).offset().left;
 	}
 	
 	/**
@@ -548,6 +606,118 @@ In the drop-down view click an img to find its original position in the larger i
 	}
 	
 	/**
+	 * Draw area mouse-down listener
+	 */
+	imgspect.prototype.drawMouseDown = function( _e ) {
+		var self = this;
+		//------------------------------------------------------------
+		//  Create a new lite
+		//------------------------------------------------------------
+		self.c_lite = $( document.createElement('div') ).addClass( 'lite' );
+		$( '.draw', self.elem ).append( self.c_lite );
+		
+		//------------------------------------------------------------
+		//  Get the mouse and draw position
+		//------------------------------------------------------------
+		var mp = self.viewMousePos( _e );
+		var dp = $( '.draw', self.elem ).position();
+		
+		//------------------------------------------------------------
+		//  Stash the current coordinates in 'img' space
+		//------------------------------------------------------------
+		self.c_pos = {
+			left: mp.left - dp.left,
+			top: mp.top - dp.top
+		};
+		
+		//------------------------------------------------------------
+		//  Start drawing the highlight
+		//------------------------------------------------------------
+		self.c_lite.css({
+			left: self.c_pos.left,
+			top: self.c_pos.top,
+			'background-color': '#'+self.options['lite_color'].hex(),
+			opacity: self.options['lite_opacity']
+		});
+	}
+	
+	/**
+	 * Draw area mouse-move listener
+	 */
+	imgspect.prototype.drawMouseMove = function( _e ) {
+		var self = this;
+		if ( self.c_lite != null ) {
+			var cp = self.c_pos;
+			var mp = self.viewMousePos( _e );
+			var dp = $( '.draw', self.elem ).position();
+			
+			//------------------------------------------------------------
+			//  Get mouse position coordinates in 'img' space
+			//------------------------------------------------------------
+			mp.left -= dp.left;
+			mp.top -= dp.top;
+			
+			//------------------------------------------------------------
+			//  This logic controls left-handed highlight support.
+			//  The origin of the highlight will change to the mouse's
+			//  current position if it's less than the original click
+			//  position.
+			//------------------------------------------------------------
+			if ( cp.left > mp.left ) {
+				self.c_lite.css({
+					left: mp.left,
+					width: cp.left - mp.left
+				});
+			}
+			else {
+				self.c_lite.css({
+					left: cp.left,
+					width: mp.left - cp.left
+				});
+			}
+			if ( cp.top > mp.top ) {
+				self.c_lite.css({
+					top: mp.top,
+					height: cp.top - mp.top
+				});
+			}
+			else {
+				self.c_lite.css({
+					top: cp.top,
+					height: mp.top - cp.top
+				});
+			}
+		}
+	}
+	
+	/**
+	 * Draw area mouse-up listener
+	 */
+	imgspect.prototype.drawMouseUp = function( _e ) {
+		var self = this;
+		if ( self.c_lite == null ) {
+			return;
+		}
+		//------------------------------------------------------------
+		//  Check to see if the current lite is not just 
+		//  a trivial mouse slip up.
+		//------------------------------------------------------------
+		if ( self.c_lite.width() == 0 || self.c_lite.height() == 0 ) {
+			self.c_lite = null;
+			return;
+		}
+		//------------------------------------------------------------
+		//  Store lite position in relation to original
+		//------------------------------------------------------------
+		var cp = self.c_lite.position();
+		var x1 = cp.left / self.zoom_n;
+		var y1 = cp.top / self.zoom_n;
+		var x2 = x1 + self.c_lite.width() / self.zoom_n;
+		var y2 = y1 + self.c_lite.height() / self.zoom_n;
+		self.liteAdd( x1, y1, x2, y2 );
+	}
+	
+	/**
 	 * Start the lite mouse event listeners
 	 */
 	imgspect.prototype.liteStart = function() {
@@ -557,144 +727,80 @@ In the drop-down view click an img to find its original position in the larger i
 		//  Mouse Down
 		//------------------------------------------------------------
 		$( '.view', self.elem ).mousedown( function( _e ) {
-			
-			//------------------------------------------------------------
-			//  Create a new lite
-			//------------------------------------------------------------
-			self.c_lite = $( document.createElement('div') ).addClass( 'lite' );
-			$( '.draw', self.elem ).append( self.c_lite );
-			
-			//------------------------------------------------------------
-			//  Get the mouse and draw position
-			//------------------------------------------------------------
-			var mp = self.viewMousePos( _e );
-			var dp = $( '.draw', self.elem ).position();
-			
-			//------------------------------------------------------------
-			//  Stash the current coordinates in 'img' space
-			//------------------------------------------------------------
-			self.c_pos = {
-				left: mp.left - dp.left,
-				top: mp.top - dp.top
-			};
-			
-			//------------------------------------------------------------
-			//  Start drawing the highlight
-			//------------------------------------------------------------
-			self.c_lite.css({
-				left: self.c_pos.left,
-				top: self.c_pos.top,
-				'background-color': '#'+self.options['lite_color'].hex(),
-				opacity: self.options['lite_opacity']
-			});
 			_e.preventDefault();
+			self.drawMouseDown( _e );
+		});
+		$( '.view', self.elem ).bind('touchstart', function( _e ) {
+			_e.preventDefault();
+			console.log( 'touchstart' )
+			self.drawMouseDown( _e );
 		});
 		
 		//------------------------------------------------------------
 		//  Mouse Move
 		//------------------------------------------------------------
 		$( '.view', self.elem ).mousemove( function( _e ) {
-			if ( self.c_lite != null ) {
-				var cp = self.c_pos;
-				var mp = self.viewMousePos( _e );
-				var dp = $( '.draw', self.elem ).position();
-				
-				//------------------------------------------------------------
-				//  Get mouse position coordinates in 'img' space
-				//------------------------------------------------------------
-				mp.left -= dp.left;
-				mp.top -= dp.top;
-				
-				//------------------------------------------------------------
-				//  This logic controls left-handed highlight support.
-				//  The origin of the highlight will change to the mouse's
-				//  current position if it's less than the original click
-				//  position.
-				//------------------------------------------------------------
-				if ( cp.left > mp.left ) {
-					self.c_lite.css({
-						left: mp.left,
-						width: cp.left - mp.left
-					});
-				}
-				else {
-					self.c_lite.css({
-						left: cp.left,
-						width: mp.left - cp.left
-					});
-				}
-				if ( cp.top > mp.top ) {
-					self.c_lite.css({
-						top: mp.top,
-						height: cp.top - mp.top
-					});
-				}
-				else {
-					self.c_lite.css({
-						top: cp.top,
-						height: mp.top - cp.top
-					});
-				}
-			}
-			
+			_e.preventDefault();
+			self.drawMouseMove( _e );
 		});
+		$( '.view', self.elem ).bind( 'touchmove', function( _e ) {
+			_e.preventDefault();
+			console.log( 'touchmove' )
+			self.drawMouseMove( _e );
+		})
 		
 		//------------------------------------------------------------
 		//  Mouse Up
 		//------------------------------------------------------------
-		$( '.view', self.elem ).mouseup( function( _e ) {
-			//------------------------------------------------------------
-			//  Check to see if the current lite is not just 
-			//  a trivial mouse slip up.
-			//------------------------------------------------------------
-			if ( self.c_lite.width() == 0 || self.c_lite.height() == 0 ) {
-				self.c_lite = null;
-				return;
-			}
-			
-			//------------------------------------------------------------
-			//  Store lite position in relation to original
-			//------------------------------------------------------------
-			var cp = self.c_lite.position();
-			var x1 = cp.left / self.zoom_n;
-			var y1 = cp.top / self.zoom_n;
-			var x2 = x1 + self.c_lite.width() / self.zoom_n;
-			var y2 = y1 + self.c_lite.height() / self.zoom_n;
-			
-			//------------------------------------------------------------
-			//  Stash that lite
-			//------------------------------------------------------------
-			self.lites.push({ 
-				x1: parseInt(x1),
-				y1: parseInt(y1),
-				x2: parseInt(x2),
-				y2: parseInt(y2),
-				zoom: self.zoom_n,
-				color: self.options['lite_color'],
-				opacity: self.options['lite_opacity'],
-				id: self.lites.length
-			});
-			
-			//------------------------------------------------------------
-			//  Draw the lite on the nav image.
-			//  ( Make this optional with a config option? )
-			//------------------------------------------------------------
-			self.navLiteDraw( self.liteLast().id );
-			
-			//------------------------------------------------------------
-			//  Reset current lite
-			//------------------------------------------------------------
-			self.c_lite = null;
-			self.c_pos = null;
-			
-			//------------------------------------------------------------
-			//  Let the world know the app state has changed
-			//------------------------------------------------------------
-			$( self.elem ).trigger( self.events['change'] );
-			
+		$( self.elem ).mouseup( function( _e ) {
 			_e.preventDefault();
+			self.drawMouseUp( _e );
 		});
+		$( self.elem ).bind( 'touchend', function( _e ) {
+			_e.preventDefault();
+			console.log( 'touchend' )
+			self.drawMouseUp( _e );
+		})
 	}
+	
+	/**
+	 * Add a lite
+	 */
+	imgspect.prototype.liteAdd = function( _x1, _y1, _x2, _y2 ) {
+		var self = this;
+		//------------------------------------------------------------
+		//  Stash that lite
+		//------------------------------------------------------------
+		self.lites.push({ 
+			x1: parseInt( _x1 ),
+			y1: parseInt( _y1 ),
+			x2: parseInt( _x2 ),
+			y2: parseInt( _y2 ),
+			zoom: self.zoom_n,
+			color: self.options['lite_color'],
+			opacity: self.options['lite_opacity'],
+			id: self.lites.length
+		});
+		
+		//------------------------------------------------------------
+		//  Draw the lite on the nav image.
+		//  ( Make this optional with a config option? )
+		//------------------------------------------------------------
+		self.navLiteDraw( self.liteLast().id );
+		
+		//------------------------------------------------------------
+		//  Reset current lite
+		//------------------------------------------------------------
+		self.c_lite = null;
+		self.c_pos = null;
+		
+		//------------------------------------------------------------
+		//  Let the world know the app state has changed
+		//------------------------------------------------------------
+		$( self.elem ).trigger( self.events['change'] );
+	}
+	
+	
 	
 	/**
 	 * Build the DOM element for a lite
@@ -762,7 +868,6 @@ In the drop-down view click an img to find its original position in the larger i
 	 * @ param { int } _id The lite id
 	 */
 	imgspect.prototype.liteShow = function( _id ) {
-		console.log( _id );
 		var self = this;
 		
 		//------------------------------------------------------------
@@ -967,7 +1072,6 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.dragStart = function() {
 		var self = this;
-		
 		$( '.drag', self.elem ).draggable({
 			containment: 'parent',
 			scroll: false,
@@ -1110,8 +1214,11 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.viewMousePos = function( _e ) {
 		var vp = $( '.view', this.elem ).position();
-		var left = _e.clientX - vp.left;
-		var top = _e.clientY - vp.top + $(window).scrollTop();
+		console.log( _e );
+		var x = ( _e.clientX != undefined ) ? _e.clientX : _e.originalEvent.pageX;
+		var y = ( _e.clientY != undefined ) ? _e.clientY : _e.originalEvent.pageY;
+		var left = x - vp.left;
+		var top = y - vp.top + $(window).scrollTop();
 		return { 'left':left, 'top':top }
 	}
 	
@@ -1272,7 +1379,7 @@ In the drop-down view click an img to find its original position in the larger i
 		//  Time created with UTC offset
 		//------------------------------------------------------------
 		var timeStamp = new TimeStamp();
-		self.timeCreated = timeStamp.withUtc();
+		self.timeCreated = timeStamp.withUtc( true );
 		
 		//------------------------------------------------------------
 		//  Get the imgbit parameters
@@ -1524,13 +1631,7 @@ In the drop-down view click an img to find its original position in the larger i
 			//  Keep editable and static caption synched.
 			//------------------------------------------------------------
 			$( '.caption', self.elem ).bind( 'input propertychange', function() {
-				self.caption = $( '.caption', self.elem ).val();
-				$( '.text', self.elem ).text( self.caption );
-				self.captionResize();
-				//------------------------------------------------------------
-				//  Let the application know you've changed.
-				//------------------------------------------------------------
-				$( self.elem ).trigger( self.events['change'] );
+				self.setCaption( $( '.caption', self.elem ).val() );
 			});
 		}
 	}
@@ -1541,6 +1642,20 @@ In the drop-down view click an img to find its original position in the larger i
 	imgbit.prototype.remove = function() {
 		var self = this;
 		$( self.elem ).remove();
+	}
+	
+	/**
+	 * Update the caption
+	 */
+	imgbit.prototype.setCaption = function( _caption ) {
+		var self = this;
+		self.caption = _caption;
+		$( '.text', self.elem ).text( self.caption );
+		self.captionResize();
+		//------------------------------------------------------------
+		//  Let the application know you've changed.
+		//------------------------------------------------------------
+		$( self.elem ).trigger( self.events['change'] );
 	}
 	
 	/**
@@ -1706,7 +1821,7 @@ In the drop-down view click an img to find its original position in the larger i
 		output[2] = ( self.param['x2'] - self.param['x1'] ) / self.imgWidth;
 		output[3] = ( self.param['y2'] - self.param['y1'] ) / self.imgHeight;
 		for( var i=0, ii=output.length; i<ii; i++ ) {
-			output[i] = output[i].toFixed(5);
+			output[i] = output[i].toFixed(4);
 		}
 		return output;
 	}
@@ -1797,21 +1912,202 @@ jQuery.fn.cursorToEnd = function() {
 jQuery.fn.myHtml = function() {
 	return $( this ).clone().wrap( '<div>' ).parent().html();
 }
+
 /**
- * Custom String methods
+ *  Get transition time in milliseconds
+ *
+ *  @return { Number } Time in milliseconds
+ */
+jQuery.fn.transLength = function() {
+	var trans = $( this ).css( 'transition' );
+	var res = trans.match( / [\d|\.]+s/g );
+	var sec = Number( res[0].replace( 's','' ) );
+	return sec*1000;
+}
+/**
+ * Remove newlines and tabs
  */
 String.prototype.smoosh = function() {
 	return this.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
 }
+
+/**
+ * Count the occurences of a string in a larger string
+ *
+ * @parm {string} _sub : The search string
+ * @param {boolean} _overlap : Optional. Default: false
+ * @return {int} : The count
+ */
+String.prototype.occurs = function( _search, _overlap ) {
+	var string = this;
+	//------------------------------------------------------------
+	//  If _search is null just return a char count
+	//------------------------------------------------------------
+	if ( _search == undefined ) {
+		return string.length;
+	}
+	//------------------------------------------------------------
+	//  Make sure _search is a string
+	//------------------------------------------------------------
+	_search+="";
+	//------------------------------------------------------------
+	//  If no search term is past just return a character count
+	//------------------------------------------------------------
+	if ( _search.length <= 0 ) {
+		return string.length;
+	}
+	//------------------------------------------------------------
+	//  Otherwise start counting.
+	//------------------------------------------------------------
+	var n=0;
+	var pos=0;
+	var step = ( _overlap ) ? 1 : _search.length;
+	while ( true ) {
+		pos = string.indexOf( _search, pos );
+		if ( pos >= 0 ) {
+			n++;
+			pos += step;
+		}
+		else {
+			break;
+		}
+	}
+	return n;
+}
+
+/*
+ * Turn a string with HTTP GET style parameters to an object
+ *
+ * @return { obj } A collection of keys and values
+ */
+String.prototype.params = function() {
+	var arr = this.split('?');
+	var get = arr[1];
+	arr = get.split('&');
+	var out = {};
+	for ( var i=0, ii=arr.length; i<ii; i++ ) {
+		if ( arr[i] != undefined ) {
+			var pair = arr[i].split('=');
+			out[ pair[0] ] = pair[1];
+		}
+	}
+	return out;
+}
+
+/*
+ * Check for the existence of an upper-case letter
+ *
+ * @return { boolean }
+ */
+String.prototype.hasUpper = function() {
+	return /[A-Z]/.test( this );
+}
+
+/*
+ * Create a word frequency report object
+ *
+ * @return { obj } Report object
+ */
+String.prototype.report = function() {
+	var words = this.toLowerCase().split(' ');
+	var stats = {};
+	for ( var i=0, ii=words.length; i<ii; i++ ) {
+		var word = words[i];
+		if ( ! ( word in stats ) ) {
+			stats[word] = 1;
+		}
+		else {
+			stats[word] += 1;
+		}
+	}
+	return stats;
+}
+
+/*
+ * Divide text into an array of lines by splitting on linebreaks
+ *
+ * @return { array } An array of lines
+ */
+String.prototype.lines = function() {
+	return this.split("\n");
+}
+
+/*
+ * Divide text into an array of individual sentences
+ * This is English-centric.  Forgive me.
+ *
+ * @return { array } An array of sentences
+ */
+String.prototype.sentences = function() {
+	var check = this.match( /[^\.!\?]+[\.!\?]+/g );
+	
+	//------------------------------------------------------------
+	//  Make sure characters aren't used for purposes other than
+	//  sentences.
+	//------------------------------------------------------------
+	var vowels = [ 'a','e','i','o','u','y' ];
+	var out = [];
+	var carry = '';
+	for ( var i=0; i<check.length; i++ ) {
+		//------------------------------------------------------------
+		//  Clean up.
+		//------------------------------------------------------------
+		var strCheck = carry + check[i];
+		carry = '';
+		//------------------------------------------------------------
+		//  Check for the existence of a vowel, so we aren't
+		//  accidentally thinking part of an abbreviation is its
+		//  own sentence.
+		//------------------------------------------------------------
+		var merge = true;
+		for ( var j=0; j<vowels.length; j++ ) {
+			if ( strCheck.indexOf( vowels[j] ) != -1 ) {
+				merge = false;
+				break;
+			}
+		}
+		//------------------------------------------------------------
+		//  Also check for a capital letter on the first word.  
+		//  Most sentences have those too.
+		//------------------------------------------------------------
+		var capTest = strCheck.trim();
+		if ( ! capTest[0].hasUpper() ) {
+			merge = true;
+		}
+		//------------------------------------------------------------
+		//  If no vowel exists in the sentence you're probably
+		//  dealing with an abbreviation.  Merge with last sentence.  
+		//------------------------------------------------------------
+		if ( merge ) {
+			if ( out.length > 0 ) {
+				out[ out.length-1 ] += strCheck;
+			}
+			else {
+				carry = strCheck;
+			}
+			continue;
+		}
+		
+		//------------------------------------------------------------
+		//  Prepare output.
+		//------------------------------------------------------------
+		out.push( strCheck.smoosh().trim() );
+	}
+	return out;
+}
 /**
  * Get a quality timestamp
+ * @requires datejs ../third_party/datejs.date.js [ http://www.datejs.com/ ]
  */
 function TimeStamp() {}
 
 /**
  * Return a timestamp with a UTC offset
+ *
+ * @param { boolean } _milli include milliseconds
+ * @return { string } timestamp with UTC offset
  */
-TimeStamp.prototype.withUtc = function( ) {
+TimeStamp.prototype.withUtc = function( _milli ) {
 	var d = new Date();
 	var yyyy = d.getFullYear();
 	var mm = ('0' + (d.getMonth()+1)).slice(-2);
@@ -1819,8 +2115,23 @@ TimeStamp.prototype.withUtc = function( ) {
 	var hh = d.getHours();
 	var min = ('0' + d.getMinutes()).slice(-2);
 	var sec = ('0' + d.getSeconds()).slice(-2);
+	var mil = ('0' + d.getMilliseconds()).slice(-3);
 	var diff = d.getTimezoneOffset();
-	var time = yyyy+'-'+mm+'-'+dd+'T'+hh+":"+min+":"+sec+"UTC";
+	
+	//------------------------------------------------------------
+	//  Include milliseconds?
+	//------------------------------------------------------------
+	var time = '';
+	if ( _milli ) {
+		time = yyyy+'-'+mm+'-'+dd+'T'+hh+":"+min+":"+sec+":"+mil+"UTC";
+	}
+	else {
+		time = yyyy+'-'+mm+'-'+dd+'T'+hh+":"+min+":"+sec+"UTC";		
+	}
+	
+	//------------------------------------------------------------
+	//  Get the timezone offset
+	//------------------------------------------------------------
 	if ( diff > 0 ) {
 		time = time+"+"+diff;
 	}
@@ -1830,7 +2141,37 @@ TimeStamp.prototype.withUtc = function( ) {
 	return time;
 }
 
+/**
+ * Return unix time
+ *
+ * @return { int } unix time
+ */
+TimeStamp.prototype.unix = function() {
+	return new Date().getTime();
+}
 
+/**
+ * Return millisecond unix time from UTC string
+ *
+ * @param { string } _string timestamp with UTC offset
+ * @return { int } unix time
+ */
+TimeStamp.prototype.toUnix = function( _string ) {
+	//------------------------------------------------------------
+	// Kill the UTC offset
+	//------------------------------------------------------------
+	var cleanTime = _string.replace( /UTC.*/, '' );
+	var milli = 0;
+	//------------------------------------------------------------
+	// Grab the milliseconds if they exist
+	//------------------------------------------------------------
+	if ( cleanTime.match( /:\d{3}/ ) ) {
+		milli = cleanTime.slice( -4 );
+		cleanTime = cleanTime.replace( /:\d+$/, '' );
+		milli = parseInt( milli.replace(':','') );
+	}
+	return Date.parse( cleanTime ).getTime() + milli;
+}
 /**
  * A smarter way to control colors
  */

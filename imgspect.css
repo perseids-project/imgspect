@@ -88,11 +88,16 @@
 
 .imgbit.full .text,
 .imgbit.edit .text {
+	margin: 0;
+	float: none;
+	clear: none;
+	width: auto;
 	word-wrap: break-word;
 	padding: 5px;
 }
 
 .imgbit.edit .caption {
+	box-sizing: border-box;
 	overflow: hidden;
 	display: block;
 	word-wrap: break-word;
@@ -116,23 +121,20 @@
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	width: auto;
 	background-color: #222;
+	padding: 5px 5px 20px 5px;
 }
-
 .imgspect .view {
-	height: 400px;
+	height: 325px;
 	position: relative;
 	overflow: hidden;
 	margin-bottom: 20px;
 }
-
 .imgspect .nav {
 	float: left;
-	min-height: 0;
 	max-width: 640px;
-	max-height: 400px;
+	max-height: 300px;
 	display: block;
 }
-
 .imgspect .draw {
 	float: left;
 	position: absolute;
@@ -143,7 +145,6 @@
 	margin-right: 10px;
 	background-size: cover;
 }
-
 .imgspect .drag {
 	position: absolute;
 	z-index: 100;
@@ -152,42 +153,30 @@
 	outline: 1px solid #444;
 	border: 1px solid #BBB;
 }
-
 .imgspect .tool {
 	font-size: 30px;
 	display: block;
 	float: left;
 	margin-right: 5px;
 }
-
 .imgspect .lite {
 	position: absolute;
 }
-
 .imgspect .colors {
 	display: block;
 }
-
 .imgspect .color.selected {
 	border: 1px solid #444;
 	outline: 1px solid #BBB;
 }
-
-.imgspect {
-	padding: 5px;
-	margin: 5px;
-	padding-bottom: 20px;
-}
-
 .imgspect .tools {
 	float: left;
+	margin: 0 20px;
 }
-
 .imgspect .tools .group {
 	display: block;
 	clear: both;
 }
-
 .imgspect .tool {
 	background-color: #444;
 	color: #888888;
@@ -197,40 +186,27 @@
 	padding: 2px 6px;
 	font-size: 20px;
 }
-
-#drop .clicker:hover,
-.imgspect .tool:hover {
-	color: #FF8888;
-}
-
-.imgspect .output {
+.imgspect textarea#imgspectOut {
 	color: #888;
 	word-wrap: break-word;
 	margin-right: 5px;
 	border: none;
 	outline: none;
 	background-color: #111;
-	padding: 6px 5px 4px 5px;
+	padding: 10px;
 	width: 300px;
+	height: 250px;
 	overflow-y: scroll;
 	text-align: left;
+	font-size: 10px;
 }
-
-.imgspect .output pre {
-	margin: 0;
-	font-size: 12px;
-}
-
 .imgspect .center {
 	width: 100%;
 	text-align: center;
 }
-
 .imgspect .ui {
 	display: inline-block;
-	width: 955px;
 }
-
 #drop {
 	width: 100%;
 }
@@ -246,9 +222,50 @@
 	width: 100%;
 	text-align: center;
 	text-decoration: none;
-	background-color: rgba( 25, 25, 25, 0.9 );
+	background-color: #222;
 	color: #666;
 	padding: 5px 0;
 	font-family: 'Lucida Console', 'Monaco', sans-serif;
 	font-size: 25px;
+}
+#drop .sort {
+	color: #666;
+	text-decoration: none;
+	margin-right: 10px;
+}
+#drop .sort:hover {
+	color: #AAA;
+}
+
+#drop .clicker:hover,
+.imgspect .tool:hover {
+	color: #FF8888;
+}
+#imgspectWarning {
+	background-color: rgba(255,255,255,0.95);
+	border: solid 2px #AAA;
+	padding: 5px;
+	padding-bottom: 20px;
+}
+#imgspectWarning p {
+	text-align:center;
+	padding: 5px 20px;
+}
+#imgspectWarning div.space {
+	text-align: center;
+	padding-top: 0;
+	padding: 20px;
+}
+#imgspectWarning p:last-of-type {
+	margin-bottom: 40px;
+}
+#imgspectWarning #imgspectButtons {
+	text-align: center;
+}
+#imgspectWarning a {
+	text-decoration: none;
+	margin: 10px;
+}
+#imgspectWarning a:hover {
+	text-decoration: underline;
 }

@@ -52,11 +52,16 @@
 
 .imgbit.full .text,
 .imgbit.edit .text {
+	margin: 0;
+	float: none;
+	clear: none;
+	width: auto;
 	word-wrap: break-word;
 	padding: 5px;
 }
 
 .imgbit.edit .caption {
+	box-sizing: border-box;
 	overflow: hidden;
 	display: block;
 	word-wrap: break-word;

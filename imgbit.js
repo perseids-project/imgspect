@@ -66,7 +66,7 @@
 		//  Time created with UTC offset
 		//------------------------------------------------------------
 		var timeStamp = new TimeStamp();
-		self.timeCreated = timeStamp.withUtc();
+		self.timeCreated = timeStamp.withUtc( true );
 		
 		//------------------------------------------------------------
 		//  Get the imgbit parameters
@@ -318,13 +318,7 @@
 			//  Keep editable and static caption synched.
 			//------------------------------------------------------------
 			$( '.caption', self.elem ).bind( 'input propertychange', function() {
-				self.caption = $( '.caption', self.elem ).val();
-				$( '.text', self.elem ).text( self.caption );
-				self.captionResize();
-				//------------------------------------------------------------
-				//  Let the application know you've changed.
-				//------------------------------------------------------------
-				$( self.elem ).trigger( self.events['change'] );
+				self.setCaption( $( '.caption', self.elem ).val() );
 			});
 		}
 	}
@@ -335,6 +329,20 @@
 	imgbit.prototype.remove = function() {
 		var self = this;
 		$( self.elem ).remove();
+	}
+	
+	/**
+	 * Update the caption
+	 */
+	imgbit.prototype.setCaption = function( _caption ) {
+		var self = this;
+		self.caption = _caption;
+		$( '.text', self.elem ).text( self.caption );
+		self.captionResize();
+		//------------------------------------------------------------
+		//  Let the application know you've changed.
+		//------------------------------------------------------------
+		$( self.elem ).trigger( self.events['change'] );
 	}
 	
 	/**
@@ -500,7 +508,7 @@
 		output[2] = ( self.param['x2'] - self.param['x1'] ) / self.imgWidth;
 		output[3] = ( self.param['y2'] - self.param['y1'] ) / self.imgHeight;
 		for( var i=0, ii=output.length; i<ii; i++ ) {
-			output[i] = output[i].toFixed(5);
+			output[i] = output[i].toFixed(4);
 		}
 		return output;
 	}
@@ -591,21 +599,202 @@ jQuery.fn.cursorToEnd = function() {
 jQuery.fn.myHtml = function() {
 	return $( this ).clone().wrap( '<div>' ).parent().html();
 }
+
 /**
- * Custom String methods
+ *  Get transition time in milliseconds
+ *
+ *  @return { Number } Time in milliseconds
+ */
+jQuery.fn.transLength = function() {
+	var trans = $( this ).css( 'transition' );
+	var res = trans.match( / [\d|\.]+s/g );
+	var sec = Number( res[0].replace( 's','' ) );
+	return sec*1000;
+}
+/**
+ * Remove newlines and tabs
  */
 String.prototype.smoosh = function() {
 	return this.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
 }
+
+/**
+ * Count the occurences of a string in a larger string
+ *
+ * @parm {string} _sub : The search string
+ * @param {boolean} _overlap : Optional. Default: false
+ * @return {int} : The count
+ */
+String.prototype.occurs = function( _search, _overlap ) {
+	var string = this;
+	//------------------------------------------------------------
+	//  If _search is null just return a char count
+	//------------------------------------------------------------
+	if ( _search == undefined ) {
+		return string.length;
+	}
+	//------------------------------------------------------------
+	//  Make sure _search is a string
+	//------------------------------------------------------------
+	_search+="";
+	//------------------------------------------------------------
+	//  If no search term is past just return a character count
+	//------------------------------------------------------------
+	if ( _search.length <= 0 ) {
+		return string.length;
+	}
+	//------------------------------------------------------------
+	//  Otherwise start counting.
+	//------------------------------------------------------------
+	var n=0;
+	var pos=0;
+	var step = ( _overlap ) ? 1 : _search.length;
+	while ( true ) {
+		pos = string.indexOf( _search, pos );
+		if ( pos >= 0 ) {
+			n++;
+			pos += step;
+		}
+		else {
+			break;
+		}
+	}
+	return n;
+}
+
+/*
+ * Turn a string with HTTP GET style parameters to an object
+ *
+ * @return { obj } A collection of keys and values
+ */
+String.prototype.params = function() {
+	var arr = this.split('?');
+	var get = arr[1];
+	arr = get.split('&');
+	var out = {};
+	for ( var i=0, ii=arr.length; i<ii; i++ ) {
+		if ( arr[i] != undefined ) {
+			var pair = arr[i].split('=');
+			out[ pair[0] ] = pair[1];
+		}
+	}
+	return out;
+}
+
+/*
+ * Check for the existence of an upper-case letter
+ *
+ * @return { boolean }
+ */
+String.prototype.hasUpper = function() {
+	return /[A-Z]/.test( this );
+}
+
+/*
+ * Create a word frequency report object
+ *
+ * @return { obj } Report object
+ */
+String.prototype.report = function() {
+	var words = this.toLowerCase().split(' ');
+	var stats = {};
+	for ( var i=0, ii=words.length; i<ii; i++ ) {
+		var word = words[i];
+		if ( ! ( word in stats ) ) {
+			stats[word] = 1;
+		}
+		else {
+			stats[word] += 1;
+		}
+	}
+	return stats;
+}
+
+/*
+ * Divide text into an array of lines by splitting on linebreaks
+ *
+ * @return { array } An array of lines
+ */
+String.prototype.lines = function() {
+	return this.split("\n");
+}
+
+/*
+ * Divide text into an array of individual sentences
+ * This is English-centric.  Forgive me.
+ *
+ * @return { array } An array of sentences
+ */
+String.prototype.sentences = function() {
+	var check = this.match( /[^\.!\?]+[\.!\?]+/g );
+	
+	//------------------------------------------------------------
+	//  Make sure characters aren't used for purposes other than
+	//  sentences.
+	//------------------------------------------------------------
+	var vowels = [ 'a','e','i','o','u','y' ];
+	var out = [];
+	var carry = '';
+	for ( var i=0; i<check.length; i++ ) {
+		//------------------------------------------------------------
+		//  Clean up.
+		//------------------------------------------------------------
+		var strCheck = carry + check[i];
+		carry = '';
+		//------------------------------------------------------------
+		//  Check for the existence of a vowel, so we aren't
+		//  accidentally thinking part of an abbreviation is its
+		//  own sentence.
+		//------------------------------------------------------------
+		var merge = true;
+		for ( var j=0; j<vowels.length; j++ ) {
+			if ( strCheck.indexOf( vowels[j] ) != -1 ) {
+				merge = false;
+				break;
+			}
+		}
+		//------------------------------------------------------------
+		//  Also check for a capital letter on the first word.  
+		//  Most sentences have those too.
+		//------------------------------------------------------------
+		var capTest = strCheck.trim();
+		if ( ! capTest[0].hasUpper() ) {
+			merge = true;
+		}
+		//------------------------------------------------------------
+		//  If no vowel exists in the sentence you're probably
+		//  dealing with an abbreviation.  Merge with last sentence.  
+		//------------------------------------------------------------
+		if ( merge ) {
+			if ( out.length > 0 ) {
+				out[ out.length-1 ] += strCheck;
+			}
+			else {
+				carry = strCheck;
+			}
+			continue;
+		}
+		
+		//------------------------------------------------------------
+		//  Prepare output.
+		//------------------------------------------------------------
+		out.push( strCheck.smoosh().trim() );
+	}
+	return out;
+}
 /**
  * Get a quality timestamp
+ * @requires datejs ../third_party/datejs.date.js [ http://www.datejs.com/ ]
  */
 function TimeStamp() {}
 
 /**
  * Return a timestamp with a UTC offset
+ *
+ * @param { boolean } _milli include milliseconds
+ * @return { string } timestamp with UTC offset
  */
-TimeStamp.prototype.withUtc = function( ) {
+TimeStamp.prototype.withUtc = function( _milli ) {
 	var d = new Date();
 	var yyyy = d.getFullYear();
 	var mm = ('0' + (d.getMonth()+1)).slice(-2);
@@ -613,8 +802,23 @@ TimeStamp.prototype.withUtc = function( ) {
 	var hh = d.getHours();
 	var min = ('0' + d.getMinutes()).slice(-2);
 	var sec = ('0' + d.getSeconds()).slice(-2);
+	var mil = ('0' + d.getMilliseconds()).slice(-3);
 	var diff = d.getTimezoneOffset();
-	var time = yyyy+'-'+mm+'-'+dd+'T'+hh+":"+min+":"+sec+"UTC";
+	
+	//------------------------------------------------------------
+	//  Include milliseconds?
+	//------------------------------------------------------------
+	var time = '';
+	if ( _milli ) {
+		time = yyyy+'-'+mm+'-'+dd+'T'+hh+":"+min+":"+sec+":"+mil+"UTC";
+	}
+	else {
+		time = yyyy+'-'+mm+'-'+dd+'T'+hh+":"+min+":"+sec+"UTC";		
+	}
+	
+	//------------------------------------------------------------
+	//  Get the timezone offset
+	//------------------------------------------------------------
 	if ( diff > 0 ) {
 		time = time+"+"+diff;
 	}
@@ -624,7 +828,37 @@ TimeStamp.prototype.withUtc = function( ) {
 	return time;
 }
 
+/**
+ * Return unix time
+ *
+ * @return { int } unix time
+ */
+TimeStamp.prototype.unix = function() {
+	return new Date().getTime();
+}
 
+/**
+ * Return millisecond unix time from UTC string
+ *
+ * @param { string } _string timestamp with UTC offset
+ * @return { int } unix time
+ */
+TimeStamp.prototype.toUnix = function( _string ) {
+	//------------------------------------------------------------
+	// Kill the UTC offset
+	//------------------------------------------------------------
+	var cleanTime = _string.replace( /UTC.*/, '' );
+	var milli = 0;
+	//------------------------------------------------------------
+	// Grab the milliseconds if they exist
+	//------------------------------------------------------------
+	if ( cleanTime.match( /:\d{3}/ ) ) {
+		milli = cleanTime.slice( -4 );
+		cleanTime = cleanTime.replace( /:\d+$/, '' );
+		milli = parseInt( milli.replace(':','') );
+	}
+	return Date.parse( cleanTime ).getTime() + milli;
+}
 /**
  * A smarter way to control colors
  */
