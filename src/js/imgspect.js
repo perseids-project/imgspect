@@ -269,7 +269,8 @@
 		//------------------------------------------------------------
 		//  Sort listeners
 		//------------------------------------------------------------
-		$( '#drop .sort' ).click( function( _e ) {
+		$( '#drop .sort' ).on( 'touchstart click', function( _e ) {
+			_e.stopPropagatin();
 			_e.preventDefault();
 			var type = $( this ).attr('id');
 			self.imgbitsSort( type );
@@ -380,7 +381,9 @@
 		//  Clicking an imgbit will take you to its position in
 		//  the original image.
 		//------------------------------------------------------------
-		$( '#drop #imgbit-'+_id+' .view' ).click( function( _e ) {
+		$( '#drop #imgbit-'+_id+' .view' ).on( 'touchstart click', function( _e ) {
+			_e.stopPropagation();
+			_e.preventDefault();
 			self.drop.close();
 			var id = $(this).parent().attr('id');
 			var i = parseInt( id.replace( 'imgbit-', '') );
@@ -390,7 +393,6 @@
 			setTimeout( function() {
 				self.liteShow( i );
 			}, 500 );
-			_e.preventDefault();
 		});
 		
 		//------------------------------------------------------------
@@ -516,11 +518,12 @@ In the drop-down view click an img to find its original position in the larger i
 		//------------------------------------------------------------
 		//  Select the clicked color
 		//------------------------------------------------------------
-		$( '.color', self.elem ).click( function( _e ) {
+		$( '.color', self.elem ).on( 'touchstart click', function( _e ) {
+			_e.stopPropagation();
+			_e.preventDefault();
 			$( '.color', self.elem ).removeClass( 'selected' );
 			$( this ).addClass( 'selected' );
 			self.liteColor( $( this ).css('background-color') );
-			_e.preventDefault();
 		});
 	}
 	
@@ -529,17 +532,14 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.undoStart = function() {
 		var self = this;
-		$( '.undo', self.elem ).click( function( _e ) {
+		$( '.undo', self.elem ).on( 'touchstart click', function( _e ) {
+			_e.stopPropagation();
+			_e.preventDefault();
 			//------------------------------------------------------------
 			//  Remove the last lite
 			//------------------------------------------------------------
 			var id = self.lites.length - 1;
 			self.liteRemove( id );
-			
-			//------------------------------------------------------------
-			//  Let the world know what's happened here.
-			//------------------------------------------------------------
-			_e.preventDefault();
 		});
 	}
 	
@@ -1005,14 +1005,15 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.zoomStart = function() {
 		var self = this;
-		$( '.zoom', self.elem ).click( function( _e ) {
+		$( '.zoom', self.elem ).on( 'touchstart click', function( _e ) {
+			_e.stopPropagation();
+			_e.preventDefault();
 			if ( $(this).hasClass('in') ) {
 				self.zoomIn();
 			}
 			else {
 				self.zoomOut();
 			}
-			_e.preventDefault();
 		});
 	}
 	
@@ -1211,6 +1212,10 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.viewMousePos = function( _e ) {
 		var vp = $( '.view', this.elem ).position();
+		//------------------------------------------------------------
+		//  Clicks and touches have different event objects.
+		//  Deal with it.
+		//------------------------------------------------------------
 		var x = ( _e.clientX != undefined ) ? _e.clientX : _e.originalEvent.pageX;
 		var y = ( _e.clientY != undefined ) ? _e.clientY : _e.originalEvent.pageY;
 		var left = x - vp.left;
