@@ -619,3 +619,7 @@ I've been working on sorting the imgbit grid.
 Sorting algorithms are fun to write.
 Maybe not the most practical use of time but it was a good mother of invention.
 I added some really useful functions to my jslib library which I know will come in handy in the future.
+
+# 2014-02-10
+So imgspect is now mostly IOS Safari compatible except I can't scroll the menumucil dropdown...
+Ahh you think you've squashed them all.

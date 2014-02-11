@@ -80,6 +80,11 @@
 		self.nav_scale = 1;
 		
 		//------------------------------------------------------------
+		//  Drag nav x distance difference
+		//------------------------------------------------------------
+		self.dragDiff = 0;
+		
+		//------------------------------------------------------------
 		//  Will store the source of the img
 		//------------------------------------------------------------
 		self.src = null;
@@ -478,12 +483,13 @@ In the drop-down view click an img to find its original position in the larger i
 		self.drawResize();
 		self.dragResize();
 		self.liteResize();
-		
-		//------------------------------------------------------------
-		//  TODO: dragger move with window resize.
-		//------------------------------------------------------------
-		var dleft = $( '.nav .drag' ).offset().left;
-		var nleft = $( '.nav' ).offset().left;
+	}
+	
+	imgspect.prototype.dragNavDiff = function() {
+		var self = this;
+		var dleft = $( '.nav .drag', self.elem ).offset().left;
+		var nleft = $( '.nav', self.elem ).offset().left;
+		self.dragDiff = dleft-nleft;
 	}
 	
 	/**
@@ -1075,6 +1081,9 @@ In the drop-down view click an img to find its original position in the larger i
 			scroll: false,
 			drag: function() {
 				self.drawResize();
+			},
+			stop: function() {
+				self.dragNavDiff();
 			}
 		});
 		
@@ -1104,7 +1113,7 @@ In the drop-down view click an img to find its original position in the larger i
 	}
 	
 	/**
-	 * Resize drag window
+	 * Resize and reposition dragger
 	 */
 	imgspect.prototype.dragResize = function() {
 		var self = this;
@@ -1120,9 +1129,11 @@ In the drop-down view click an img to find its original position in the larger i
 		var img = $( '.nav img', self.elem );
 		var width = img.width() * w_ratio; 
 		var height = img.height() * h_ratio;
+		var nav_left = $( '.nav', self.elem ).offset().left;
 		$( '.drag', self.elem ).css({
 			width: width,
-			height: height
+			height: height,
+			left: nav_left + self.dragDiff
 		});
 		
 		/*
