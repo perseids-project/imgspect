@@ -82,7 +82,7 @@
 		//------------------------------------------------------------
 		//  Drag nav x distance difference
 		//------------------------------------------------------------
-		self.dragDiff = 0;
+		self.dragDiff = { top: 0, left: 0 };
 		
 		//------------------------------------------------------------
 		//  Will store the source of the img
@@ -486,7 +486,10 @@ In the drop-down view click an img to find its original position in the larger i
 		var self = this;
 		var dleft = $( '.nav .drag', self.elem ).offset().left;
 		var nleft = $( '.nav', self.elem ).offset().left;
-		self.dragDiff = dleft-nleft;
+		var dtop = $( '.nav .drag', self.elem ).offset().top;
+		var ntop = $( '.nav', self.elem ).offset().top;
+		self.dragDiff['left'] = dleft-nleft;
+		self.dragDiff['top'] = dtop-ntop;
 	}
 	
 	/**
@@ -1127,10 +1130,12 @@ In the drop-down view click an img to find its original position in the larger i
 		var width = img.width() * w_ratio; 
 		var height = img.height() * h_ratio;
 		var nav_left = $( '.nav', self.elem ).offset().left;
+		var nav_top = $( '.nav', self.elem ).offset().top;
 		$( '.drag', self.elem ).css({
 			width: width,
 			height: height,
-			left: nav_left + self.dragDiff
+			left: nav_left + self.dragDiff['left'],
+			top: nav_top + self.dragDiff['top']
 		});
 		
 		/*
