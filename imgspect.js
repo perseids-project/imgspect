@@ -243,6 +243,7 @@
 				<div class="imgbits"></div>\
 			</div>';
 		$( self.elem ).before( drop.smoosh() );
+		$( '#drop .sortBits' ).hide();
 		self.drop = $( '#drop' ).menumucil({ 
 			cover: true,
 			closed: '&#9660',
@@ -474,10 +475,6 @@ In the drop-down view click an img to find its original position in the larger i
 	 */
 	imgspect.prototype.resize = function() {
 		var self = this;
-		
-		//------------------------------------------------------------
-		//  Resize the drawing area
-		//------------------------------------------------------------
 		self.navResize();
 		self.viewResize();
 		self.drawResize();
@@ -607,7 +604,7 @@ In the drop-down view click an img to find its original position in the larger i
 		var timer;
 		$(window).resize( function(){
 			timer && clearTimeout(timer);
-			timer = setTimeout( function(){ self.resize(); }, 50 );
+			timer = setTimeout( function(){ self.resize(); }, 10 );
 		});
 	}
 	
