@@ -34,6 +34,7 @@
 	-webkit-transition-delay: 0;	/* Safari and Chrome */
 	-o-transition-delay: 0;			/* Opera */
 }
+
 .imgbit {
 	display: inline-block;
 }

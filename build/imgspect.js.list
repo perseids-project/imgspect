@@ -1,7 +1,13 @@
-../../src/js/imgspect.js
-../../src/js/imgbit.js
+../../third_party/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js
 ../jslib/src/js/jQueryPlus.js
 ../jslib/src/js/StringExt.js
+../jslib/third_party/datejs/date.js
 ../jslib/src/js/TimeStamp.js
+../jslib/src/js/ObjectExt.js
 ../jslib/src/js/Culuh.js
 ../menumucil/menumucil.js
+../jslib/src/js/Sorted.js
+../plopup/src/js/plopup.js
+../../src/js/PerseidsBridge.js
+../../src/js/imgbit.js
+../../src/js/imgspect.js
