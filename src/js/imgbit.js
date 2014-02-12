@@ -461,26 +461,32 @@
 	/**
 	 * Show an imgbit sequence
 	 */
-	imgbit.prototype.sequence = function( _sequence, _i ) {
+	imgbit.prototype.sequence = function( _sequence, _loop, _i ) {
 		var self = this;
-		_i = ( _i != undefined ) ? _i : 0
+		_i = ( _i != undefined ) ? _i : 0;
+		_loop = ( _loop == undefined ) ? false : _loop;
 		if ( _sequence.length <= _i ) {
+			if ( _loop == true ) {
+				self.sequence( _sequence, _loop, 0 );
+			}
 			return;
 		}
 		self.param.x1 = _sequence[ _i ]['coords'][0];
 		self.param.y1 = _sequence[ _i ]['coords'][1];
 		self.param.x2 = _sequence[ _i ]['coords'][2];
 		self.param.y2 = _sequence[ _i ]['coords'][3];
+		self.param.z = _sequence[ _i ]['coords'][4];
 		var wipe = _sequence[ _i ]['wipe'];
 		var stay = _sequence[ _i ]['stay']
-		$( 'img.star', self.elem ).css({
+		$( 'img.star, .view', self.elem ).css({
 			transition: "all " + wipe + "s",
 			'-webkit-transition': "all " + wipe + "s"
 		});
 		self.imgMove();
+		self.viewCrop();
 		_i++;
 		setTimeout( function() {  
-			self.sequence( _sequence, _i ) 
+			self.sequence( _sequence, _loop, _i );
 		},(stay+wipe)*1000 );
 	}
 	

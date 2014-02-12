@@ -3,7 +3,6 @@
 	<link rel="stylesheet" href="../../../src/css/imgbit.css">
 </head>
 <body>
-	<h1>Sequence</h1>
 	<a id="imgbit" href="../../img/wheres-waldo.jpg"></a>
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -17,19 +16,19 @@
 		bit = $( '#imgbit' ).imgbit().data( '#imgbit' );
 		bit.sequence([
 			{
-				coords: [ 100, 200, 300, 400 ],
+				coords: [ 100, 200, 300, 400, 1 ],
 				stay: 5,
 				wipe: .25
 			},
 			{
-				coords: [ 500, 600, 700, 800 ],
+				coords: [ 500, 600, 700, 800, .5 ],
 				stay: 5,
 				wipe: 2
 			},
 			{
-				coords: [ 900, 400, 200, 100 ],
+				coords: [ 900, 400, 2000, 1000, 1.5 ],
 				stay: 5,
-				wipe: 0
+				wipe: 1
 			},
 		]);
 	});
