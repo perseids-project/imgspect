@@ -1,0 +1,37 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../../../src/css/imgbit.css">
+</head>
+<body>
+	<h1>Sequence</h1>
+	<a id="imgbit" href="../../img/wheres-waldo.jpg"></a>
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="../../../third_party/jslib/src/js/jQueryPlus.js"></script>
+<script src="../../../third_party/jslib/src/js/StringExt.js"></script>
+<script src="../../../third_party/jslib/src/js/TimeStamp.js"></script>
+<script src="../../../third_party/jslib/src/js/Culuh.js"></script>
+<script src="../../../src/js/imgbit.js"></script>
+<script type="text/javascript">
+	$(document).ready( function(){
+		bit = $( '#imgbit' ).imgbit().data( '#imgbit' );
+		bit.sequence([
+			{
+				coords: [ 100, 200, 300, 400 ],
+				stay: 5,
+				wipe: .25
+			},
+			{
+				coords: [ 500, 600, 700, 800 ],
+				stay: 5,
+				wipe: 2
+			},
+			{
+				coords: [ 900, 400, 200, 100 ],
+				stay: 5,
+				wipe: 0
+			},
+		]);
+	});
+</script>
+</html>

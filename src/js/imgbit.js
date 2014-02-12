@@ -30,15 +30,15 @@
 		var self = this;
 		
 		//------------------------------------------------------------
-		// 	User options 
+		//	User options 
 		//------------------------------------------------------------
 		self.options = $.extend({
-			style: 'full',
+			style: null,
 			closable: false
 		}, _options);
 		
 		//------------------------------------------------------------
-		//  Events
+		//	Events
 		//------------------------------------------------------------
 		self.events = {
 			change: 'IMGBIT-CHANGE',
@@ -46,63 +46,67 @@
 		}
 		
 		//------------------------------------------------------------
-		//  Store original element in plain text
+		//	Store original element in plain text
 		//------------------------------------------------------------
 		self.original = $( self.elem ).myHtml();
 		
 		//------------------------------------------------------------
-		//  Separate the image source and clipping coordinates
+		//	Separate the image source and clipping coordinates
 		//------------------------------------------------------------
 		self.href = $( self.elem ).attr( 'href' );
 		self.caption = $( self.elem ).text();
 		
 		//------------------------------------------------------------
-		//  Store the images original height and width
+		//	Store the images original height and width
 		//------------------------------------------------------------
 		self.imgWidth = null;
 		self.imgHeight = null;
 		
 		//------------------------------------------------------------
-		//  Time created with UTC offset
+		//	Time created with UTC offset
 		//------------------------------------------------------------
 		var timeStamp = new TimeStamp();
 		self.timeCreated = timeStamp.withUtc( true );
 		
 		//------------------------------------------------------------
-		//  Get the imgbit parameters
+		//	Get the imgbit parameters
 		//------------------------------------------------------------
 		var arr = self.href.split('imgbit=');
-		self.src = arr[0].substring( 0, arr[0].length-1 );
-		self.param = self.getToJson( arr[1] );
+		self.src = self.href;
+		self.param = {};
+		if ( arr.length > 1 ) {
+			self.src = arr[0].substring( 0, arr[0].length-1 );
+			self.param = self.getToJson( arr[1] );
+		}
 		
 		//------------------------------------------------------------
-		//  Explicit width?
+		//	Explicit width?
 		//------------------------------------------------------------
 		if ( self.param.w != undefined ) {
 			self.param.z = self.param.w / ( self.param.x2 - self.param.x1 );
 		}
 		
 		//------------------------------------------------------------
-		//  Explicit height?
+		//	Explicit height?
 		//------------------------------------------------------------
 		if ( self.param.h != undefined ) {
 			self.param.z = self.param.h / ( self.param.y2 - self.param.y1 );
 		}
 		
 		//------------------------------------------------------------
-		//  Color?
+		//	Color?
 		//------------------------------------------------------------
 		if ( self.param.c != undefined ) {
 			self.culuh = new Culuh( self.param.c );
 		}
 		
 		//------------------------------------------------------------
-		//  Zoom?
+		//	Zoom?
 		//------------------------------------------------------------
 		self.param.z = ( self.param.z == undefined ) ? 1 : self.param.z;
 		
 		//------------------------------------------------------------
-		//  Check to see if special style classes have been passed
+		//	Check to see if special style classes have been passed
 		//------------------------------------------------------------
 		if ( $( self.elem ).hasClass('min') ) {
 			self.options['style'] = null;
@@ -115,7 +119,7 @@
 		}
 		
 		//------------------------------------------------------------
-		//  Check to see if img is in album
+		//	Check to see if img is in album
 		//------------------------------------------------------------
 		self.build();
 	}
@@ -127,107 +131,107 @@
 		var self = this;
 		
 		//------------------------------------------------------------
-		//  Store the id
+		//	Store the id
 		//------------------------------------------------------------
 		var id = $( self.elem ).attr('id');
 		
 		//------------------------------------------------------------
-		//  Change anchor tag to div
+		//	Change anchor tag to div
 		//------------------------------------------------------------
 		$( self.elem ).after( '<div class="imgbit">' );
 		self.elem = $( self.elem ).next();
 		
 		//------------------------------------------------------------
-		//  Add the id
+		//	Add the id
 		//------------------------------------------------------------
 		$( self.elem ).attr( 'id', id );
 		
 		//------------------------------------------------------------
-		//  Remove the original anchor tag.
+		//	Remove the original anchor tag.
 		//------------------------------------------------------------
 		var a = $( self.elem ).prev();
 		var html = a.html();
 		a.remove();
 		
 		//------------------------------------------------------------
-		//  Add the style class if it is not null
+		//	Add the style class if it is not null
 		//------------------------------------------------------------
 		if ( self.options['style'] != null ) {
 			$( self.elem ).addClass( self.options['style'] );
 		}
 		
 		//------------------------------------------------------------
-		//  Create the viewport
+		//	Create the viewport
 		//------------------------------------------------------------
 		$( self.elem ).append( '<div class="view">' );
 		
 		//------------------------------------------------------------
-		//  Store the a tag text
+		//	Store the a tag text
 		//------------------------------------------------------------
 		if ( self.options['style'] != null ) {
 			$( self.elem ).append( '<div class="text">'+ html +'</div>' );
 		}
 		
 		//------------------------------------------------------------
-		//  Load the image
+		//	Load the image
 		//------------------------------------------------------------
 		var img = new Image();
 		img.onload = function() {
 			$( this ).addClass('star');
 			//------------------------------------------------------------
-			//  Store the orignal size of the image
+			//	Store the orignal size of the image
 			//------------------------------------------------------------
 			self.imgWidth = img.width;
 			self.imgHeight = img.height;
 			
 			//------------------------------------------------------------
-			//  Add the image to the view
+			//	Add the image to the view
 			//------------------------------------------------------------
 			$( '.view', self.elem ).append( this )
 			
 			//------------------------------------------------------------
-			//  Crop the view to the area dimensions
+			//	Crop the view to the area dimensions
 			//------------------------------------------------------------
 			self.viewCrop();
 		
 			//------------------------------------------------------------
-			//  Move the image into place and scale it
+			//	Move the image into place and scale it
 			//------------------------------------------------------------
 			self.imgMove();
 		
 			//------------------------------------------------------------
-			//  Add a clear
+			//	Add a clear
 			//------------------------------------------------------------
 			$( self.elem ).prepend( '<div style="clear:both"></div>' );
 		
 			//------------------------------------------------------------
-			//  Add a link to the source image
+			//	Add a link to the source image
 			//------------------------------------------------------------
 			if ( self.options['style'] != null && self.options['style'] != 'edit' ) {
 				$( self.elem ).prepend( '<a class="source" href="'+ self.src +'">source</a>' );
 			}
 			
 			//------------------------------------------------------------
-			//  Scale imgbit container to size of image
+			//	Scale imgbit container to size of image
 			//------------------------------------------------------------
 			$( self.elem ).css({
 				width: $( '.view', self.elem ).width()
 			});
 			
 			//------------------------------------------------------------
-			//  If the edit tag is set, create the edit dom elements
+			//	If the edit tag is set, create the edit dom elements
 			//------------------------------------------------------------
 			self.editStart();
 			
 			//------------------------------------------------------------
-			//  If the imgbit is closable add the close button
+			//	If the imgbit is closable add the close button
 			//------------------------------------------------------------
 			if ( self.options['closable'] == true ) {
 				self.closeBuild();
 			}
 			
 			//------------------------------------------------------------
-			//  If the color has been set... set the color
+			//	If the color has been set... set the color
 			//------------------------------------------------------------
 			if ( self.param.c != undefined ) {
 				$( self.elem ).css({
@@ -239,7 +243,7 @@
 			}
 			
 			//------------------------------------------------------------
-			//  Let the world know you've changed
+			//	Let the world know you've changed
 			//------------------------------------------------------------
 			$( self.elem ).trigger( self.events['change'] );
 		}
@@ -248,7 +252,7 @@
 
 	/**
 	 * Build the close button and start the click listener
-	 */	
+	 */ 
 	imgbit.prototype.closeBuild = function() {
 		var self = this;
 		$( self.elem ).prepend( '<a href="" class="close">x</a>' );
@@ -267,10 +271,10 @@
 		var text = $( '.text', self.elem );
 		
 		//------------------------------------------------------------
-		//  jQuery's height() method returns incorrect values if
-		//  the targeted element is hidden.  So we have to do a
-		//  a little show and hide voodoo to get an accurate height
-		//  value.  Hopefully it won't cause any strobing.
+		//	jQuery's height() method returns incorrect values if
+		//	the targeted element is hidden.	 So we have to do a
+		//	a little show and hide voodoo to get an accurate height
+		//	value.	Hopefully it won't cause any strobing.
 		//------------------------------------------------------------
 		var hide = false;
 		if ( text.is(':visible') == false ) {
@@ -296,17 +300,17 @@
 		if ( self.options['style'] == 'edit' ) {
 			
 			//------------------------------------------------------------
-			//  Build the edit DOM elements.
+			//	Build the edit DOM elements.
 			//------------------------------------------------------------
 			self.editBuild();
 			
 			//------------------------------------------------------------
-			//  Resize the caption as neeeded.
+			//	Resize the caption as neeeded.
 			//------------------------------------------------------------
 			self.captionResize();
 			
 			//------------------------------------------------------------
-			//  Listen for return key.  
+			//	Listen for return key.	
 			//------------------------------------------------------------
 			$( '.caption', self.elem ).keypress( function( _e ) {
 				if ( _e.which == 13) {
@@ -315,7 +319,7 @@
 			});
 			
 			//------------------------------------------------------------
-			//  Keep editable and static caption synched.
+			//	Keep editable and static caption synched.
 			//------------------------------------------------------------
 			$( '.caption', self.elem ).bind( 'input propertychange', function() {
 				self.setCaption( $( '.caption', self.elem ).val() );
@@ -340,7 +344,7 @@
 		$( '.text', self.elem ).text( self.caption );
 		self.captionResize();
 		//------------------------------------------------------------
-		//  Let the application know you've changed.
+		//	Let the application know you've changed.
 		//------------------------------------------------------------
 		$( self.elem ).trigger( self.events['change'] );
 	}
@@ -359,21 +363,21 @@
 	imgbit.prototype.editBuild = function() {
 		var self = this;
 		//------------------------------------------------------------
-		//  Build a caption
+		//	Build a caption
 		//------------------------------------------------------------
 		var textarea = '<textarea class="caption">'+$( '.text', self.elem ).text()+'</textarea>';
 		$( '.text', self.elem ).after( textarea );
 		
 		//------------------------------------------------------------
-		//  Set the width of the caption textarea to the size of the 
-		//  image and the height of the static caption.
+		//	Set the width of the caption textarea to the size of the 
+		//	image and the height of the static caption.
 		//------------------------------------------------------------
 		 $( '.caption', self.elem ).css({ 
 			width: $( '.view', self.elem).width()
 		});
 		
 		//------------------------------------------------------------
-		//  If a color has been set desaturate the color.
+		//	If a color has been set desaturate the color.
 		//------------------------------------------------------------
 		if ( self.culuh != undefined ) {
 			$( '.caption', self.elem ).css({
@@ -384,7 +388,7 @@
 		$( '.caption', self.elem ).hide();
 		
 		//------------------------------------------------------------
-		//  Switch between editable and static captions
+		//	Switch between editable and static captions
 		//------------------------------------------------------------
 		$( '.text', self.elem ).click( function( _e ) {
 			self.editSwitch();
@@ -402,9 +406,9 @@
 		}
 		else {
 			//------------------------------------------------------------
-			//  There can only be one imgbit caption editor
-			//  Calling editHide() on the prototype object will
-			//  call that method for all instances.
+			//	There can only be one imgbit caption editor
+			//	Calling editHide() on the prototype object will
+			//	call that method for all instances.
 			//------------------------------------------------------------
 			imgbit.prototype.editHide();
 			self.editShow();
@@ -455,21 +459,47 @@
 	}
 	
 	/**
+	 * Show an imgbit sequence
+	 */
+	imgbit.prototype.sequence = function( _sequence, _i ) {
+		var self = this;
+		_i = ( _i != undefined ) ? _i : 0
+		if ( _sequence.length <= _i ) {
+			return;
+		}
+		self.param.x1 = _sequence[ _i ]['coords'][0];
+		self.param.y1 = _sequence[ _i ]['coords'][1];
+		self.param.x2 = _sequence[ _i ]['coords'][2];
+		self.param.y2 = _sequence[ _i ]['coords'][3];
+		var wipe = _sequence[ _i ]['wipe'];
+		var stay = _sequence[ _i ]['stay']
+		$( 'img.star', self.elem ).css({
+			transition: "all " + wipe + "s",
+			'-webkit-transition': "all " + wipe + "s"
+		});
+		self.imgMove();
+		_i++;
+		setTimeout( function() {  
+			self.sequence( _sequence, _i ) 
+		},(stay+wipe)*1000 );
+	}
+	
+	/**
 	 * Turn GET parameter string into a JSON object
 	 */
 	imgbit.prototype.getToJson = function( _get ) {
-        if ( _get == "" ) return {};
-        var json = {};
+		if ( _get == "" || _get == undefined ) return {};
+		var json = {};
 		var key_vals = _get.split('%');
-        for ( var i=0, ii=key_vals.length; i<ii; i++ ) {
+		for ( var i=0, ii=key_vals.length; i<ii; i++ ) {
 			var param = key_vals[i].split('=');
 			if ( param.length != 2 ) {
 				continue;
 			}
-            json[ param[0] ] = decodeURIComponent( param[1].replace( /\+/g, "" ) );
-        }
-        return json;
-    }
+			json[ param[0] ] = decodeURIComponent( param[1].replace( /\+/g, "" ) );
+		}
+		return json;
+	}
 	
 	/**
 	 * Turn imgbit into imgbit constructor HTML
@@ -517,7 +547,7 @@
 	 * Returns an imgbit transcription in open annotation spec JSON
 	 *
 	 * @param { json } JSON with additional info 
-	 *                 needed to construct a complete JSON LD object
+	 *				   needed to construct a complete JSON LD object
 	 *
 	 *		"@id": "http://perseids.org/collections/urn:cite:perseus:annsimp.1.1",
 	 *		"annotatedBy": {
