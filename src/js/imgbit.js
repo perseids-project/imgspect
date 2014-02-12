@@ -460,6 +460,10 @@
 	
 	/**
 	 * Show an imgbit sequence
+	 *
+	 * @param { obj } The sequence config.  See examples/imgbit/sequence
+	 * @param { bool } Loop the sequence?
+	 * @param { int } Current index of sequence
 	 */
 	imgbit.prototype.sequence = function( _sequence, _loop, _i ) {
 		var self = this;
@@ -492,6 +496,9 @@
 	
 	/**
 	 * Turn GET parameter string into a JSON object
+	 *
+	 * @param { string } HTTP Get style string
+	 * @return { obj } JSON
 	 */
 	imgbit.prototype.getToJson = function( _get ) {
 		if ( _get == "" || _get == undefined ) return {};
