@@ -33,7 +33,7 @@
 		//	User options 
 		//------------------------------------------------------------
 		self.options = $.extend({
-			style: null,
+			style: 'full',
 			closable: false
 		}, _options);
 		
@@ -168,8 +168,10 @@
 		//------------------------------------------------------------
 		//	Store the a tag text
 		//------------------------------------------------------------
+		$( self.elem ).append( '<div class="text">'+ html +'</div>' );
+		$( '.text', self.elem ).hide();
 		if ( self.options['style'] != null ) {
-			$( self.elem ).append( '<div class="text">'+ html +'</div>' );
+			$( '.text', self.elem ).show();
 		}
 		
 		//------------------------------------------------------------
@@ -384,7 +386,6 @@
 				'background-color': self.culuh.sat( 0.35, true ).hex()
 			});
 		}
-		
 		$( '.caption', self.elem ).hide();
 		
 		//------------------------------------------------------------
@@ -399,7 +400,6 @@
 		//  Clicking outside a focused imgbit will uneditify them.
 		//------------------------------------------------------------
 		$( document ).on( 'touchstart click', function( _e ) {
-			_e.preventDefault();
 			if ( $( _e.target ).html() == $( '.caption', self.elem ).html() ||
 				 $( _e.target ).html() == $( '.text', self.elem ).html() ) {
 				return;
@@ -455,6 +455,9 @@
 			width: ( self.param.x2 - self.param.x1 ) * self.param.z,
 			height: ( self.param.y2 - self.param.y1 ) * self.param.z
 		});
+		$( self.elem ).css({
+			width: ( self.param.x2 - self.param.x1 ) * self.param.z
+		});
 	}
 	
 	/**
@@ -463,8 +466,8 @@
 	imgbit.prototype.imgMove = function() {
 		var self = this;
 		$( 'img.star', self.elem ).css({
-			width: $( 'img.star', self.elem ).width() * self.param.z,
-			height: $( 'img.star', self.elem ).height() * self.param.z,
+			width: self.imgWidth * self.param.z,
+			height: self.imgHeight * self.param.z,
 			left: self.param.x1*-1*self.param.z,
 			top: self.param.y1*-1*self.param.z
 		});
@@ -494,12 +497,24 @@
 		self.param.z = _sequence[ _i ]['coords'][4];
 		var wipe = _sequence[ _i ]['wipe'];
 		var stay = _sequence[ _i ]['stay']
+		//------------------------------------------------------------
+		//  animate transitions
+		//------------------------------------------------------------
 		$( 'img.star, .view', self.elem ).css({
+			transition: "all " + wipe + "s",
+			'-webkit-transition': "all " + wipe + "s"
+		});
+		$( self.elem ).css({
 			transition: "all " + wipe + "s",
 			'-webkit-transition': "all " + wipe + "s"
 		});
 		self.imgMove();
 		self.viewCrop();
+		$( '.text', self.elem ).hide();
+		if ( 'caption' in _sequence[ _i ] ) {
+			$( '.text', self.elem ).show();
+			self.setCaption( _sequence[ _i ]['caption'] );
+		}
 		_i++;
 		setTimeout( function() {  
 			self.sequence( _sequence, _loop, _i );
