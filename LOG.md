@@ -628,3 +628,6 @@ Ahh you think you've squashed them all.
 So I was working on the sequence method in imgbit.  When I loop the sequence it doesn't return to the start... I have to figure out why that is... It would be nice to add a captioning system. too.
 
 I just made imgbit caption editing work with ios tablets or any other touch device that uses the 'touchstart' event.  I haven't tested this thoroughly yet though.
+
+# 2014-02-13
+Just showing Maxim and Giuseppe how to use github.
