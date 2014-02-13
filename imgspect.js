@@ -2106,9 +2106,21 @@ PerseidsBridge.imgspect = ( function() {
 		//------------------------------------------------------------
 		//	Switch between editable and static captions
 		//------------------------------------------------------------
-		$( '.text', self.elem ).click( function( _e ) {
-			self.editSwitch();
+		$( '.text', self.elem ).on( 'touchstart click', function( _e ) {
 			_e.preventDefault();
+			self.editSwitch();
+		});
+		
+		//------------------------------------------------------------
+		//  Clicking outside a focused imgbit will uneditify them.
+		//------------------------------------------------------------
+		$( document ).on( 'touchstart click', function( _e ) {
+			_e.preventDefault();
+			if ( $( _e.target ).html() == $( '.caption', self.elem ).html() ||
+				 $( _e.target ).html() == $( '.text', self.elem ).html() ) {
+				return;
+			}
+			self.editHide();
 		});
 	}
 	

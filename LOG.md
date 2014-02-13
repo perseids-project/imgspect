@@ -2,7 +2,7 @@
 ## 2013-12-09
 
 So right now my interface does not move highlighted areas in the viewport.
-I was thinking that I should create a clear canvas to overlay over the image and just draw to that canvas.  
+I was thinking that I should create a clear canvas to overlay over the image and just draw to that canvas.	
 Problems arise though... It would make click handling a bit trickier.
 Having the highlighted areas in the DOM seems more scalalbe.
 I'm conflicted.
@@ -19,7 +19,7 @@ It shouldn't be too costly.
 Zoom/scaling events aren't as granular as translations.
 
 ### imgbit
-I thought I'd be clever and make an album area in the DOM so I wouldn't have to redownload images if several imgbit instances were created for a page, but really what browser doesn't do this already.  
+I thought I'd be clever and make an album area in the DOM so I wouldn't have to redownload images if several imgbit instances were created for a page, but really what browser doesn't do this already.	 
 I'm going to scrap it.
 That should simplify things.
 
@@ -28,7 +28,7 @@ That should simplify things.
 So I made it so hi-res images can be navigated.
 I feel good about that.
 
-I would like to make the nav and draw areas resizable by the user.  
+I would like to make the nav and draw areas resizable by the user.	
 Maybe just a draggable button in the lower right corner of the draw area.
 The nav will resize just to fit the width of the browser?
 I think that could work pretty well.
@@ -64,7 +64,7 @@ I improved the undo features.
 Lites now have ids which will make zeroing in on them easy / possible.
 I might breakout lites into their own class if they get any more complex.
 Added the goTo and showLite methods which will make it possible to find the context of an imgbit.
-I need to a proof of concept on that in the basics example.  I'll do that now...
+I need to a proof of concept on that in the basics example.	 I'll do that now...
 
 So I added the ability to find a lite in context.
 In the example you can click an imgbit below the main app area and your draw area will find the corresponding lite.
@@ -73,14 +73,14 @@ JQuery's animate function can be a resource hawg.
 Maybe they've improved it, or maybe my development laptop is too new and too fast.
 I'll have to test it on a clunker.
 
-Undo feature works now.  I'm going to move some of the code hacked together on the basics example page into the plugin itself once I wrap my head around a few things.
+Undo feature works now.	 I'm going to move some of the code hacked together on the basics example page into the plugin itself once I wrap my head around a few things.
 
 So let me think through some of the feedback.
 
 	* maybe it would be nice to position the imgbit snippets overlayed on top of the base image, 
 	with the ability to toggle its visibility?
 
-So if I'm imagining this right the snippets would basically be floating over the view area, and you can show or hide them, instead of the grid of imgbits being appended to the bottom.  I can see that being visually confusing unless I add a semi transparent black background behind the imgbits and over the whole view area.  Right now appending the imgbits at the bottom is not ideal because depending on the height of your display they could be hidden.  I'll have to give this some thought.  If done well this could be attractive / easy to use.
+So if I'm imagining this right the snippets would basically be floating over the view area, and you can show or hide them, instead of the grid of imgbits being appended to the bottom.	 I can see that being visually confusing unless I add a semi transparent black background behind the imgbits and over the whole view area.	Right now appending the imgbits at the bottom is not ideal because depending on the height of your display they could be hidden.  I'll have to give this some thought.	If done well this could be attractive / easy to use.
 
 	* love the undo feature - needs to apply to the 'nav' image and the imgbit snippets too
 
@@ -88,7 +88,7 @@ It should be fixed now...
 
 	* can we enable the zoom on the imgbit snippets too?
 
-There is something like a zoom.  You can set explicit scale, width, or height now.  But an interactive scale after the imgbit is created could be neat.  If the dimensions change it could really mess up page layouts though, and if the image gets clipped like in imgspect's view area I would need to come up with a UI to pan.  The nav dragger system in imgspect wouldn't really work. That could get tricky because the imgbit areas potentially can be really small.  The dimension changing approach could work if the max size could be set and could be accounted for in the layout.
+There is something like a zoom.	 You can set explicit scale, width, or height now.	But an interactive scale after the imgbit is created could be neat.	 If the dimensions change it could really mess up page layouts though, and if the image gets clipped like in imgspect's view area I would need to come up with a UI to pan.	 The nav dragger system in imgspect wouldn't really work. That could get tricky because the imgbit areas potentially can be really small.  The dimension changing approach could work if the max size could be set and could be accounted for in the layout.
 
 	* how are you planning on handling the urn? Maybe if a data-urn attribute is specified on the 
 	img src tag it could trigger CITE URN specific functionality? 
@@ -96,7 +96,7 @@ There is something like a zoom.  You can set explicit scale, width, or height no
 
 Change events are being triggered, so I could build a little module that could listen in and build the URNs of all the ROIS separate from the main imgspect app.  
 
-When starting the app CITE URNs could be translated to the GET params system I'm using now.  It's javascript so all the data ends up in JSON.  GET params > JSON or CITE URN > GET params > JSON it shouldn't be hard to translate.
+When starting the app CITE URNs could be translated to the GET params system I'm using now.	 It's javascript so all the data ends up in JSON.  GET params > JSON or CITE URN > GET params > JSON it shouldn't be hard to translate.
 
 	* was thinking it would be really nice if we could enable something like the following: 
 	user types facs="" in the editing area, and clicks in the middle of the "" - this triggers 
@@ -127,7 +127,7 @@ Plus they can be used for categorization and sorting later on if we want to add 
 Now I need to figure out how to layout the imgbit grid.
 Below the main app area with explicit heights ain't cuttin' it for me.
 
-3:32 - So I found my old menumucil project.  
+3:32 - So I found my old menumucil project.	 
 I created a github repo for it.
 imgspect will pull it in as a submodule now.
 It will create a imgbit grid drop-down over the main app area.
@@ -231,9 +231,9 @@ ubuntu@sosol-test:/usr/local/sosol$ jruby -S script/server
 http://sosol-test.perseids.org:3000/
 
 //------------------------------------------------------------
-//  So let's get adjusted.
-//  Log output is here.
-//  What files are these associated with?
+//	So let's get adjusted.
+//	Log output is here.
+//	What files are these associated with?
 //------------------------------------------------------------
 Processing EpiCtsIdentifiersController#editxml
 Rendering template within layouts/perseus >> ./app/views/layouts/perseus.haml
@@ -248,12 +248,12 @@ So where is the #editxml content
 
 	sudo vim ./app/controllers/epi_cts_identifiers_controller.rb
 
-    def editxml
-      find_identifier
-      @identifier[:xml_content] = @identifier.xml_content
-      @is_editor_view = true
-      render :template => 'epi_cts_identifiers/editxml'
-    end
+	def editxml
+	  find_identifier
+	  @identifier[:xml_content] = @identifier.xml_content
+	  @is_editor_view = true
+	  render :template => 'epi_cts_identifiers/editxml'
+	end
 
 find . | grep editxml
 
@@ -266,7 +266,7 @@ Edit commit
 
 This is what needs to change.
 
-    %iframe{:id => 'ict_frame'}
+	%iframe{:id => 'ict_frame'}
 
 So let's add imgspect as a submodule in this directory.
 
@@ -310,7 +310,7 @@ Add the imgspect source image
 
 HAML format is very touchy when it comes to whitespace.
 
-So I need to come up with a decent workflow.  I'll just scp the files to the server and refresh I suppose.  Not ideal but it will work.
+So I need to come up with a decent workflow.  I'll just scp the files to the server and refresh I suppose.	Not ideal but it will work.
 
 	scp /var/www/imgspect/imgspect.js sosol-test:/usr/local/sosol/public/javascripts/imgspect/imgspect.js
 
@@ -356,7 +356,7 @@ Requirements/Ideas for Perseids integration:
 ### CITE URN Functionality
 This could be triggered in a general way by either of the following on the image element for which imgspect() is triggered:
 * @src URL value which references urn:cite:.... as the last path element
-    * this would be the case if we have proxy resolution of CITE served images e.g. at http://data.perseus.org/images/urn:cite:perseus:epifacsimg.1
+	* this would be the case if we have proxy resolution of CITE served images e.g. at http://data.perseus.org/images/urn:cite:perseus:epifacsimg.1
 * @resource value containing a CITE urn 
 
 Imgspect and Imgbit would each have an non-null URN property if 
@@ -376,18 +376,18 @@ Serialization format:
 * annotatedBy foaf:agent could be provided either by calling app in imgspec contructor or as an optional user-entered item (nice to support both but not essential at this stage)
 * target URI is either the CITE URN or image url (both with properly configured ROI coordinates) depending upon construction options as above
 * body is inline content item
-    * either cntAsText or cntAsXML 
-    * cntAsXML could be triggered on imgspec constructor configuration option
-        * UI could ask user to select semantic tag of region highlighted as one of the options available from EpiDoc (w, c, gap, ..)
-        * with targetURI (but see below notes on integration) inserted as @facs attribute value
+	* either cntAsText or cntAsXML 
+	* cntAsXML could be triggered on imgspec constructor configuration option
+		* UI could ask user to select semantic tag of region highlighted as one of the options available from EpiDoc (w, c, gap, ..)
+		* with targetURI (but see below notes on integration) inserted as @facs attribute value
 
 ### Perseids SoSOL Integration
 Assuming the above functionality, then we could do something like:
 
-* have an interface element that allows the user to scroll through the available images for a text (replacing the dropdown and  iframe of the ICT tool, but populated in the same way from the PerseidsLD Linked Data query)
+* have an interface element that allows the user to scroll through the available images for a text (replacing the dropdown and	iframe of the ICT tool, but populated in the same way from the PerseidsLD Linked Data query)
 * activate a double-click handler on the text input area of the Perseids edit interface that activates imgspect on the currently visible image and supplies a function as a callback which 
-    * parses the text body(ies) from JSON-LD object of annotations 
-    * inserts it at the X/Y coordinates of the doubleclick 
+	* parses the text body(ies) from JSON-LD object of annotations 
+	* inserts it at the X/Y coordinates of the doubleclick 
 
 Note: Ultimately I'd like to  eliminate the use of the @facs attribute at all, and instead have the image mappings just kept as a separate related data file of annotations. This relies on some API functionality that isn't yet fully developed in SoSOL though so the above approach is provisional and the callback functionality would change to this when the Perseids SoSOL API is ready for it.
 
@@ -433,10 +433,10 @@ So if I can define this object I will know how to proceed.
 So I'm trying to piece this together from Bridget's notes...
 
 	* body is inline content item
-	    * either cntAsText or cntAsXML 
-	    * cntAsXML could be triggered on imgspec constructor configuration option
-	        * UI could ask user to select semantic tag of region highlighted as one of the options available from EpiDoc (w, c, gap, ..)
-	        * with targetURI (but see below notes on integration) inserted as @facs attribute value
+		* either cntAsText or cntAsXML 
+		* cntAsXML could be triggered on imgspec constructor configuration option
+			* UI could ask user to select semantic tag of region highlighted as one of the options available from EpiDoc (w, c, gap, ..)
+			* with targetURI (but see below notes on integration) inserted as @facs attribute value
 
 I really don't understand what she means.  
 I'll have to ask her for clarification.
@@ -505,7 +505,7 @@ contentAsXML
 Motivation - perseus:transcribing
 
 # 2014-01-13
-So I've been pretty good about making code reusable by breaking bits out into submodules and documenting things.  But that causes problems, especially in the Javascript world.  Looking at my installation documentation makes me realize that having developers import half a dozen or more scripts in the right sequence is only going to make them angry.  So I need to implement a build system.  I already have one in another project.  I just need to roll that build system into this one, and document everything.
+So I've been pretty good about making code reusable by breaking bits out into submodules and documenting things.  But that causes problems, especially in the Javascript world.	 Looking at my installation documentation makes me realize that having developers import half a dozen or more scripts in the right sequence is only going to make them angry.  So I need to implement a build system.  I already have one in another project.  I just need to roll that build system into this one, and document everything.
 
 # 2014-01-14
 Brainstorm what needs to be done.
@@ -521,7 +521,7 @@ That way working prototype will be ready for presentation day.
 	/usr/local/sosol/public/javascripts/perseids-ld.js
 	
 	# The XML edit template
-	GET	scp sosol-test:/usr/local/sosol/app/views/epi_cts_identifiers/editxml.haml /var/www/imgspect/scratch/editxml.haml
+	GET scp sosol-test:/usr/local/sosol/app/views/epi_cts_identifiers/editxml.haml /var/www/imgspect/scratch/editxml.haml
 	PUT scp /var/www/imgspect/scratch/editxml.haml sosol-test:/usr/local/sosol/app/views/epi_cts_identifiers/editxml.haml
 	
 	# PERSEIDS-LD -- Makes call to sparql server to get cite urns to images related to current document.
@@ -573,7 +573,7 @@ There are some things I still need to do.
 My most pressing TODOs.
 Let me just list them.
 
-* I need to build the summary.  I'm not sure exactly what this should include.
+* I need to build the summary.	I'm not sure exactly what this should include.
 * In order to do that well I need to figure out what data I need about the user.
 	* That data should be gathered and managed by PerseidsBridge ideally.
 		* grabUserData()
@@ -623,3 +623,8 @@ I added some really useful functions to my jslib library which I know will come 
 # 2014-02-10
 So imgspect is now mostly IOS Safari compatible except I can't scroll the menumucil dropdown...
 Ahh you think you've squashed them all.
+
+# 2014-02-13
+So I was working on the sequence method in imgbit.  When I loop the sequence it doesn't return to the start... I have to figure out why that is... It would be nice to add a captioning system. too.
+
+I just made imgbit caption editing work with ios tablets or any other touch device that uses the 'touchstart' event.  I haven't tested this thoroughly yet though.

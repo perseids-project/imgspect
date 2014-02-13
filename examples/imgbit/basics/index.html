@@ -3,7 +3,7 @@
 	<link rel="stylesheet" href="../../../src/css/imgbit.css">
 </head>
 <body>
-	<h1>Do you only want a part of this image?</h1>
+	<h1>Do you only want a part of this image?imgbit=</h1>
 	
 	<img src="../../img/morpho.jpg" />
 	
@@ -15,16 +15,16 @@
 	
 	<h2>Include the necessary files</h2>
 	<pre>
-&lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;imgbit.js&quot;&gt;&lt;/script&gt;
-&lt;link rel=&quot;stylesheet&quot; href=&quot;css/imgbit.css&quot;&gt;
+&lt;script src=%quot;http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js%quot;&gt;&lt;/script&gt;
+&lt;script src=%quot;imgbit.js%quot;&gt;&lt;/script&gt;
+&lt;link rel=%quot;stylesheet%quot; href=%quot;css/imgbit.css%quot;&gt;
 	</pre>
 	
 	<h2>Activate the imgbit plug-in</h2>
 	<pre>
-&lt;script type=&quot;text/javascript&quot;&gt;
+&lt;script type=%quot;text/javascript%quot;&gt;
 	$(document).ready( function(){
-		$( &#x27;.imgbit&#x27; ).imgbit();
+		$( %#x27;.imgbit%#x27; ).imgbit();
 	});
 &lt;/script&gt;
 	</pre>
@@ -34,45 +34,45 @@
 	<h2>imgbit &lt;a&gt; tags</h2>
 	<h2>Most basic use</h2>
 	<div>
-		<p>To use just add <strong>class="imgbit"</strong> to an <strong>&lt;a&gt;</strong> tag.  In the href attribute after the image url add the clipping coordinates using html GET parameters <strong>?x1=0&y1=0&x2=100&y2=100</strong>.</p>  
+		<p>To use just add <strong>class="imgbit"</strong> to an <strong>&lt;a&gt;</strong> tag.  In the href attribute after the image url add the clipping coordinates using html GET parameters <strong>?imgbit=x1=0%y1=0%x2=100%y2=100</strong>.</p>  
 		<p>Any text inside the anchor tag will become the image caption.</p>
 		<pre>
-&lt;a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400"&gt;Butterfly Body&lt;/a&gt;
+&lt;a class="imgbit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400"&gt;Butterfly Body&lt;/a&gt;
 		</pre>
-		<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400">Butterfly Body</a>
+		<a class="imgbit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400">Butterfly Body</a>
 	</div>
 	
 	<hr/>
 	
 	<h2>Explicit Scale</h2>
 	<div>
-		<p>If you want to change the scale of an image you can add a zoom parameter. <strong>&z=2</strong> added to the first example <strong>will scale the image to 200%</strong> its clipped size.</p>
+		<p>If you want to change the scale of an image you can add a zoom parameter. <strong>%z=2</strong> added to the first example <strong>will scale the image to 200%</strong> its clipped size.</p>
 		<pre>
-&lt;a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&z=2"&gt;Butterfly Body Z&lt;/a&gt;
+&lt;a class="imgbit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%z=2"&gt;Butterfly Body Z&lt;/a&gt;
 		</pre>
-		<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&z=2">Butterfly Body Z</a>
+		<a class="imgbit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%z=2">Butterfly Body Z</a>
 	</div>
 	
 	<hr/>
 	
 	<h2>Explicit Width</h2>
 	<div>
-		<p>If you want an image to be scaled to a specific width you can add a width parameter. <strong>&w=200 will scale the image to 200px wide</strong>.</p>
+		<p>If you want an image to be scaled to a specific width you can add a width parameter. <strong>%w=200 will scale the image to 200px wide</strong>.</p>
 		<pre>
-&lt;a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=500&y2=400&w=200"&gt;Butterfly Body W&lt;/a&gt;
+&lt;a class="imgbit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=500%y2=400%w=200"&gt;Butterfly Body W&lt;/a&gt;
 		</pre>
-		<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=500&y2=400&w=200">Butterfly Body W</a>
+		<a class="imgbit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=500%y2=400%w=200">Butterfly Body W</a>
 	</div>
 	
 	<hr />
 	
 	<h2>Explicit Height</h2>
 	<div>
-		<p>You guessed it! If you want an image to be scaled to a specific height you can add a height parameter. <strong>&h=200 will scale the image to 200px tall</strong>.</p>
+		<p>You guessed it! If you want an image to be scaled to a specific height you can add a height parameter. <strong>%h=200 will scale the image to 200px tall</strong>.</p>
 		<pre>
-&lt;a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&h=200"&gt;Butterfly Body H&lt;/a&gt;
+&lt;a class="imgbit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%h=200"&gt;Butterfly Body H&lt;/a&gt;
 		</pre>
-		<a class="imgbit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&h=200">Butterfly Body H</a>
+		<a class="imgbit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%h=200">Butterfly Body H</a>
 	</div>
 	
 	<hr/>
@@ -81,9 +81,9 @@
 	<div>
 		<p>If you want just the clipped image, no caption, no source button, add <strong>min</strong> to the <strong>&lt;a&gt;'s class attribute</strong>.</p>
 		<pre>
-&lt;a class="imgbit min" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200"&gt;&lt;/a&gt;
+&lt;a class="imgbit min" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200"&gt;&lt;/a&gt;
 		</pre>
-		<a class="imgbit min" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200"></a>
+		<a class="imgbit min" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200"></a>
 	</div>
 	
 	<hr/>
@@ -92,9 +92,9 @@
 	<div>
 		<p>If you want an editable caption, because oh say you're using imgbit as part of a larger application which requires you to have an editable caption pass the 'edit' class.</p>
 		<pre>
-&lt;a class="imgbit edit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200"&gt;You can edit this caption! Wow!&lt;/a&gt;
+&lt;a class="imgbit edit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200"&gt;You can edit this caption! Wow!&lt;/a&gt;
 		</pre>
-		<a class="imgbit edit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200">You can edit this caption! Wow!</a>
+		<a class="imgbit edit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200">You can edit this caption! Wow!</a>
 	</div>
 	
 	<hr />
@@ -103,9 +103,9 @@
 	<div>
 		<p>If you want color add a c=[hex] parameter.  This does not work with the 'min' option.</p>
 		<pre>
-&lt;a class="imgbit edit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200&c=ffa9a9"&gt;You can edit this caption! Wow!&lt;/a&gt;
+&lt;a class="imgbit edit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200%c=ffa9a9"&gt;You can edit this caption! Wow!&lt;/a&gt;
 		</pre>
-		<a class="imgbit edit" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200&c=ffa9a9">You can edit this caption! Wow!</a>
+		<a class="imgbit edit" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200%c=ffa9a9">You can edit this caption! Wow!</a>
 	</div>
 	
 	<hr />
@@ -115,9 +115,9 @@
 		<p>If you want to add a close button add the 'closable' class.</p>
 		<p>You'll need to listen for the IMGBIT-CLOSED event to actually do any closing...  More documentation on that to come.</p>
 		<pre>
-&lt;a class="imgbit edit closable" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200"&gt;Click X to close&lt;/a&gt;
+&lt;a class="imgbit edit closable" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200"&gt;Click X to close&lt;/a&gt;
 		</pre>
-		<a class="imgbit edit closable" href="../../img/morpho.jpg?x1=200&y1=100&x2=400&y2=400&w=200">Click X to close</a>
+		<a class="imgbit edit closable" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200">Click X to close</a>
 	</div>
 	
 </body>
