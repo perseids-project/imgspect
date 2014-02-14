@@ -1005,7 +1005,7 @@ Culuh.prototype.invert = function( _out ) {
 		//------------------------
 		//	Register click event  
 		//------------------------
-		$( self.clicker ).click( function( _e ) {
+		$( self.clicker ).on( 'click touchstart', function( _e ) {
 			if ( self.isOpen() ) {
 				self.close();
 			}
@@ -3606,9 +3606,9 @@ In the drop-down view click an img to find its original position in the larger i
 		//  Deal with it.
 		//------------------------------------------------------------
 		var x = ( _e.clientX != undefined ) ? _e.clientX : _e.originalEvent.pageX;
-		var y = ( _e.clientY != undefined ) ? _e.clientY : _e.originalEvent.pageY;
+		var y = ( _e.clientY != undefined ) ? _e.clientY + $(window).scrollTop() : _e.originalEvent.pageY;
 		var left = x - vp.left;
-		var top = y - vp.top + $(window).scrollTop();
+		var top = y - vp.top;
 		return { 'left':left, 'top':top }
 	}
 	
