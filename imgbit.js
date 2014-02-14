@@ -42,7 +42,8 @@
 		//------------------------------------------------------------
 		self.events = {
 			change: 'IMGBIT-CHANGE',
-			closed: 'IMGBIT-CLOSED'
+			closed: 'IMGBIT-CLOSED',
+			frame: 'IMGBIT-FRAME'
 		}
 		
 		//------------------------------------------------------------
@@ -482,14 +483,23 @@
 	 */
 	imgbit.prototype.sequence = function( _sequence, _loop, _i ) {
 		var self = this;
+		//------------------------------------------------------------
+		//  Default values
+		//------------------------------------------------------------
 		_i = ( _i != undefined ) ? _i : 0;
 		_loop = ( _loop == undefined ) ? false : _loop;
+		//------------------------------------------------------------
+		//  Looping logic...
+		//------------------------------------------------------------
 		if ( _sequence.length <= _i ) {
 			if ( _loop == true ) {
 				self.sequence( _sequence, _loop, 0 );
 			}
 			return;
 		}
+		//------------------------------------------------------------
+		//  Put sequence config in place
+		//------------------------------------------------------------
 		self.param.x1 = _sequence[ _i ]['coords'][0];
 		self.param.y1 = _sequence[ _i ]['coords'][1];
 		self.param.x2 = _sequence[ _i ]['coords'][2];
@@ -498,7 +508,7 @@
 		var wipe = _sequence[ _i ]['wipe'];
 		var stay = _sequence[ _i ]['stay']
 		//------------------------------------------------------------
-		//  animate transitions
+		//  Animate Transitions
 		//------------------------------------------------------------
 		$( 'img.star, .view', self.elem ).css({
 			transition: "all " + wipe + "s",
@@ -510,15 +520,30 @@
 		});
 		self.imgMove();
 		self.viewCrop();
-		$( '.text', self.elem ).hide();
+		//------------------------------------------------------------
+		//  Captions, Captions, Captions
+		//------------------------------------------------------------
+		$( '.caption', self.elem ).hide();
+		var caption = null;
 		if ( 'caption' in _sequence[ _i ] ) {
-			$( '.text', self.elem ).show();
-			self.setCaption( _sequence[ _i ]['caption'] );
+			caption = _sequence[ _i ]['caption'];
+			if ( self.options['style'] != 'min' || self.options['style'] != null ) {
+				$( '.caption', self.elem ).show();
+				self.setCaption( caption );
+			}
 		}
+		//------------------------------------------------------------
+		//  Next Frame!
+		//------------------------------------------------------------
 		_i++;
 		setTimeout( function() {  
 			self.sequence( _sequence, _loop, _i );
-		},(stay+wipe)*1000 );
+		}, (stay+wipe) * 1000 );
+		//------------------------------------------------------------
+		//  Alert the DOM of what you're doing.
+		//  Passing along the caption for custom display.
+		//------------------------------------------------------------
+		$( self.elem ).trigger( self.events['frame'], { 'caption': caption } );
 	}
 	
 	/**

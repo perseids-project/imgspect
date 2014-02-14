@@ -1,9 +1,33 @@
 <html>
 <head>
 	<link rel="stylesheet" href="../../../src/css/imgbit.css">
+	<style type="text/css">
+		body {
+			margin: 0;
+			background-color: #222;
+		}
+		#imgbit {
+			bottom: 150;
+			margin: auto;
+			position: absolute;
+			left:0; right:0;
+		}
+		#caption {
+			width: 100%;
+			position: absolute;
+			bottom:0;
+			color: #AAA;
+			padding: 50px 0;
+			text-align: center;
+			background-color: rgba( 0,0,0,.75 );
+			z-index: 9999;
+			font-size: 25px;
+		}
+	</style>
 </head>
 <body>
-	<a id="imgbit" href="../../img/wheres-waldo.jpg"></a>
+	<a id="imgbit" class="min" href="../../img/wheres-waldo.jpg"></a>
+	<div id="caption"></div>
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="../../../third_party/jslib/src/js/jQueryPlus.js"></script>
@@ -14,19 +38,28 @@
 <script type="text/javascript">
 	$(document).ready( function(){
 		bit = $( '#imgbit' ).imgbit().data( '#imgbit' );
+		$( bit.elem ).on( 'IMGBIT-FRAME', function( _e, _data ) {
+			$( '#caption' ).html( _data['caption'] )
+		});
 		bit.sequence([
 			{
 				coords: [ 100, 200, 300, 400, 1 ],
 				stay: 5,
-				wipe: .25,
-				caption: "I don't mind."
+				wipe: 2,
+				caption: "Boom"
 			},
 			{
 				coords: [ 500, 600, 700, 800, .5 ],
 				stay: 5,
 				wipe: 2,
-				caption: "Do you mind?"
+				caption: "Who's this guy?"
 			},
+			{
+				coords: [ 0, 0, 1000, 600, 1 ],
+				stay: 5,
+				wipe: 2,
+				caption: "Big shot!"
+			}
 		], true );
 	});
 </script>

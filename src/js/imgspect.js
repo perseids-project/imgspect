@@ -482,6 +482,10 @@ In the drop-down view click an img to find its original position in the larger i
 		self.liteResize();
 	}
 	
+	/**
+	 * Store location difference of nav window and dragger
+	 * for more accurate placement during window resizes.
+	 */
 	imgspect.prototype.dragNavDiff = function() {
 		var self = this;
 		var dleft = $( '.nav .drag', self.elem ).offset().left;
