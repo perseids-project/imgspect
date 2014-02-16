@@ -6,28 +6,34 @@
 			margin: 0;
 			background-color: #222;
 		}
-		#imgbit {
-			bottom: 150;
-			margin: auto;
-			position: absolute;
-			left:0; right:0;
+		.table {
+			width: 100%;
+			height: 100%;
+			display: table;
+		}
+		.cell {
+			display: table-cell;
+			text-align: center;
+			vertical-align: middle;
 		}
 		#caption {
-			width: 100%;
-			position: absolute;
-			bottom:0;
+			font-family: Georgia, serif;
+			letter-spacing: .05em;
 			color: #AAA;
-			padding: 50px 0;
+			padding: 25px 0;
 			text-align: center;
-			background-color: rgba( 0,0,0,.75 );
-			z-index: 9999;
+			width: 100%;
 			font-size: 25px;
 		}
 	</style>
 </head>
 <body>
-	<a id="imgbit" class="min" href="../../img/wheres-waldo.jpg"></a>
-	<div id="caption"></div>
+	<div class="table">
+		<div class="cell">
+			<a id="imgbit" class="min" href="../../img/wheres-waldo.jpg"></a>
+			<div id="caption"></div>
+		</div>
+	</div>
 </body>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="../../../third_party/jslib/src/js/jQueryPlus.js"></script>
@@ -43,16 +49,22 @@
 		});
 		bit.sequence([
 			{
-				coords: [ 100, 200, 300, 400, 1 ],
+				coords: [ 100, 200, 300, 300, 1 ],
 				stay: 5,
 				wipe: 2,
 				caption: "Boom"
 			},
 			{
-				coords: [ 500, 600, 700, 800, .5 ],
+				coords: [ 500, 600, 300, 300, 1.5 ],
 				stay: 5,
 				wipe: 2,
 				caption: "Who's this guy?"
+			},
+			{
+				coords: [ 700, 900, 150, 150, 3 ],
+				stay: 5,
+				wipe: 2,
+				caption: "Dogfood panty-house."
 			},
 			{
 				coords: [ 0, 0, 1000, 600, 1 ],

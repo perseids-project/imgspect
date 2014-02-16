@@ -502,8 +502,8 @@
 		//------------------------------------------------------------
 		self.param.x1 = _sequence[ _i ]['coords'][0];
 		self.param.y1 = _sequence[ _i ]['coords'][1];
-		self.param.x2 = _sequence[ _i ]['coords'][2];
-		self.param.y2 = _sequence[ _i ]['coords'][3];
+		self.param.x2 = _sequence[ _i ]['coords'][2] + self.param.x1;
+		self.param.y2 = _sequence[ _i ]['coords'][3] + self.param.y1;
 		self.param.z = _sequence[ _i ]['coords'][4];
 		var wipe = _sequence[ _i ]['wipe'];
 		var stay = _sequence[ _i ]['stay']
