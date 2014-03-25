@@ -14,7 +14,7 @@
  */
 jQuery.fn.cursorToEnd = function() {
 	return this.each( function() {
-		$( this ).focus();
+		jQuery( this ).focus();
 		
 		//------------------------------------------------------------
 		//   If this function exists...
@@ -25,7 +25,7 @@ jQuery.fn.cursorToEnd = function() {
 			// Double the length because Opera is inconsistent 
 			// about whether a carriage return is one character or two.
 			//------------------------------------------------------------
-			var len = $( this ).val().length * 2;
+			var len = jQuery( this ).val().length * 2;
 			this.setSelectionRange( len, len );
 		} 
 		else {
@@ -33,7 +33,7 @@ jQuery.fn.cursorToEnd = function() {
 			// ... otherwise replace the contents with itself
 			// ( Doesn't work in Google Chrome )
 			//------------------------------------------------------------
-			$( this ).val( $( this ).val() );
+			jQuery( this ).val( jQuery( this ).val() );
 		}
 		//------------------------------------------------------------
 		// Scroll to the bottom, in case we're in a tall textarea
@@ -47,7 +47,7 @@ jQuery.fn.cursorToEnd = function() {
  *  Get an element's html
  */
 jQuery.fn.myHtml = function() {
-	return $( this ).clone().wrap( '<div>' ).parent().html();
+	return jQuery( this ).clone().wrap( '<div>' ).parent().html();
 }
 
 /**
@@ -56,7 +56,7 @@ jQuery.fn.myHtml = function() {
  *  @return { Number } Time in milliseconds
  */
 jQuery.fn.transLength = function() {
-	var trans = $( this ).css( 'transition' );
+	var trans = jQuery( this ).css( 'transition' );
 	var res = trans.match( / [\d|\.]+s/g );
 	var sec = Number( res[0].replace( 's','' ) );
 	return sec*1000;
@@ -66,6 +66,29 @@ jQuery.fn.transLength = function() {
  */
 String.prototype.smoosh = function() {
 	return this.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
+}
+
+/**
+ * Alpha-numeric and spaces only
+ */
+String.prototype.alphaSpaceOnly = function() {
+	return this.replace(/[^\w\s]/gi, '');
+}
+
+/**
+ * Capitalize the first letter of a string
+ */
+String.prototype.capitalize = function() {
+	return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+/**
+ * Repeat a string n times
+ *
+ * @param {string} _n How many times you want to repeat a string
+ */
+String.prototype.repeat = function( _n ) {
+	return new Array( _n + 1 ).join( this );
 }
 
 /**
@@ -1005,7 +1028,7 @@ Culuh.prototype.invert = function( _out ) {
 		//------------------------
 		//	Register click event  
 		//------------------------
-		$( self.clicker ).on( 'click touchstart', function( _e ) {
+		$( self.clicker ).click( function( _e ) {
 			if ( self.isOpen() ) {
 				self.close();
 			}
@@ -2218,8 +2241,8 @@ PerseidsBridge.imgspect = ( function() {
 		//------------------------------------------------------------
 		self.param.x1 = _sequence[ _i ]['coords'][0];
 		self.param.y1 = _sequence[ _i ]['coords'][1];
-		self.param.x2 = _sequence[ _i ]['coords'][2];
-		self.param.y2 = _sequence[ _i ]['coords'][3];
+		self.param.x2 = _sequence[ _i ]['coords'][2] + self.param.x1;
+		self.param.y2 = _sequence[ _i ]['coords'][3] + self.param.y1;
 		self.param.z = _sequence[ _i ]['coords'][4];
 		var wipe = _sequence[ _i ]['wipe'];
 		var stay = _sequence[ _i ]['stay']
