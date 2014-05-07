@@ -471,6 +471,22 @@ In the drop-down view click an img to find its original position in the larger i
 	}
 	
 	/**
+	 * Update the output area with a sequence
+	 */
+	imgspect.prototype.outputSequence = function() {
+		var self = this;
+		$( '.output', self.elem ).val('');
+		//------------------------------------------------------------
+		//  Loop through the imgbits and return a sequence object
+		//------------------------------------------------------------
+		var items = [];
+		for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
+			items[i] = self.imgbits[i].sequenceFormat();
+		}
+		$( '.output', self.elem ).val( JSON.stringify( items ) );
+	}
+	
+	/**
 	 * Resize imgspect
 	 */
 	imgspect.prototype.resize = function() {
@@ -1005,6 +1021,7 @@ In the drop-down view click an img to find its original position in the larger i
 				%y1='+lite.y1+'\
 				%x2='+lite.x2+'\
 				%y2='+lite.y2+'\
+				%z='+lite.zoom+'\
 				%c='+color.sat( 0.5, true ).hex()+'\
 				">#</a>';
 		return tag.smoosh();

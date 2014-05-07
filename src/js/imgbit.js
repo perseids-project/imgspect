@@ -505,8 +505,8 @@
 		self.param.x2 = _sequence[ _i ]['coords'][2] + self.param.x1;
 		self.param.y2 = _sequence[ _i ]['coords'][3] + self.param.y1;
 		self.param.z = _sequence[ _i ]['coords'][4];
-		var wipe = _sequence[ _i ]['wipe'];
-		var stay = _sequence[ _i ]['stay']
+		var wipe = ( _sequence[ _i ]['wipe'] == undefined ) ? 1 : _sequence[ _i ]['wipe'];
+		var stay = ( _sequence[ _i ]['stay'] == undefined ) ? 5 : _sequence[ _i ]['stay'];
 		//------------------------------------------------------------
 		//  Animate Transitions
 		//------------------------------------------------------------
@@ -587,6 +587,26 @@
 						'+self.caption+'\
 					<a>';
 		return html.smoosh();
+	}
+	
+	/**
+	 * Turn imgbit into imgbit constructor HTML
+	 * You know the markup you need to start imgbit
+	 *
+	 * @return { string } HTML representation
+	 */
+	imgbit.prototype.sequenceFormat = function() {
+		var self = this;
+		var x1 = parseInt( self.param.x1 );
+		var y1 = parseInt( self.param.y1 );
+		var width = parseInt( self.param.x2 ) - parseInt( self.param.x1 );
+		var height = parseInt( self.param.y2 ) - parseInt( self.param.y1 );
+		var zoom = self.param.z;
+		var output = {
+			coords: [ x1, y1, width, height, zoom ],
+			caption: self.caption
+		};
+		return output;
 	}
 	
 	/**

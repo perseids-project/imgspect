@@ -1,0 +1,52 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../../../third_party/menumucil/css/menumucil.css">
+	<link rel="stylesheet" href="../../../src/css/imgspect.css">
+	<link rel="stylesheet" href="../../../src/css/imgbit.css">
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+		#app {
+			background-color: #222;
+		}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<img id="bosch" src="../../img/the-garden-of-earthly-delights.jpg" />
+	</div>
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script src="../../../third_party/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+<script src="../../../third_party/jslib/src/js/jQueryPlus.js"></script>
+<script src="../../../third_party/jslib/src/js/StringExt.js"></script>
+
+<!-- Dynamic Duo -->
+<script src="../../../third_party/jslib/third_party/datejs/date.js"></script>
+<script src="../../../third_party/jslib/src/js/TimeStamp.js"></script>
+
+<script src="../../../third_party/jslib/src/js/ObjectExt.js"></script>
+<script src="../../../third_party/jslib/src/js/Culuh.js"></script>
+<script src="../../../third_party/jslib/src/js/Sorted.js"></script>
+
+<script src="../../../third_party/menumucil/menumucil.js"></script>
+<script src="../../../src/js/imgspect.js"></script>
+<script src="../../../src/js/imgbit.js"></script>
+<script type="text/javascript">
+	var spect = null;
+	$(window).load( function(){
+		/**
+		 * Start imgspect and grab a handler
+		 */
+		spect = $( '#bosch' ).imgspect().data( '#bosch' );
+		//------------------------------------------------------------
+		// Everytime imgspect changes update the output.
+		//------------------------------------------------------------
+		$( spect.elem ).on( 'IMGSPECT-UPDATE', function() {
+			spect.outputSequence();
+		});
+	});
+</script>
+</html>
