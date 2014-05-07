@@ -4,12 +4,12 @@
 [submodule "third_party/jslib"]
 	path = third_party/jslib
 	url = https://github.com/caesarfeta/jslib
-[submodule "third_party/sqUIsh"]
-	path = third_party/sqUIsh
-	url = https://github.com/caesarfeta/sqUIsh
 [submodule "third_party/plopup"]
 	path = third_party/plopup
 	url = http://github.com/caesarfeta/plopup
 [submodule "third_party/jquery-ui-touch-punch"]
 	path = third_party/jquery-ui-touch-punch
 	url = https://github.com/furf/jquery-ui-touch-punch
+[submodule "squish"]
+	path = squish
+	url = https://github.com/caesarfeta/squish

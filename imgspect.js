@@ -14,7 +14,7 @@
  */
 jQuery.fn.cursorToEnd = function() {
 	return this.each( function() {
-		$( this ).focus();
+		jQuery( this ).focus();
 		
 		//------------------------------------------------------------
 		//   If this function exists...
@@ -25,7 +25,7 @@ jQuery.fn.cursorToEnd = function() {
 			// Double the length because Opera is inconsistent 
 			// about whether a carriage return is one character or two.
 			//------------------------------------------------------------
-			var len = $( this ).val().length * 2;
+			var len = jQuery( this ).val().length * 2;
 			this.setSelectionRange( len, len );
 		} 
 		else {
@@ -33,7 +33,7 @@ jQuery.fn.cursorToEnd = function() {
 			// ... otherwise replace the contents with itself
 			// ( Doesn't work in Google Chrome )
 			//------------------------------------------------------------
-			$( this ).val( $( this ).val() );
+			jQuery( this ).val( jQuery( this ).val() );
 		}
 		//------------------------------------------------------------
 		// Scroll to the bottom, in case we're in a tall textarea
@@ -44,10 +44,24 @@ jQuery.fn.cursorToEnd = function() {
 };
 
 /**
+ *  Remove whitespace
+ *  Copied from
+ *  http://stackoverflow.com/questions/1539367/remove-whitespace-and-line-breaks-between-html-elements-using-jquery
+ */
+jQuery.fn.noSpace = function() {
+	textNodes = this.contents().filter(
+		function() { 
+			return ( this.nodeType == 3 && !/\S/.test( this.nodeValue ) );
+		}
+	).remove();
+	return this;
+}
+
+/**
  *  Get an element's html
  */
 jQuery.fn.myHtml = function() {
-	return $( this ).clone().wrap( '<div>' ).parent().html();
+	return jQuery( this ).clone().wrap( '<div>' ).parent().html();
 }
 
 /**
@@ -56,7 +70,7 @@ jQuery.fn.myHtml = function() {
  *  @return { Number } Time in milliseconds
  */
 jQuery.fn.transLength = function() {
-	var trans = $( this ).css( 'transition' );
+	var trans = jQuery( this ).css( 'transition' );
 	var res = trans.match( / [\d|\.]+s/g );
 	var sec = Number( res[0].replace( 's','' ) );
 	return sec*1000;
@@ -66,6 +80,60 @@ jQuery.fn.transLength = function() {
  */
 String.prototype.smoosh = function() {
 	return this.replace(/(\r\n+|\n+|\r+|\t+)/gm,'');
+}
+
+/**
+ * Splice in a string at a specified index
+ *
+ * @param { string } _string
+ * @param { int } _index The position in the string
+ */
+String.prototype.splice = function( _string, _index ) {
+    return ( this.slice( 0, Math.abs( _index ) ) + _string + this.slice( Math.abs( _index )));
+};
+
+/**
+ * Strip html tags
+ */
+String.prototype.stripTags = function() {
+	return this.replace(/<\/?[^>]+(>|$)/g, '' );
+}
+
+/**
+ * Remove extra spaces
+ */
+String.prototype.oneSpace = function() {
+	return this.replace(/\s{2,}/g, ' ');
+}
+
+/**
+ * Alpha-numeric and spaces only
+ */
+String.prototype.alphaSpaceOnly = function() {
+	return this.replace(/[^\w\s]/gi, '');
+}
+
+/**
+ * Alpha-numeric characters only
+ */
+String.prototype.alphaOnly = function() {
+	return this.replace(/[^\w]/gi, '');
+}
+
+/**
+ * Capitalize the first letter of a string
+ */
+String.prototype.capitalize = function() {
+	return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+/**
+ * Repeat a string n times
+ *
+ * @param {string} _n How many times you want to repeat a string
+ */
+String.prototype.repeat = function( _n ) {
+	return new Array( _n + 1 ).join( this );
 }
 
 /**
@@ -110,6 +178,83 @@ String.prototype.occurs = function( _search, _overlap ) {
 		}
 	}
 	return n;
+}
+
+/**
+ * Find the positions of occurences of a substring
+ *
+ * @parm {string} _sub : The search string
+ * @param {boolean} _overlap : Optional. Default--false.
+ * @param {boolean} _ignoreXML : Optional. Check to see if string is inside XML/HTML element.
+ * @param {boolean} _onlyWords : Optional. Make sure string is a discrete word.
+ * @return {Array} : An array of integers.
+ */
+String.prototype.positions = function( _search, _overlap, _ignoreXML, _onlyWords ) {
+//	console.log( '----------' );
+//	console.log( _search );
+	var string = this;
+	//------------------------------------------------------------
+	//  Make sure _search is a string
+	//------------------------------------------------------------
+	_search+="";
+	//------------------------------------------------------------
+	//  Otherwise start counting.
+	//------------------------------------------------------------
+	var pos=0;
+	//------------------------------------------------------------
+	//  String overlapping allowed?
+	//------------------------------------------------------------
+	var step = ( _overlap ) ? 1 : _search.length;
+	var p = [];
+	while ( true ) {
+		var ok = true;
+		pos = string.indexOf( _search, pos );
+		if ( pos >= 0 ) {
+			//------------------------------------------------------------
+			//  Ignore if search string was found within an XML/HTML tag
+			//------------------------------------------------------------
+			if ( _ignoreXML == true ) {
+				for ( var i=pos; i<string.length; i++ ) {
+					if ( string[i] == '<' ) {
+						break;
+					}
+					if ( string[i] == '>' ) {
+						ok = false;
+					}
+				}
+			}
+			//------------------------------------------------------------
+			//  Check to see if search string is an isolated word
+			//------------------------------------------------------------
+			if ( _onlyWords == true ) {
+//				console.log( string.substr((pos-1),(pos+_search.length+1)) );
+//				console.log( string.substr((pos-1),(pos+_search.length+1)).isAlphaNum() );
+				if ( string.substr((pos-1),(pos+_search.length+1)).isAlphaNum() == true ) {
+					ok = false;
+				}
+			}
+			//------------------------------------------------------------
+			//  If everything is good
+			//------------------------------------------------------------
+			if ( ok == true ) {
+				p.push( pos );
+			}
+			pos += step;
+		}
+		else {
+			break;
+		}
+	}
+	return p;
+}
+
+/*
+ * Insert a substring at a particular index
+ *
+ * @return { string } The modified string
+ */
+String.prototype.insertAt = function( _index, _string ) {
+	return this.substr( 0, _index) + _string + this.substr( _index );
 }
 
 /*
@@ -167,6 +312,18 @@ String.prototype.report = function() {
  */
 String.prototype.lines = function() {
 	return this.split("\n");
+}
+
+/*
+ * Check to see if string is composed of only alphanumeric characters
+ *
+ * @return { boolean }
+ */
+String.prototype.isAlphaNum = function() {
+	if ( /[^a-zA-Z0-9]/.test( this ) ) {
+		return false;
+	}
+	return true;
 }
 
 /*
@@ -849,6 +1006,19 @@ Culuh.prototype.sat = function( _sat, _out ) {
 		out.sat( _sat );
 		return out;
 	}
+}
+
+/**
+ * Return rgba string with specified alpha value
+ *
+ * @param { float } _float A number between 0 and 1
+ * @return { string }
+ */
+Culuh.prototype.toAlpha = function( _float ) {
+	_float = parseFloat( _float );
+	_float = ( _float < 0 ) ? 0 : _float;
+	_float = ( _float > 1 ) ? 1 : _float;
+	return 'rgba('+this.r+','+this.g+','+this.b+','+_float+')';
 }
 
 /**
@@ -2218,8 +2388,8 @@ PerseidsBridge.imgspect = ( function() {
 		//------------------------------------------------------------
 		self.param.x1 = _sequence[ _i ]['coords'][0];
 		self.param.y1 = _sequence[ _i ]['coords'][1];
-		self.param.x2 = _sequence[ _i ]['coords'][2];
-		self.param.y2 = _sequence[ _i ]['coords'][3];
+		self.param.x2 = _sequence[ _i ]['coords'][2] + self.param.x1;
+		self.param.y2 = _sequence[ _i ]['coords'][3] + self.param.y1;
 		self.param.z = _sequence[ _i ]['coords'][4];
 		var wipe = _sequence[ _i ]['wipe'];
 		var stay = _sequence[ _i ]['stay']

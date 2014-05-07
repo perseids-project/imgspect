@@ -1,4 +1,4 @@
-../menumucil/css/menumucil.css
-../plopup/src/css/plopup.css
-../../src/css/imgbit.css
-../../src/css/imgspect.css
+third_party/menumucil/css/menumucil.css
+third_party/plopup/src/css/plopup.css
+src/css/imgbit.css
+src/css/imgspect.css
