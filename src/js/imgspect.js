@@ -210,9 +210,9 @@
 		//  Create the zoom buttons
 		//------------------------------------------------------------
 		$( '.tools', self.elem ).append('\
-				<a href="#" class="tool zoom in">+</a>\
-				<a href="#" class="tool zoom out">-</a>\
-		 ');
+			<a href="#" class="tool zoom in">+</a>\
+			<a href="#" class="tool zoom out">-</a>\
+		');
 		
 		//------------------------------------------------------------
 		//  Build the color

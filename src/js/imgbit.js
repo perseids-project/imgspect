@@ -641,6 +641,9 @@
 	 * 
 	 * @return { array } [ top-left-x, top-left-y, width, height ]
 	 */
+	imgbit.prototype.relative = function() {
+		return this.citeCoords();
+	}
 	imgbit.prototype.citeCoords = function() {
 		var self = this;
 		var output = [];
