@@ -663,7 +663,7 @@
 			self.param.x1 = self.param.x * self.imgWidth;
 			self.param.y1 = self.param.y * self.imgHeight;
 			self.param.x2 = self.param.x1 + self.param.w * self.imgWidth;
-			self.param.y2 = self.param.y1 + self.param.y * self.imgHeight;
+			self.param.y2 = self.param.y1 + self.param.h * self.imgHeight;
 			delete self.param.x;
 			delete self.param.y;
 			delete self.param.w;
