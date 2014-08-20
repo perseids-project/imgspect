@@ -659,7 +659,7 @@
 	 */
 	imgbit.prototype.toExplicit = function() {
 		var self = this;
-		if ( self.param.w < 1 && self.param.h < 1 && self.param.x < 1 && self.param.y < 1 ) {
+		if ( self.param.w <= 1 && self.param.h <= 1 && self.param.x <= 1 && self.param.y <= 1 ) {
 			self.param.x1 = self.param.x * self.imgWidth;
 			self.param.y1 = self.param.y * self.imgHeight;
 			self.param.x2 = self.param.x1 + self.param.w * self.imgWidth;
@@ -669,7 +669,6 @@
 			delete self.param.w;
 			delete self.param.h;
 		}
-		console.log( self.param );
 	}
 	
 	/**
