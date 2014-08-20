@@ -3,7 +3,7 @@
 	<link rel="stylesheet" href="../../../src/css/imgbit.css">
 </head>
 <body>
-	<h1>Do you only want a part of this image?imgbit=</h1>
+	<h1>Do you only want a part of this image?</h1>
 	
 	<img src="../../img/morpho.jpg" />
 	
@@ -15,16 +15,16 @@
 	
 	<h2>Include the necessary files</h2>
 	<pre>
-&lt;script src=%quot;http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js%quot;&gt;&lt;/script&gt;
-&lt;script src=%quot;imgbit.js%quot;&gt;&lt;/script&gt;
-&lt;link rel=%quot;stylesheet%quot; href=%quot;css/imgbit.css%quot;&gt;
+&lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"&gt;&lt;/script&gt;
+&lt;script src="imgbit.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="css/imgbit.css"&gt;
 	</pre>
 	
 	<h2>Activate the imgbit plug-in</h2>
 	<pre>
-&lt;script type=%quot;text/javascript%quot;&gt;
+&lt;script type="text/javascript"&gt;
 	$(document).ready( function(){
-		$( %#x27;.imgbit%#x27; ).imgbit();
+		$(".imgbit" ).imgbit();
 	});
 &lt;/script&gt;
 	</pre>
@@ -118,6 +118,17 @@
 &lt;a class="imgbit edit closable" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200"&gt;Click X to close&lt;/a&gt;
 		</pre>
 		<a class="imgbit edit closable" href="../../img/morpho.jpg?imgbit=x1=200%y1=100%x2=400%y2=400%w=200">Click X to close</a>
+	</div>
+	
+	<hr />
+	
+	<h2>Relative</h2>
+	<div>
+		<p>You can use relative coordinates like so.</p>
+		<pre>
+&lt;a class="imgbit min" href="../../img/morpho.jpg?imgbit=x=0.5%y=0.5%w=0.5%h=0.5"&gt;&lt;/a&gt;
+		</pre>
+		<a class="imgbit min" href="../../img/morpho.jpg?imgbit=x=0.5%y=0.5%w=0.5%h=0.5"></a>
 	</div>
 	
 </body>

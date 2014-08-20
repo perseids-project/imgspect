@@ -81,6 +81,43 @@
 		}
 		
 		//------------------------------------------------------------
+		//  Check for special class options
+		//------------------------------------------------------------
+		self.specClass();
+		
+		//------------------------------------------------------------
+		//	Check to see if img is in album
+		//------------------------------------------------------------
+		self.build();
+	}
+	
+	/**
+	 * Check for special classes
+	 */
+	imgbit.prototype.specClass = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
+		//	Check to see if special style classes have been passed
+		//------------------------------------------------------------
+		if ( $( self.elem ).hasClass('min') ) {
+			self.options['style'] = null;
+		}
+		if ( $( self.elem ).hasClass('edit') ) {
+			self.options['style'] = 'edit';
+		}
+		if ( $( self.elem ).hasClass('closable') ) {
+			self.options['closable'] = true;
+		}
+	}
+	
+	/**
+	 * Build the imgbit DOM elements
+	 */
+	imgbit.prototype.fixParams = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
 		//	Explicit width?
 		//------------------------------------------------------------
 		if ( self.param.w != undefined ) {
@@ -105,24 +142,6 @@
 		//	Zoom?
 		//------------------------------------------------------------
 		self.param.z = ( self.param.z == undefined ) ? 1 : self.param.z;
-		
-		//------------------------------------------------------------
-		//	Check to see if special style classes have been passed
-		//------------------------------------------------------------
-		if ( $( self.elem ).hasClass('min') ) {
-			self.options['style'] = null;
-		}
-		if ( $( self.elem ).hasClass('edit') ) {
-			self.options['style'] = 'edit';
-		}
-		if ( $( self.elem ).hasClass('closable') ) {
-			self.options['closable'] = true;
-		}
-		
-		//------------------------------------------------------------
-		//	Check to see if img is in album
-		//------------------------------------------------------------
-		self.build();
 	}
 	
 	/**
@@ -181,11 +200,18 @@
 		var img = new Image();
 		img.onload = function() {
 			$( this ).addClass('star');
+			
 			//------------------------------------------------------------
 			//	Store the orignal size of the image
 			//------------------------------------------------------------
 			self.imgWidth = img.width;
 			self.imgHeight = img.height;
+			
+			//------------------------------------------------------------
+			//  Relative to explicit
+			//------------------------------------------------------------
+			self.toExplicit();
+			self.fixParams();
 			
 			//------------------------------------------------------------
 			//	Add the image to the view
@@ -618,14 +644,32 @@
 	imgbit.prototype.citeCoords = function() {
 		var self = this;
 		var output = [];
-		output[0] = self.param['x1'] / self.imgWidth;
-		output[1] = self.param['y1'] / self.imgHeight;
-		output[2] = ( self.param['x2'] - self.param['x1'] ) / self.imgWidth;
-		output[3] = ( self.param['y2'] - self.param['y1'] ) / self.imgHeight;
+		output[0] = self.param.x1 / self.imgWidth;
+		output[1] = self.param.y1 / self.imgHeight;
+		output[2] = ( self.param.x2 - self.param.x1 ) / self.imgWidth;
+		output[3] = ( self.param.y2 - self.param.y1 ) / self.imgHeight;
 		for( var i=0, ii=output.length; i<ii; i++ ) {
 			output[i] = output[i].toFixed(4);
 		}
 		return output;
+	}
+	
+	/**
+	 * @return { boolean }
+	 */
+	imgbit.prototype.toExplicit = function() {
+		var self = this;
+		if ( self.param.w < 1 && self.param.h < 1 && self.param.x < 1 && self.param.y < 1 ) {
+			self.param.x1 = self.param.x * self.imgWidth;
+			self.param.y1 = self.param.y * self.imgHeight;
+			self.param.x2 = self.param.x1 + self.param.w * self.imgWidth;
+			self.param.y2 = self.param.y1 + self.param.y * self.imgHeight;
+			delete self.param.x;
+			delete self.param.y;
+			delete self.param.w;
+			delete self.param.h;
+		}
+		console.log( self.param );
 	}
 	
 	/**
