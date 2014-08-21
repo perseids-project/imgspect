@@ -102,14 +102,6 @@
 		self.start();
 		
 		//------------------------------------------------------------
-		//  If a load parameter is passed to the constructor then
-		//  load it.
-		//------------------------------------------------------------
-		if ( self.options['load'] != null ) {
-			self.load( self.options['load'] );
-		}
-		
-		//------------------------------------------------------------
 		//  Let everything listening know imgspect is ready
 		//------------------------------------------------------------
 		$( self.elem ).trigger( self.events['ready'] );
@@ -1321,10 +1313,27 @@ In the drop-down view click an img to find its original position in the larger i
 	}
 	
 	/**
-	 * Load an imgspect object TODO
+	 * Load an imgspect object
 	 */	
-	imgspect.prototype.load = function( _obj ) {
+	imgspect.prototype.load = function( items ) {
 		var self = this;
+		for ( var i=0; i<items.length; i++ ) {
+			coords = self.relToExp( items[i] );
+			self.liteAdd( coords.x1, coords.y1, coords.x2, coords.y2 );				
+		}
+	}
+	
+	/**
+	 * Turn relative coordinates into explicit ones
+	 */
+	imgspect.prototype.relToExp = function( item ) {
+		var self = this;
+		var out = { x1:null, x2:null, y1:null, y2:null }	;
+		out.x1 = Math.round( item.x * self.orig_w );
+		out.y1 = Math.round( item.y * self.orig_h );
+		out.x2 = Math.round( out.x1 + item.width * self.orig_w );
+		out.y2 = Math.round( out.y1 + item.height * self.orig_h );
+		return out
 	}
 	
 	/**
