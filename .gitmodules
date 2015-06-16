@@ -1,15 +1,15 @@
 [submodule "third_party/menumucil"]
 	path = third_party/menumucil
-	url = https://github.com/caesarfeta/menumucil
+	url = https://github.com/perseids-project/menumucil
 [submodule "third_party/jslib"]
 	path = third_party/jslib
-	url = https://github.com/caesarfeta/jslib
+	url = https://github.com/perseids-project/jslib
 [submodule "third_party/plopup"]
 	path = third_party/plopup
-	url = http://github.com/caesarfeta/plopup
+	url = http://github.com/perseids-project/plopup
 [submodule "third_party/jquery-ui-touch-punch"]
 	path = third_party/jquery-ui-touch-punch
 	url = https://github.com/furf/jquery-ui-touch-punch
 [submodule "squish"]
 	path = squish
-	url = https://github.com/caesarfeta/squish
+	url = https://github.com/perseids-project/squish
