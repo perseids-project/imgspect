@@ -6,7 +6,7 @@
 	url = https://github.com/perseids-project/jslib
 [submodule "third_party/plopup"]
 	path = third_party/plopup
-	url = http://github.com/perseids-project/plopup
+	url = https://github.com/perseids-project/plopup
 [submodule "third_party/jquery-ui-touch-punch"]
 	path = third_party/jquery-ui-touch-punch
 	url = https://github.com/furf/jquery-ui-touch-punch
