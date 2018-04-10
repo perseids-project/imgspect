@@ -71,6 +71,9 @@ The imgspect project is the home of two closesly related jQuery plug-ins, the ep
 	</script>
 
 ## For further documentation browse the examples
+
+View the examples [here](http://perseids-project.github.io/imgspect/).
+
 ### imgspect
 	...	see ./examples/imgspect
 
