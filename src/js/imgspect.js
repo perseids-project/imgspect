@@ -517,6 +517,7 @@ In the drop-down view click an img to find its original position in the larger i
 		self.undoStart();
 		self.liteStart();
 		self.dragStart();
+		self.scrollStart();
 		self.sizeStart();
 		self.colorStart();
 	}
@@ -1108,6 +1109,51 @@ In the drop-down view click an img to find its original position in the larger i
 			left: nav_pos.left,
 			top: nav_pos.top
 		});
+	}
+
+	/**
+	 * Start scroll listener
+	 */
+	imgspect.prototype.scrollStart = function() {
+		var self = this;
+		var nav = $( '.nav', self.elem );
+		var drag = $( '.drag', self.elem );
+		var view = $( '.view', self.elem );
+
+		var callback = function(event) {
+			var dX = event.originalEvent.deltaX / 4;
+			var dY = event.originalEvent.deltaY / 4;
+			var nav_pos = nav.position();
+			var drag_pos = drag.position();
+
+			var nav_width = nav.width();
+			var nav_height = nav.height();
+			var drag_width = drag.width();
+			var drag_height = drag.height();
+
+			var drag_max_x = nav_pos.left + nav_width - drag_width;
+			var drag_max_y = nav_pos.top + nav_height - drag_height;
+
+			var top = drag_pos.top + dY;
+			var left = drag_pos.left + dX;
+
+			top = ( top < nav_pos.top ) ? nav_pos.top : top;
+			left = ( left < nav_pos.left ) ? nav_pos.left : left;
+			top = ( top > drag_max_y ) ? drag_max_y : top;
+			left = ( left > drag_max_x ) ? drag_max_x : left;
+
+			drag.css("top", top + "px");
+			drag.css("left", left  + "px");
+			drag_pos = drag.position();
+
+			self.dragHandler( nav_pos, drag_pos );
+			self.dragNavDiff();
+
+			event.preventDefault();
+		};
+
+		$(nav).on('wheel', callback);
+		$(view).on('wheel', callback);
 	}
 	
 	/**
