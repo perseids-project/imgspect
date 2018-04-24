@@ -81,6 +81,43 @@
 		}
 		
 		//------------------------------------------------------------
+		//  Check for special class options
+		//------------------------------------------------------------
+		self.specClass();
+		
+		//------------------------------------------------------------
+		//	Check to see if img is in album
+		//------------------------------------------------------------
+		self.build();
+	}
+	
+	/**
+	 * Check for special classes
+	 */
+	imgbit.prototype.specClass = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
+		//	Check to see if special style classes have been passed
+		//------------------------------------------------------------
+		if ( $( self.elem ).hasClass('min') ) {
+			self.options['style'] = null;
+		}
+		if ( $( self.elem ).hasClass('edit') ) {
+			self.options['style'] = 'edit';
+		}
+		if ( $( self.elem ).hasClass('closable') ) {
+			self.options['closable'] = true;
+		}
+	}
+	
+	/**
+	 * Build the imgbit DOM elements
+	 */
+	imgbit.prototype.fixParams = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
 		//	Explicit width?
 		//------------------------------------------------------------
 		if ( self.param.w != undefined ) {
@@ -105,24 +142,6 @@
 		//	Zoom?
 		//------------------------------------------------------------
 		self.param.z = ( self.param.z == undefined ) ? 1 : self.param.z;
-		
-		//------------------------------------------------------------
-		//	Check to see if special style classes have been passed
-		//------------------------------------------------------------
-		if ( $( self.elem ).hasClass('min') ) {
-			self.options['style'] = null;
-		}
-		if ( $( self.elem ).hasClass('edit') ) {
-			self.options['style'] = 'edit';
-		}
-		if ( $( self.elem ).hasClass('closable') ) {
-			self.options['closable'] = true;
-		}
-		
-		//------------------------------------------------------------
-		//	Check to see if img is in album
-		//------------------------------------------------------------
-		self.build();
 	}
 	
 	/**
@@ -181,11 +200,18 @@
 		var img = new Image();
 		img.onload = function() {
 			$( this ).addClass('star');
+			
 			//------------------------------------------------------------
 			//	Store the orignal size of the image
 			//------------------------------------------------------------
 			self.imgWidth = img.width;
 			self.imgHeight = img.height;
+			
+			//------------------------------------------------------------
+			//  Relative to explicit
+			//------------------------------------------------------------
+			self.toExplicit();
+			self.fixParams();
 			
 			//------------------------------------------------------------
 			//	Add the image to the view
@@ -505,8 +531,8 @@
 		self.param.x2 = _sequence[ _i ]['coords'][2] + self.param.x1;
 		self.param.y2 = _sequence[ _i ]['coords'][3] + self.param.y1;
 		self.param.z = _sequence[ _i ]['coords'][4];
-		var wipe = _sequence[ _i ]['wipe'];
-		var stay = _sequence[ _i ]['stay']
+		var wipe = ( _sequence[ _i ]['wipe'] == undefined ) ? 1 : _sequence[ _i ]['wipe'];
+		var stay = ( _sequence[ _i ]['stay'] == undefined ) ? 5 : _sequence[ _i ]['stay'];
 		//------------------------------------------------------------
 		//  Animate Transitions
 		//------------------------------------------------------------
@@ -590,22 +616,62 @@
 	}
 	
 	/**
+	 * Turn imgbit into imgbit constructor HTML
+	 * You know the markup you need to start imgbit
+	 *
+	 * @return { string } HTML representation
+	 */
+	imgbit.prototype.sequenceFormat = function() {
+		var self = this;
+		var x1 = parseInt( self.param.x1 );
+		var y1 = parseInt( self.param.y1 );
+		var width = parseInt( self.param.x2 ) - parseInt( self.param.x1 );
+		var height = parseInt( self.param.y2 ) - parseInt( self.param.y1 );
+		var zoom = self.param.z;
+		var output = {
+			coords: [ x1, y1, width, height, zoom ],
+			caption: self.caption
+		};
+		return output;
+	}
+	
+	/**
 	 * Returns coordinates for cite urns.
 	 * All coordinates are stored as ratios to the original height and width
 	 * 
 	 * @return { array } [ top-left-x, top-left-y, width, height ]
 	 */
+	imgbit.prototype.relative = function() {
+		return this.citeCoords();
+	}
 	imgbit.prototype.citeCoords = function() {
 		var self = this;
 		var output = [];
-		output[0] = self.param['x1'] / self.imgWidth;
-		output[1] = self.param['y1'] / self.imgHeight;
-		output[2] = ( self.param['x2'] - self.param['x1'] ) / self.imgWidth;
-		output[3] = ( self.param['y2'] - self.param['y1'] ) / self.imgHeight;
+		output[0] = self.param.x1 / self.imgWidth;
+		output[1] = self.param.y1 / self.imgHeight;
+		output[2] = ( self.param.x2 - self.param.x1 ) / self.imgWidth;
+		output[3] = ( self.param.y2 - self.param.y1 ) / self.imgHeight;
 		for( var i=0, ii=output.length; i<ii; i++ ) {
 			output[i] = output[i].toFixed(4);
 		}
 		return output;
+	}
+	
+	/**
+	 * @return { boolean }
+	 */
+	imgbit.prototype.toExplicit = function() {
+		var self = this;
+		if ( self.param.w <= 1 && self.param.h <= 1 && self.param.x <= 1 && self.param.y <= 1 ) {
+			self.param.x1 = self.param.x * self.imgWidth;
+			self.param.y1 = self.param.y * self.imgHeight;
+			self.param.x2 = self.param.x1 + self.param.w * self.imgWidth;
+			self.param.y2 = self.param.y1 + self.param.h * self.imgHeight;
+			delete self.param.x;
+			delete self.param.y;
+			delete self.param.w;
+			delete self.param.h;
+		}
 	}
 	
 	/**

@@ -129,6 +129,7 @@
 	position: relative;
 	overflow: hidden;
 	margin-bottom: 20px;
+	cursor: crosshair;
 }
 .imgspect .nav {
 	float: left;
@@ -270,3 +271,4 @@
 #imgspectWarning a:hover {
 	text-decoration: underline;
 }
+
