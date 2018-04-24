@@ -1571,164 +1571,164 @@ Sorted.prototype.numSort = function( _array, _key ) {
  */
 var PerseidsBridge = PerseidsBridge || { REVISION: '1' };
 PerseidsBridge.imgspect = ( function() {
-    var instance;
-    function _init() {
-        var self = this;
-        
-        self.imgspect = null;
-        self.output = null;
-        self.warning = null;
-        self.img = null;
+	var instance;
+	function _init() {
+		var self = this;
+		
+		self.imgspect = null;
+		self.output = null;
+		self.warning = null;
+		self.img = null;
 		self.w_tags = {};
-		        
-        /**
-         * Load imgspect
-         */
-        self.load = function( _override ) {
-            _override = ( _override == undefined ) ? false : _override;
-            
-            //------------------------------------------------------------
-            // Display the warning dialog if new thumbnail is clicked
-            //------------------------------------------------------------
-            if ( self.imgspect != null && _override == false ) {
-				self.buildWarning();
-                self.warning.popup();
-                return;
-            }
+				
+		/**
+		 * Load imgspect
+		 */
+		self.load = function( _override ) {
+			_override = ( _override == undefined ) ? false : _override;
 			
 			//------------------------------------------------------------
-			//  Build the wait screen
+			// Display the warning dialog if new thumbnail is clicked
+			//------------------------------------------------------------
+			if ( self.imgspect != null && _override == false ) {
+				self.buildWarning();
+				self.warning.popup();
+				return;
+			}
+			
+			//------------------------------------------------------------
+			//	Build the wait screen
 			//------------------------------------------------------------
 			self.buildWait();
 			self.warning.popup();
-            
-            //------------------------------------------------------------
-            // Visually id the selected thumbnail
-            //------------------------------------------------------------
-            $('.imgUrn').removeClass('selected');
-            $('.imgUrn[rel="'+self.img.src+'"]').addClass('selected');
-            
-            //------------------------------------------------------------
-            // Load the image.
-            //------------------------------------------------------------
-            $('#imgspect').empty();
-            $('#imgspect').append( self.img );
-            self.imgspect = $('#imgspect img').imgspect().data('#imgspect img');
-            self.urn = self.getUrn();
-            
-            //------------------------------------------------------------
-            // Update the background color of the thumbnail area
-            //------------------------------------------------------------
-            $('#ict_tool').addClass( 'imgspectLoaded' );
-            
-            //------------------------------------------------------------
-            // Everytime imgspect changes update the output.
-            //------------------------------------------------------------
-            $( self.imgspect.elem ).on( 'IMGSPECT-UPDATE', function() {
-                var tags = self.buildTags();
-                $('.imgspect .output' ).val( tags.join("\n\n") );
-            });
-        };
-        
-        /**
-         * Get the FACS you need
-         */
-        self.buildTags = function() {
-            var tags = [];
-            for ( var i=0, ii=self.imgspect.imgbits.length; i<ii; i++ ) {
-                var fullUrn = self.urnCoords( i );
-                var caption = self.imgspect.imgbits[i].caption;
-                tags[i] = '<w facs="' + fullUrn + '">' + caption + '</w>';
-            }
-            return tags;
-        };
-        
-        /**
-         * Get the URN coordinates
-         */
-        self.urnCoords = function( _i ) {
-            var coords = self.imgspect.imgbits[ _i ].citeCoords();
-            return self.urn + '@' + coords.join(',');
-        };
-        
-        /**
-         * Build the warning
-         */
-        self.buildWarning = function() {
-            $('#imgspectWarning').remove();
-            $('body').append( '\
-                <div id="imgspectWarning">\
-                    <p>\
-                        Switching images will reset imgspect. \
-                    </p>\
-                    <p>\
-                        You will lose your highlights and captions \
-                        if you have have not copied them to your main XML document.\
-                    </p>\
-                    <p>\
-                        Do you want to CONTINUE?\
-                    </p>\
-                    <div id="imgspectButtons">\
-                        <a id="imgspectWarningOk" href="">CONTINUE</a>\
-                        <a id="imgspectWarningCancel" href="">CANCEL</a>\
-                    </div>\
-                </div>' );
-            self.warning = $('#imgspectWarning').plopup({button:'x'}).data('#imgspectWarning');
-            $( '#imgspectWarningOk' ).click( function( _e ) {
-                self.load( true );
-                _e.preventDefault();
-            });
-            $( '#imgspectWarningCancel' ).click( function( _e ) {
-                self.warning.hide();
-                _e.preventDefault();
-            });
-        };
-		
-        /**
-         * Build the wait screen
-         */
-        self.buildWait = function() {
-            $('#imgspectWarning').remove();
-            $('body').append( '\
-                <div id="imgspectWarning">\
-                    <p>\
-                        Loading hi-res image.\
-                    </p>\
-                    <p>\
-						This may take a while.\
-                    </p>\
-					<div class="space"><img src="/javascripts/imgspect/src/img/ajax-loader.gif" /></div>\
-                </div>' );
-            self.warning = $('#imgspectWarning').plopup({ button:'x' }).data('#imgspectWarning');
 			
 			//------------------------------------------------------------
-			//  When imgspect is ready the warning gets removed... natch
+			// Visually id the selected thumbnail
+			//------------------------------------------------------------
+			$('.imgUrn').removeClass('selected');
+			$('.imgUrn[rel="'+self.img.src+'"]').addClass('selected');
+			
+			//------------------------------------------------------------
+			// Load the image.
+			//------------------------------------------------------------
+			$('#imgspect').empty();
+			$('#imgspect').append( self.img );
+			self.imgspect = $('#imgspect img').imgspect().data('#imgspect img');
+			self.urn = self.getUrn();
+			
+			//------------------------------------------------------------
+			// Update the background color of the thumbnail area
+			//------------------------------------------------------------
+			$('#ict_tool').addClass( 'imgspectLoaded' );
+			
+			//------------------------------------------------------------
+			// Everytime imgspect changes update the output.
+			//------------------------------------------------------------
+			$( self.imgspect.elem ).on( 'IMGSPECT-UPDATE', function() {
+				var tags = self.buildTags();
+				$('.imgspect .output' ).val( tags.join("\n\n") );
+			});
+		};
+		
+		/**
+		 * Get the FACS you need
+		 */
+		self.buildTags = function() {
+			var tags = [];
+			for ( var i=0, ii=self.imgspect.imgbits.length; i<ii; i++ ) {
+				var fullUrn = self.urnCoords( i );
+				var caption = self.imgspect.imgbits[i].caption;
+				tags[i] = '<w facs="' + fullUrn + '">' + caption + '</w>';
+			}
+			return tags;
+		};
+		
+		/**
+		 * Get the URN coordinates
+		 */
+		self.urnCoords = function( _i ) {
+			var coords = self.imgspect.imgbits[ _i ].citeCoords();
+			return self.urn + '@' + coords.join(',');
+		};
+		
+		/**
+		 * Build the warning
+		 */
+		self.buildWarning = function() {
+			$('#imgspectWarning').remove();
+			$('body').append( '\
+				<div id="imgspectWarning">\
+					<p>\
+						Switching images will reset imgspect. \
+					</p>\
+					<p>\
+						You will lose your highlights and captions \
+						if you have have not copied them to your main XML document.\
+					</p>\
+					<p>\
+						Do you want to CONTINUE?\
+					</p>\
+					<div id="imgspectButtons">\
+						<a id="imgspectWarningOk" href="">CONTINUE</a>\
+						<a id="imgspectWarningCancel" href="">CANCEL</a>\
+					</div>\
+				</div>' );
+			self.warning = $('#imgspectWarning').plopup({button:'x'}).data('#imgspectWarning');
+			$( '#imgspectWarningOk' ).click( function( _e ) {
+				self.load( true );
+				_e.preventDefault();
+			});
+			$( '#imgspectWarningCancel' ).click( function( _e ) {
+				self.warning.hide();
+				_e.preventDefault();
+			});
+		};
+		
+		/**
+		 * Build the wait screen
+		 */
+		self.buildWait = function() {
+			$('#imgspectWarning').remove();
+			$('body').append( '\
+				<div id="imgspectWarning">\
+					<p>\
+						Loading hi-res image.\
+					</p>\
+					<p>\
+						This may take a while.\
+					</p>\
+					<div class="space"><img src="/javascripts/imgspect/src/img/ajax-loader.gif" /></div>\
+				</div>' );
+			self.warning = $('#imgspectWarning').plopup({ button:'x' }).data('#imgspectWarning');
+			
+			//------------------------------------------------------------
+			//	When imgspect is ready the warning gets removed... natch
 			//------------------------------------------------------------
 			$( document ).on( 'IMGSPECT-READY', function() {
 				$('#imgspectWarning').remove();
 			});
-        };
-        
-        /**
-         * Retreive CITE urn
-         */
-        self.getUrn = function() {
-            var obj = self.imgspect.src.params();
-            return obj['urn'];
-        };
+		};
 		
-        /**
-         * Retreive ImgBit coordinates from XML string
+		/**
+		 * Retreive CITE urn
+		 */
+		self.getUrn = function() {
+			var obj = self.imgspect.src.params();
+			return obj['urn'];
+		};
+		
+		/**
+		 * Retreive ImgBit coordinates from XML string
 		 *
 		 * @ param { string } _xml An XML string
-         */
+		 */
 		self.getTags = function( _xml ) {
 			var self = this;
 			var xmlDoc = $.parseXML( _xml.smoosh() );
 			var xml = $( xmlDoc );
 			xml.find( "w" ).each( function() {
 				//------------------------------------------------------------
-				//  Extract the info you need to build an imgbit from the XML
+				//	Extract the info you need to build an imgbit from the XML
 				//------------------------------------------------------------
 				var caption = this.innerHTML;
 				var facs = $(this).attr('facs');
@@ -1738,7 +1738,7 @@ PerseidsBridge.imgspect = ( function() {
 				var coords = nums.split(',');
 				
 				//------------------------------------------------------------
-				//  Store the info in a handy format.
+				//	Store the info in a handy format.
 				//------------------------------------------------------------
 				if ( !( urn in self.w_tags ) ) {
 					self.w_tags[urn] = [];
@@ -1750,54 +1750,54 @@ PerseidsBridge.imgspect = ( function() {
 			});
 		};
 		
-        /**
-         * Add a click event listener
+		/**
+		 * Add a click event listener
 		 *
 		 * @ param { string } _selector jQuery selector string
-         */
+		 */
 		self.clickListen = function( _selector ) {
 			var self = this;
-            //------------------------------------------------------------
-            // Once an image is clicked.
-            //------------------------------------------------------------
-            $( '#'+_selector ).click( function( _e ) {
-                _e.preventDefault();
-                //------------------------------------------------------------
-                //  Check to see if the clicked image has currently been
-                //  loaded.
-                //------------------------------------------------------------
-                var src = $(this).attr('href');
-                if ( self.imgspect != null && self.imgspect.src == src ) {
-                    return;
-                }
-                //------------------------------------------------------------
-                // Load the new image
-                //------------------------------------------------------------
-                self.img = new Image();
-                self.img.onload = function() {
-                    self.load();
-                }
-                self.img.src = src;
+			//------------------------------------------------------------
+			// Once an image is clicked.
+			//------------------------------------------------------------
+			$( '#'+_selector ).click( function( _e ) {
+				_e.preventDefault();
+				//------------------------------------------------------------
+				//	Check to see if the clicked image has currently been
+				//	loaded.
+				//------------------------------------------------------------
+				var src = $(this).attr('href');
+				if ( self.imgspect != null && self.imgspect.src == src ) {
+					return;
+				}
+				//------------------------------------------------------------
+				// Load the new image
+				//------------------------------------------------------------
+				self.img = new Image();
+				self.img.onload = function() {
+					self.load();
+				}
+				self.img.src = src;
 			});
 		};
 		
-        /**
-         * Turn self.w_tags into Imgspect highlights and imgbits
+		/**
+		 * Turn self.w_tags into Imgspect highlights and imgbits
 		 *
 		 * @ param { string } _xml An XML string
-         */
+		 */
 		self.loadTags = function () {
 			var self = this;
 			
 			//------------------------------------------------------------
-			//  Check to see if src has w_tags associated with it
+			//	Check to see if src has w_tags associated with it
 			//------------------------------------------------------------
 			if ( self.w_tags != undefined && !( self.imgspect.src in self.w_tags ) ) {
 				return;
 			}
 			
 			//------------------------------------------------------------
-			//  Hey there are w_tags!  Let's convert some coordinates.
+			//	Hey there are w_tags!  Let's convert some coordinates.
 			//------------------------------------------------------------
 			var src = self.imgspect.src;
 			var width = self.imgspect.orig_w;
@@ -1813,76 +1813,76 @@ PerseidsBridge.imgspect = ( function() {
 			}
 			
 			//------------------------------------------------------------
-			//  Update the location of all the highlights
+			//	Update the location of all the highlights
 			//------------------------------------------------------------
 			self.imgspect.resize();
 		};
-        
-        return {
+		
+		return {
 			//------------------------------------------------------------
-			//  Revealed properties
+			//	Revealed properties
 			//------------------------------------------------------------
-            imgspect: self.imgspect,
+			imgspect: self.imgspect,
 			w_tags: self.w_tags,
 			
-            /**
-             * Build imgspect links
-             *
-             * @ param { obj } _elem
-             * @ param { obj } _results
-             */
-            buildLinks: function( _elem, _results ) {
-                var url = "http://services.perseus.tufts.edu/sparqlimg/api?request=GetBinaryImage&urn=";
-                for ( var i=0, ii=_results.length; i<ii; i++ ) {
-                    var imgUrn = '<a id="imgUrn_'+i+'"class="imgUrn" href="' + url + _results[i] + '&w=3000"><img src="'+ url + _results[i] + '&w=100"/></a>';
-                    jQuery( _elem ).append( imgUrn );
+			/**
+			 * Build imgspect links
+			 *
+			 * @ param { obj } _elem
+			 * @ param { obj } _results
+			 */
+			buildLinks: function( _elem, _results ) {
+				var url = "http://services.perseus.tufts.edu/sparqlimg/api?request=GetBinaryImage&urn=";
+				for ( var i=0, ii=_results.length; i<ii; i++ ) {
+					var imgUrn = '<a id="imgUrn_'+i+'"class="imgUrn" href="' + url + _results[i] + '&w=3000"><img src="'+ url + _results[i] + '&w=100"/></a>';
+					jQuery( _elem ).append( imgUrn );
 					self.clickListen( imgUrn.attr('id'))
-                }
-            },
+				}
+			},
 			
-            /**
-             * See self.getTags() function declaration above.
-             */			
+			/**
+			 * See self.getTags() function declaration above.
+			 */			
 			getTags: self.getTags,
 			
-            /**
-             * See self.buildTags() function declaration above.
-             */			
+			/**
+			 * See self.buildTags() function declaration above.
+			 */			
 			buildTags: self.buildTags,
 			
-            /**
-             * See self.loadTags() function declaration above.
-             */			
+			/**
+			 * See self.loadTags() function declaration above.
+			 */			
 			loadTags: self.loadTags,
-            
-            /**
-             * See self.load() function declaration above.
-             */
-            load: self.load,
+			
+			/**
+			 * See self.load() function declaration above.
+			 */
+			load: self.load,
 			
 			clickListen: self.clickListen,
-            
-            /**
-             * Once imgspect links are loaded add some event listeners
-             */
-            start: function() {
-           	 	$( document ).on('IMGSPECT-LINK_LOADED', function( _e, _id ) {
+			
+			/**
+			 * Once imgspect links are loaded add some event listeners
+			 */
+			start: function() {
+				$( document ).on('IMGSPECT-LINK_LOADED', function( _e, _id ) {
 					self.clickListen( _id );
-           	 	});
-            }
-        }
-    };
-    //--------------------------
-    //  There can only be one!  
-    //--------------------------
-    return {
-        init: function () {
-            if ( ! instance ) {
-                instance = _init();
-            }
-            return instance;
-        }
-    };
+				});
+			}
+		}
+	};
+	//--------------------------
+	//	There can only be one!	
+	//--------------------------
+	return {
+		init: function () {
+			if ( ! instance ) {
+				instance = _init();
+			}
+			return instance;
+		}
+	};
 })();
 /*!
  * imgbit
@@ -1967,6 +1967,43 @@ PerseidsBridge.imgspect = ( function() {
 		}
 		
 		//------------------------------------------------------------
+		//  Check for special class options
+		//------------------------------------------------------------
+		self.specClass();
+		
+		//------------------------------------------------------------
+		//	Check to see if img is in album
+		//------------------------------------------------------------
+		self.build();
+	}
+	
+	/**
+	 * Check for special classes
+	 */
+	imgbit.prototype.specClass = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
+		//	Check to see if special style classes have been passed
+		//------------------------------------------------------------
+		if ( $( self.elem ).hasClass('min') ) {
+			self.options['style'] = null;
+		}
+		if ( $( self.elem ).hasClass('edit') ) {
+			self.options['style'] = 'edit';
+		}
+		if ( $( self.elem ).hasClass('closable') ) {
+			self.options['closable'] = true;
+		}
+	}
+	
+	/**
+	 * Build the imgbit DOM elements
+	 */
+	imgbit.prototype.fixParams = function() {
+		var self = this;
+		
+		//------------------------------------------------------------
 		//	Explicit width?
 		//------------------------------------------------------------
 		if ( self.param.w != undefined ) {
@@ -1991,24 +2028,6 @@ PerseidsBridge.imgspect = ( function() {
 		//	Zoom?
 		//------------------------------------------------------------
 		self.param.z = ( self.param.z == undefined ) ? 1 : self.param.z;
-		
-		//------------------------------------------------------------
-		//	Check to see if special style classes have been passed
-		//------------------------------------------------------------
-		if ( $( self.elem ).hasClass('min') ) {
-			self.options['style'] = null;
-		}
-		if ( $( self.elem ).hasClass('edit') ) {
-			self.options['style'] = 'edit';
-		}
-		if ( $( self.elem ).hasClass('closable') ) {
-			self.options['closable'] = true;
-		}
-		
-		//------------------------------------------------------------
-		//	Check to see if img is in album
-		//------------------------------------------------------------
-		self.build();
 	}
 	
 	/**
@@ -2067,11 +2086,18 @@ PerseidsBridge.imgspect = ( function() {
 		var img = new Image();
 		img.onload = function() {
 			$( this ).addClass('star');
+			
 			//------------------------------------------------------------
 			//	Store the orignal size of the image
 			//------------------------------------------------------------
 			self.imgWidth = img.width;
 			self.imgHeight = img.height;
+			
+			//------------------------------------------------------------
+			//  Relative to explicit
+			//------------------------------------------------------------
+			self.toExplicit();
+			self.fixParams();
 			
 			//------------------------------------------------------------
 			//	Add the image to the view
@@ -2391,8 +2417,8 @@ PerseidsBridge.imgspect = ( function() {
 		self.param.x2 = _sequence[ _i ]['coords'][2] + self.param.x1;
 		self.param.y2 = _sequence[ _i ]['coords'][3] + self.param.y1;
 		self.param.z = _sequence[ _i ]['coords'][4];
-		var wipe = _sequence[ _i ]['wipe'];
-		var stay = _sequence[ _i ]['stay']
+		var wipe = ( _sequence[ _i ]['wipe'] == undefined ) ? 1 : _sequence[ _i ]['wipe'];
+		var stay = ( _sequence[ _i ]['stay'] == undefined ) ? 5 : _sequence[ _i ]['stay'];
 		//------------------------------------------------------------
 		//  Animate Transitions
 		//------------------------------------------------------------
@@ -2476,22 +2502,62 @@ PerseidsBridge.imgspect = ( function() {
 	}
 	
 	/**
+	 * Turn imgbit into imgbit constructor HTML
+	 * You know the markup you need to start imgbit
+	 *
+	 * @return { string } HTML representation
+	 */
+	imgbit.prototype.sequenceFormat = function() {
+		var self = this;
+		var x1 = parseInt( self.param.x1 );
+		var y1 = parseInt( self.param.y1 );
+		var width = parseInt( self.param.x2 ) - parseInt( self.param.x1 );
+		var height = parseInt( self.param.y2 ) - parseInt( self.param.y1 );
+		var zoom = self.param.z;
+		var output = {
+			coords: [ x1, y1, width, height, zoom ],
+			caption: self.caption
+		};
+		return output;
+	}
+	
+	/**
 	 * Returns coordinates for cite urns.
 	 * All coordinates are stored as ratios to the original height and width
 	 * 
 	 * @return { array } [ top-left-x, top-left-y, width, height ]
 	 */
+	imgbit.prototype.relative = function() {
+		return this.citeCoords();
+	}
 	imgbit.prototype.citeCoords = function() {
 		var self = this;
 		var output = [];
-		output[0] = self.param['x1'] / self.imgWidth;
-		output[1] = self.param['y1'] / self.imgHeight;
-		output[2] = ( self.param['x2'] - self.param['x1'] ) / self.imgWidth;
-		output[3] = ( self.param['y2'] - self.param['y1'] ) / self.imgHeight;
+		output[0] = self.param.x1 / self.imgWidth;
+		output[1] = self.param.y1 / self.imgHeight;
+		output[2] = ( self.param.x2 - self.param.x1 ) / self.imgWidth;
+		output[3] = ( self.param.y2 - self.param.y1 ) / self.imgHeight;
 		for( var i=0, ii=output.length; i<ii; i++ ) {
 			output[i] = output[i].toFixed(4);
 		}
 		return output;
+	}
+	
+	/**
+	 * @return { boolean }
+	 */
+	imgbit.prototype.toExplicit = function() {
+		var self = this;
+		if ( self.param.w <= 1 && self.param.h <= 1 && self.param.x <= 1 && self.param.y <= 1 ) {
+			self.param.x1 = self.param.x * self.imgWidth;
+			self.param.y1 = self.param.y * self.imgHeight;
+			self.param.x2 = self.param.x1 + self.param.w * self.imgWidth;
+			self.param.y2 = self.param.y1 + self.param.h * self.imgHeight;
+			delete self.param.x;
+			delete self.param.y;
+			delete self.param.w;
+			delete self.param.h;
+		}
 	}
 	
 	/**
@@ -2644,14 +2710,6 @@ PerseidsBridge.imgspect = ( function() {
 		self.start();
 		
 		//------------------------------------------------------------
-		//  If a load parameter is passed to the constructor then
-		//  load it.
-		//------------------------------------------------------------
-		if ( self.options['load'] != null ) {
-			self.load( self.options['load'] );
-		}
-		
-		//------------------------------------------------------------
 		//  Let everything listening know imgspect is ready
 		//------------------------------------------------------------
 		$( self.elem ).trigger( self.events['ready'] );
@@ -2752,9 +2810,9 @@ PerseidsBridge.imgspect = ( function() {
 		//  Create the zoom buttons
 		//------------------------------------------------------------
 		$( '.tools', self.elem ).append('\
-				<a href="#" class="tool zoom in">+</a>\
-				<a href="#" class="tool zoom out">-</a>\
-		 ');
+			<a href="#" class="tool zoom in">+</a>\
+			<a href="#" class="tool zoom out">-</a>\
+		');
 		
 		//------------------------------------------------------------
 		//  Build the color
@@ -3013,6 +3071,22 @@ In the drop-down view click an img to find its original position in the larger i
 	}
 	
 	/**
+	 * Update the output area with a sequence
+	 */
+	imgspect.prototype.outputSequence = function() {
+		var self = this;
+		$( '.output', self.elem ).val('');
+		//------------------------------------------------------------
+		//  Loop through the imgbits and return a sequence object
+		//------------------------------------------------------------
+		var items = [];
+		for ( var i=0, ii=self.imgbits.length; i<ii; i++ ) {
+			items[i] = self.imgbits[i].sequenceFormat();
+		}
+		$( '.output', self.elem ).val( JSON.stringify( items ) );
+	}
+	
+	/**
 	 * Resize imgspect
 	 */
 	imgspect.prototype.resize = function() {
@@ -3051,6 +3125,7 @@ In the drop-down view click an img to find its original position in the larger i
 		self.undoStart();
 		self.liteStart();
 		self.dragStart();
+		self.scrollStart();
 		self.sizeStart();
 		self.colorStart();
 	}
@@ -3547,6 +3622,7 @@ In the drop-down view click an img to find its original position in the larger i
 				%y1='+lite.y1+'\
 				%x2='+lite.x2+'\
 				%y2='+lite.y2+'\
+				%z='+lite.zoom+'\
 				%c='+color.sat( 0.5, true ).hex()+'\
 				">#</a>';
 		return tag.smoosh();
@@ -3641,6 +3717,51 @@ In the drop-down view click an img to find its original position in the larger i
 			left: nav_pos.left,
 			top: nav_pos.top
 		});
+	}
+
+	/**
+	 * Start scroll listener
+	 */
+	imgspect.prototype.scrollStart = function() {
+		var self = this;
+		var nav = $( '.nav', self.elem );
+		var drag = $( '.drag', self.elem );
+		var view = $( '.view', self.elem );
+
+		var callback = function(event) {
+			var dX = event.originalEvent.deltaX / 4;
+			var dY = event.originalEvent.deltaY / 4;
+			var nav_pos = nav.position();
+			var drag_pos = drag.position();
+
+			var nav_width = nav.width();
+			var nav_height = nav.height();
+			var drag_width = drag.width();
+			var drag_height = drag.height();
+
+			var drag_max_x = nav_pos.left + nav_width - drag_width;
+			var drag_max_y = nav_pos.top + nav_height - drag_height;
+
+			var top = drag_pos.top + dY;
+			var left = drag_pos.left + dX;
+
+			top = ( top < nav_pos.top ) ? nav_pos.top : top;
+			left = ( left < nav_pos.left ) ? nav_pos.left : left;
+			top = ( top > drag_max_y ) ? drag_max_y : top;
+			left = ( left > drag_max_x ) ? drag_max_x : left;
+
+			drag.css("top", top + "px");
+			drag.css("left", left  + "px");
+			drag_pos = drag.position();
+
+			self.dragHandler( nav_pos, drag_pos );
+			self.dragNavDiff();
+
+			event.preventDefault();
+		};
+
+		$(nav).on('wheel', callback);
+		$(view).on('wheel', callback);
 	}
 	
 	/**
@@ -3846,10 +3967,27 @@ In the drop-down view click an img to find its original position in the larger i
 	}
 	
 	/**
-	 * Load an imgspect object TODO
+	 * Load an imgspect object
 	 */	
-	imgspect.prototype.load = function( _obj ) {
+	imgspect.prototype.load = function( items ) {
 		var self = this;
+		for ( var i=0; i<items.length; i++ ) {
+			coords = self.relToExp( items[i] );
+			self.liteAdd( coords.x1, coords.y1, coords.x2, coords.y2 );				
+		}
+	}
+	
+	/**
+	 * Turn relative coordinates into explicit ones
+	 */
+	imgspect.prototype.relToExp = function( item ) {
+		var self = this;
+		var out = { x1:null, x2:null, y1:null, y2:null }	;
+		out.x1 = Math.round( item.x * self.orig_w );
+		out.y1 = Math.round( item.y * self.orig_h );
+		out.x2 = Math.round( out.x1 + item.width * self.orig_w );
+		out.y2 = Math.round( out.y1 + item.height * self.orig_h );
+		return out
 	}
 	
 	/**
@@ -3871,3 +4009,4 @@ In the drop-down view click an img to find its original position in the larger i
 		};
 	})
 })(jQuery);
+
