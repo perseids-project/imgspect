@@ -3896,7 +3896,7 @@ In the drop-down view click an img to find its original position in the larger i
 		//  Clicks and touches have different event objects.
 		//  Deal with it.
 		//------------------------------------------------------------
-		var x = ( _e.clientX != undefined ) ? _e.clientX : _e.originalEvent.pageX;
+		var x = ( _e.clientX != undefined ) ? _e.clientX + $(window).scrollLeft() : _e.originalEvent.pageX;
 		var y = ( _e.clientY != undefined ) ? _e.clientY + $(window).scrollTop() : _e.originalEvent.pageY;
 		var left = x - vp.left;
 		var top = y - vp.top;
